@@ -1,0 +1,172 @@
+.jouele {
+  width: 100%;
+  position: relative;
+}
+.jouele,
+.jouele * {
+  line-height: 1.4em;
+  box-sizing: content-box;
+ -moz-box-sizing: content-box;
+ -webkit-box-sizing: content-box;
+}
+.jouele-progress-area {
+  height: 15px;
+  margin: 0 8px .375em 8px;
+  position: relative;
+	border-radius: 8px;
+  box-shadow: 0 2px 16px #f0f0f0;
+}
+.jouele-progress-area * {
+  position: absolute;
+}
+.jouele-mine-left,
+.jouele-mine-right,
+.jouele-mine {
+	border-top: 1px solid #d0d0d0;
+	border-bottom: 1px solid #ffffff;
+	background-image: linear-gradient(bottom, rgb(224,224,224) 7%, rgb(247,247,247) 7%, rgb(247,247,247) 93%, rgb(255,255,255) 93%);
+	background-image: -o-linear-gradient(bottom, rgb(224,224,224) 7%, rgb(247,247,247) 7%, rgb(247,247,247) 93%, rgb(255,255,255) 93%);
+	background-image: -moz-linear-gradient(bottom, rgb(224,224,224) 7%, rgb(247,247,247) 7%, rgb(247,247,247) 93%, rgb(255,255,255) 93%);
+	background-image: -webkit-linear-gradient(bottom, rgb(224,224,224) 7%, rgb(247,247,247) 7%, rgb(247,247,247) 93%, rgb(255,255,255) 93%);
+	background-image: -ms-linear-gradient(bottom, rgb(224,224,224) 7%, rgb(247,247,247) 7%, rgb(247,247,247) 93%, rgb(255,255,255) 93%);  
+}
+.jouele-load-bar-left,
+.jouele-load-bar,
+.jouele-load-bar-right {
+	border-top: 1px solid #a0a0a0;
+	border-bottom: 1px solid #ffffff;
+	background-image: linear-gradient(bottom, rgb(242,240,229) 0%, rgb(231,229,217) 67%, rgb(188,186,173) 100%);
+	background-image: -o-linear-gradient(bottom, rgb(242,240,229) 0%, rgb(231,229,217) 67%, rgb(188,186,173) 100%);
+	background-image: -moz-linear-gradient(bottom, rgb(242,240,229) 0%, rgb(231,229,217) 67%, rgb(188,186,173) 100%);
+	background-image: -webkit-linear-gradient(bottom, rgb(242,240,229) 0%, rgb(231,229,217) 67%, rgb(188,186,173) 100%);
+	background-image: -ms-linear-gradient(bottom, rgb(242,240,229) 0%, rgb(231,229,217) 67%, rgb(188,186,173) 100%);
+}
+
+.jouele-mine-left,
+.jouele-mine-right,
+.jouele-load-bar-left,
+.jouele-load-bar-right {
+	border-radius: 8px;
+	width: 15px; height: 15px;
+	top: 0;
+}
+.jouele-load-bar-left,
+.jouele-load-bar-right {
+  top: -1px;
+  margin: 0 -7.5px;
+}
+
+.jouele-mine-left { left: -8px }
+.jouele-mine-right { right: -8px }
+
+.jouele-mine {
+  width: 100%;
+  height: 15px;
+  top: 0;
+	z-index: 10;
+}
+.jouele-play-bar,
+.jouele-play-bar-left {
+	border-top: 1px solid #024694;
+	border-bottom: 1px solid #ffffff;
+	background-image: linear-gradient(bottom, rgb(0,185,241) 0%, rgb(0,153,242) 67%, rgb(0,105,242) 100%);
+	background-image: -o-linear-gradient(bottom, rgb(0,185,241) 0%, rgb(0,153,242) 67%, rgb(0,105,242) 100%);
+	background-image: -moz-linear-gradient(bottom, rgb(0,185,241) 0%, rgb(0,153,242) 67%, rgb(0,105,242) 100%);
+	background-image: -webkit-linear-gradient(bottom, rgb(0,185,241) 0%, rgb(0,153,242) 67%, rgb(0,105,242) 100%);
+	background-image: -ms-linear-gradient(bottom, rgb(0,185,241) 0%, rgb(0,153,242) 67%, rgb(0,105,242) 100%);
+	
+}
+.jouele-load-bar {
+  top: -1px;
+  width: 0;
+  height: 15px;
+	z-index: 20;
+  cursor: pointer; cursor: hand;
+}
+.jouele-play-bar-left {
+	border-radius: 8px;
+	width: 15px; height: 15px;
+	top: -1px;
+	left: -8px;
+	z-index: 19;
+}
+.jouele-play-bar {
+  top: -1px;
+  width: 0;
+  height: 15px;
+	z-index: 30;
+  cursor: pointer; cursor: hand;
+}
+.jouele-play-lift {
+  left: 0; top: 0;
+  width: 14px; height: 14px;
+	border-radius: 7px;
+  margin-left: -7px;
+	box-shadow: 0 1px 2px #808080;
+	z-index: 40;
+	background-image: linear-gradient(bottom, rgb(227,227,227) 0%, rgb(254,254,253) 100%);
+	background-image: -o-linear-gradient(bottom, rgb(227,227,227) 0%, rgb(254,254,253) 100%);
+	background-image: -moz-linear-gradient(bottom, rgb(227,227,227) 0%, rgb(254,254,253) 100%);
+	background-image: -webkit-linear-gradient(bottom, rgb(227,227,227) 0%, rgb(254,254,253) 100%);
+	background-image: -ms-linear-gradient(bottom, rgb(227,227,227) 0%, rgb(254,254,253) 100%);
+  cursor: pointer; cursor: hand;
+}
+.jouele-buffering {
+  left: 1px; top: 1px;
+  width: 12px; height: 12px;
+  background: url('i/buffering.gif'); 
+}
+.jouele-info-area {
+  position: relative;
+  text-align: center;
+  font-size: 85%;
+  text-shadow: 0px 1px 0px #fff;
+}
+.jouele-play-control {
+  position: absolute;
+  left: 0;
+  width: 16px; height: 16px;
+  margin-right: 8px;
+  cursor: pointer; cursor: hand;
+}
+.jouele-unavailable,
+.jouele-play,
+.jouele-pause {
+  width: 16px; height: 16px;
+}
+.jouele-unavailable {
+  background: url('i/jouele-unavailable.png') center center no-repeat;
+}
+.jouele-play {
+  background: url('i/jouele-paused.png') center center no-repeat;
+}
+.jouele-pause {
+  background: url('i/jouele-playing.png') center center no-repeat;
+}
+.jouele-download {
+  position: absolute;
+  right: 0;
+  width: 16px; height: 16px;
+  margin-left: 8px;
+  background: url('i/jouele-download.png') center center no-repeat;
+}
+.jouele-play-time,
+.jouele-total-time {
+  min-width: 80px;
+  min-height: 1em;
+  height: 100%;
+}
+.jouele-play-time {
+  position: absolute;
+  left: 24px;
+  text-align: left;
+}
+.jouele-total-time {
+  position: absolute;
+  right: 24px;
+  text-align: right;
+}
+.jouele-name {
+  margin: 0 100px;
+  min-height: 1.4em;
+}
