@@ -68,7 +68,7 @@ $ (function () {
     var playhead = pixels/maxWidth
     var playheadSeekable = pixels/loadWidth
     
-    if ((maxWidth == 0) || loadWidth == 0) playheadSeekable = playhead = 0
+    if ((maxWidth == 0) || (loadWidth == 0)) playheadSeekable = playhead = 0
     
     $ (playerSelector).find ('.jouele-buffering').stop ().fadeTo (1, 1)
 
@@ -144,10 +144,13 @@ $ (function () {
     
     //alert ($ (thisSelector).find ('.playhere').attr ('data-swfSource'))
     
+    var swfPath = 'jouele/jplayer.swf'
+    if (swfPathA = $aHref.attr ('data-swfSource')) swfPath = swfPathA
+    
     
     $ (thisSelector).find ('.jouele-invisible-object').jPlayer ({
       
-      swfPath: $aHref.attr ('data-swfSource'),
+      swfPath: swfPath,
       preload: 'metadata',
       volume: 100,
       
