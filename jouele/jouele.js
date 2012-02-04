@@ -142,9 +142,15 @@ $ (function () {
     
     $aHref.remove ()
     
-    //alert ($ (thisSelector).find ('.playhere').attr ('data-swfSource'))
+    filename = 'jouele.js'
+    var $exists = $ ('script').filter (function () {
+      return this.src.indexOf (filename) != -1
+    }).eq (0)
+
+    if ($exists.size ()) {
+      swfPath = ($exists.attr ('src').slice (0, -1 - filename.length))
+    }
     
-    var swfPath = 'jouele/jplayer.swf'
     if (swfPathA = $aHref.attr ('data-swfSource')) swfPath = swfPathA
     
     
