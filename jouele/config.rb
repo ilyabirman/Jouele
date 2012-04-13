@@ -1,0 +1,11 @@
+project_type = :stand_alone
+http_path = "www"
+css_dir = ""
+images_dir = "i"
+javascripts_dir = ""
+sass_dir = ""
+#output_style = :compact
+output_style = :expanded
+relative_assets = true
+line_comments = false
+environment = :production

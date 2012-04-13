@@ -153,7 +153,6 @@ $ (function () {
     
     if (swfPathA = $aHref.attr ('data-swfSource')) swfPath = swfPathA
     
-    
     $ (thisSelector).find ('.jouele-invisible-object').jPlayer ({
       
       swfPath: swfPath,
