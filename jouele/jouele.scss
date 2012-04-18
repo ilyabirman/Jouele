@@ -270,7 +270,7 @@
   }
     
   .jouele-buffering {
-    background: url('i/jouele-buffering-skin-dark.gif'); 
+    //background: url('i/jouele-buffering-skin-dark.gif'); 
   }
   
   .jouele-unavailable,
@@ -284,8 +284,8 @@
     box-shadow: 0 1px 1px #000;
     @include linear-gradient(
       color-stops(
-        rgb(66,74,88) 0%,
-        rgb(75,110,139) 100%
+        rgb(255,255,255) 0%,
+        rgb(237,237,237) 100%
       ), bottom
     );
     cursor: pointer; cursor: hand;

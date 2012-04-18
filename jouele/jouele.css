@@ -266,9 +266,6 @@
   background-image: -ms-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
   background-image: linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
 }
-.jouele-skin-dark .jouele-buffering {
-  background: url("i/jouele-buffering-skin-dark.gif");
-}
 .jouele-skin-dark .jouele-unavailable,
 .jouele-skin-dark .jouele-play,
 .jouele-skin-dark .jouele-pause,
@@ -277,12 +274,12 @@
 }
 .jouele-skin-dark .jouele-play-lift {
   box-shadow: 0 1px 1px #000;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #424a58), color-stop(100%, #4b6e8b));
-  background-image: -webkit-linear-gradient(bottom, #424a58 0%, #4b6e8b 100%);
-  background-image: -moz-linear-gradient(bottom, #424a58 0%, #4b6e8b 100%);
-  background-image: -o-linear-gradient(bottom, #424a58 0%, #4b6e8b 100%);
-  background-image: -ms-linear-gradient(bottom, #424a58 0%, #4b6e8b 100%);
-  background-image: linear-gradient(bottom, #424a58 0%, #4b6e8b 100%);
+  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #ffffff), color-stop(100%, #ededed));
+  background-image: -webkit-linear-gradient(bottom, #ffffff 0%, #ededed 100%);
+  background-image: -moz-linear-gradient(bottom, #ffffff 0%, #ededed 100%);
+  background-image: -o-linear-gradient(bottom, #ffffff 0%, #ededed 100%);
+  background-image: -ms-linear-gradient(bottom, #ffffff 0%, #ededed 100%);
+  background-image: linear-gradient(bottom, #ffffff 0%, #ededed 100%);
   cursor: pointer;
   cursor: hand;
 }
