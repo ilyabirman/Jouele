@@ -206,7 +206,10 @@ $ (function () {
         
       },
       
-      play: function (event) { $ (this).data ('isDirty', 1) },
+      play: function (event) { 
+        $ ('.jouele-invisible-object').not (this).jPlayer ('pause')
+        $ (this).data ('isDirty', 1)
+      },
       
       progress: function (event) { 
         
