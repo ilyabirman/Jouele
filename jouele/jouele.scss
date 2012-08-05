@@ -34,14 +34,13 @@
 .jouele-mine {
 	border-top: 1px solid #d0d0d0;
 	border-bottom: 1px solid #ffffff;
-	@include linear-gradient(
-	  color-stops(
-	    rgb(224,224,224) 7%,
-	    rgb(247,247,247) 7%,
-	    rgb(247,247,247) 93%,
-	    rgb(255,255,255) 93%
-	  ), bottom
-	);
+	@include background(linear-gradient(
+	  bottom,
+	  rgb(224,224,224) 7%,
+	  rgb(247,247,247) 7%,
+	  rgb(247,247,247) 93%,
+	  rgb(255,255,255) 93%
+	));
 }
 
 .jouele-load-bar-left,
@@ -49,13 +48,12 @@
 .jouele-load-bar-right {
 	border-top: 1px solid #a0a0a0;
 	border-bottom: 1px solid #ffffff;
-  @include linear-gradient(
-	  color-stops(
-	    rgb(242,240,229) 0%,
-	    rgb(231,229,217) 67%,
-	    rgb(188,186,173) 100%
-	  ), bottom
-	);
+  @include background(linear-gradient(
+    bottom,
+	  rgb(242,240,229) 0%,
+	  rgb(231,229,217) 67%,
+	  rgb(188,186,173) 100%
+	));
 }
 
 .jouele-mine-left,
@@ -87,13 +85,12 @@
 .jouele-play-bar-left {
 	border-top: 1px solid #024694;
 	border-bottom: 1px solid #ffffff;
-  @include linear-gradient(
-    color-stops(
-      rgb(0,185,241) 0%,
-      rgb(0,153,242) 67%,
-      rgb(0,105,242) 100%
-    ), bottom
-  );
+  @include background(linear-gradient(
+    bottom,
+    rgb(0,185,241) 0%,
+    rgb(0,153,242) 67%,
+    rgb(0,105,242) 100%
+  ));
 }
 
 .jouele-load-bar {
@@ -127,12 +124,11 @@
   margin-left: -7px;
 	box-shadow: 0 1px 2px #808080;
 	z-index: 40;
-  @include linear-gradient(
-    color-stops(
-      rgb(227,227,227) 0%,
-      rgb(254,254,253) 100%
-    ), bottom
-  );
+  @include background(linear-gradient(
+    bottom,
+    rgb(227,227,227) 0%,
+    rgb(254,254,253) 100%
+  ));
   cursor: pointer; cursor: hand;
 }
 
@@ -167,7 +163,10 @@
 .jouele-pause,
 .jouele-download {
   background: url('i/jouele-sprite.png') 16px center;
+  background: url('i/jouele-sprite.svg') 16px center;
+  background-repeat: no-repeat; 
 }
+  
 
 .jouele-unavailable {
   background-position: 0px;
@@ -232,14 +231,13 @@
   .jouele-mine {
     border-top: 1px solid #292733;
     border-bottom: 1px solid #575c6a;
-    @include linear-gradient(
-      color-stops(
-        rgb(59,64,76) 7%,
-        rgb(72,75,84) 7%,
-        rgb(72,75,84) 93%,
-        rgb(79,84,95) 93%
-      ), bottom
-    );
+    @include background(linear-gradient(
+      bottom,
+      rgb(59,64,76) 7%,
+      rgb(72,75,84) 7%,
+      rgb(72,75,84) 93%,
+      rgb(79,84,95) 93%
+    ));
   }
   
   .jouele-load-bar-left,
@@ -247,26 +245,24 @@
   .jouele-load-bar-right {
     border-top: 1px solid #292733;
     border-bottom: 1px solid #575c6a;
-    @include linear-gradient(
-      color-stops(
-        rgb(67,72,84) 0%,
-        rgb(64,69,80) 67%,
-        rgb(52,57,68) 100%
-      ), bottom
-    );
+    @include background(linear-gradient(
+      bottom,
+      rgb(67,72,84) 0%,
+      rgb(64,69,80) 67%,
+      rgb(52,57,68) 100%
+    ));
   }
   
   .jouele-play-bar,
   .jouele-play-bar-left {
     border-top: 1px solid #2d436d;
     border-bottom: 1px solid #66c8fd;
-    @include linear-gradient(
-      color-stops(
-        rgb(0,185,241) 0%,
-        rgb(0,153,242) 67%,
-        rgb(0,105,242) 100%
-      ), bottom
-    );
+    @include background(linear-gradient(
+      bottom,
+      rgb(0,185,241) 0%,
+      rgb(0,153,242) 67%,
+      rgb(0,105,242) 100%
+    ));
   }
     
   .jouele-buffering {
@@ -282,12 +278,11 @@
   
   .jouele-play-lift {
     box-shadow: 0 1px 1px #000;
-    @include linear-gradient(
-      color-stops(
-        rgb(255,255,255) 0%,
-        rgb(237,237,237) 100%
-      ), bottom
-    );
+    @include background(linear-gradient(
+      bottom,
+      rgb(255,255,255) 0%,
+      rgb(237,237,237) 100%
+    ));
     cursor: pointer; cursor: hand;
   }
   

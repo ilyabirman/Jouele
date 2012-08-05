@@ -8,9 +8,8 @@
 .jouele,
 .jouele * {
   line-height: 1.4em;
-  -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
-  -ms-box-sizing: content-box;
+  -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
 
@@ -31,12 +30,11 @@
 .jouele-mine {
   border-top: 1px solid #d0d0d0;
   border-bottom: 1px solid #ffffff;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(7%, #e0e0e0), color-stop(7%, #f7f7f7), color-stop(93%, #f7f7f7), color-stop(93%, #ffffff));
-  background-image: -webkit-linear-gradient(bottom, #e0e0e0 7%, #f7f7f7 7%, #f7f7f7 93%, #ffffff 93%);
-  background-image: -moz-linear-gradient(bottom, #e0e0e0 7%, #f7f7f7 7%, #f7f7f7 93%, #ffffff 93%);
-  background-image: -o-linear-gradient(bottom, #e0e0e0 7%, #f7f7f7 7%, #f7f7f7 93%, #ffffff 93%);
-  background-image: -ms-linear-gradient(bottom, #e0e0e0 7%, #f7f7f7 7%, #f7f7f7 93%, #ffffff 93%);
-  background-image: linear-gradient(bottom, #e0e0e0 7%, #f7f7f7 7%, #f7f7f7 93%, #ffffff 93%);
+  background: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(7%, #e0e0e0), color-stop(7%, #f7f7f7), color-stop(93%, #f7f7f7), color-stop(93%, #ffffff));
+  background: -webkit-linear-gradient(bottom, #e0e0e0 7%, #f7f7f7 7%, #f7f7f7 93%, #ffffff 93%);
+  background: -moz-linear-gradient(bottom, #e0e0e0 7%, #f7f7f7 7%, #f7f7f7 93%, #ffffff 93%);
+  background: -o-linear-gradient(bottom, #e0e0e0 7%, #f7f7f7 7%, #f7f7f7 93%, #ffffff 93%);
+  background: linear-gradient(bottom, #e0e0e0 7%, #f7f7f7 7%, #f7f7f7 93%, #ffffff 93%);
 }
 
 .jouele-load-bar-left,
@@ -44,12 +42,11 @@
 .jouele-load-bar-right {
   border-top: 1px solid #a0a0a0;
   border-bottom: 1px solid #ffffff;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #f2f0e5), color-stop(67%, #e7e5d9), color-stop(100%, #bcbaad));
-  background-image: -webkit-linear-gradient(bottom, #f2f0e5 0%, #e7e5d9 67%, #bcbaad 100%);
-  background-image: -moz-linear-gradient(bottom, #f2f0e5 0%, #e7e5d9 67%, #bcbaad 100%);
-  background-image: -o-linear-gradient(bottom, #f2f0e5 0%, #e7e5d9 67%, #bcbaad 100%);
-  background-image: -ms-linear-gradient(bottom, #f2f0e5 0%, #e7e5d9 67%, #bcbaad 100%);
-  background-image: linear-gradient(bottom, #f2f0e5 0%, #e7e5d9 67%, #bcbaad 100%);
+  background: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #f2f0e5), color-stop(67%, #e7e5d9), color-stop(100%, #bcbaad));
+  background: -webkit-linear-gradient(bottom, #f2f0e5 0%, #e7e5d9 67%, #bcbaad 100%);
+  background: -moz-linear-gradient(bottom, #f2f0e5 0%, #e7e5d9 67%, #bcbaad 100%);
+  background: -o-linear-gradient(bottom, #f2f0e5 0%, #e7e5d9 67%, #bcbaad 100%);
+  background: linear-gradient(bottom, #f2f0e5 0%, #e7e5d9 67%, #bcbaad 100%);
 }
 
 .jouele-mine-left,
@@ -87,12 +84,11 @@
 .jouele-play-bar-left {
   border-top: 1px solid #024694;
   border-bottom: 1px solid #ffffff;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #00b9f1), color-stop(67%, #0099f2), color-stop(100%, #0069f2));
-  background-image: -webkit-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
-  background-image: -moz-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
-  background-image: -o-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
-  background-image: -ms-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
-  background-image: linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
+  background: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #00b9f1), color-stop(67%, #0099f2), color-stop(100%, #0069f2));
+  background: -webkit-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
+  background: -moz-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
+  background: -o-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
+  background: linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
 }
 
 .jouele-load-bar {
@@ -131,12 +127,11 @@
   margin-left: -7px;
   box-shadow: 0 1px 2px #808080;
   z-index: 40;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #e3e3e3), color-stop(100%, #fefefd));
-  background-image: -webkit-linear-gradient(bottom, #e3e3e3 0%, #fefefd 100%);
-  background-image: -moz-linear-gradient(bottom, #e3e3e3 0%, #fefefd 100%);
-  background-image: -o-linear-gradient(bottom, #e3e3e3 0%, #fefefd 100%);
-  background-image: -ms-linear-gradient(bottom, #e3e3e3 0%, #fefefd 100%);
-  background-image: linear-gradient(bottom, #e3e3e3 0%, #fefefd 100%);
+  background: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #e3e3e3), color-stop(100%, #fefefd));
+  background: -webkit-linear-gradient(bottom, #e3e3e3 0%, #fefefd 100%);
+  background: -moz-linear-gradient(bottom, #e3e3e3 0%, #fefefd 100%);
+  background: -o-linear-gradient(bottom, #e3e3e3 0%, #fefefd 100%);
+  background: linear-gradient(bottom, #e3e3e3 0%, #fefefd 100%);
   cursor: pointer;
   cursor: hand;
 }
@@ -177,6 +172,8 @@
 .jouele-pause,
 .jouele-download {
   background: url("i/jouele-sprite.png") 16px center;
+  background: url("i/jouele-sprite.svg") 16px center;
+  background-repeat: no-repeat;
 }
 
 .jouele-unavailable {
@@ -236,35 +233,32 @@
 .jouele-skin-dark .jouele-mine {
   border-top: 1px solid #292733;
   border-bottom: 1px solid #575c6a;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(7%, #3b404c), color-stop(7%, #484b54), color-stop(93%, #484b54), color-stop(93%, #4f545f));
-  background-image: -webkit-linear-gradient(bottom, #3b404c 7%, #484b54 7%, #484b54 93%, #4f545f 93%);
-  background-image: -moz-linear-gradient(bottom, #3b404c 7%, #484b54 7%, #484b54 93%, #4f545f 93%);
-  background-image: -o-linear-gradient(bottom, #3b404c 7%, #484b54 7%, #484b54 93%, #4f545f 93%);
-  background-image: -ms-linear-gradient(bottom, #3b404c 7%, #484b54 7%, #484b54 93%, #4f545f 93%);
-  background-image: linear-gradient(bottom, #3b404c 7%, #484b54 7%, #484b54 93%, #4f545f 93%);
+  background: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(7%, #3b404c), color-stop(7%, #484b54), color-stop(93%, #484b54), color-stop(93%, #4f545f));
+  background: -webkit-linear-gradient(bottom, #3b404c 7%, #484b54 7%, #484b54 93%, #4f545f 93%);
+  background: -moz-linear-gradient(bottom, #3b404c 7%, #484b54 7%, #484b54 93%, #4f545f 93%);
+  background: -o-linear-gradient(bottom, #3b404c 7%, #484b54 7%, #484b54 93%, #4f545f 93%);
+  background: linear-gradient(bottom, #3b404c 7%, #484b54 7%, #484b54 93%, #4f545f 93%);
 }
 .jouele-skin-dark .jouele-load-bar-left,
 .jouele-skin-dark .jouele-load-bar,
 .jouele-skin-dark .jouele-load-bar-right {
   border-top: 1px solid #292733;
   border-bottom: 1px solid #575c6a;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #434854), color-stop(67%, #404550), color-stop(100%, #343944));
-  background-image: -webkit-linear-gradient(bottom, #434854 0%, #404550 67%, #343944 100%);
-  background-image: -moz-linear-gradient(bottom, #434854 0%, #404550 67%, #343944 100%);
-  background-image: -o-linear-gradient(bottom, #434854 0%, #404550 67%, #343944 100%);
-  background-image: -ms-linear-gradient(bottom, #434854 0%, #404550 67%, #343944 100%);
-  background-image: linear-gradient(bottom, #434854 0%, #404550 67%, #343944 100%);
+  background: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #434854), color-stop(67%, #404550), color-stop(100%, #343944));
+  background: -webkit-linear-gradient(bottom, #434854 0%, #404550 67%, #343944 100%);
+  background: -moz-linear-gradient(bottom, #434854 0%, #404550 67%, #343944 100%);
+  background: -o-linear-gradient(bottom, #434854 0%, #404550 67%, #343944 100%);
+  background: linear-gradient(bottom, #434854 0%, #404550 67%, #343944 100%);
 }
 .jouele-skin-dark .jouele-play-bar,
 .jouele-skin-dark .jouele-play-bar-left {
   border-top: 1px solid #2d436d;
   border-bottom: 1px solid #66c8fd;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #00b9f1), color-stop(67%, #0099f2), color-stop(100%, #0069f2));
-  background-image: -webkit-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
-  background-image: -moz-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
-  background-image: -o-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
-  background-image: -ms-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
-  background-image: linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
+  background: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #00b9f1), color-stop(67%, #0099f2), color-stop(100%, #0069f2));
+  background: -webkit-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
+  background: -moz-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
+  background: -o-linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
+  background: linear-gradient(bottom, #00b9f1 0%, #0099f2 67%, #0069f2 100%);
 }
 .jouele-skin-dark .jouele-unavailable,
 .jouele-skin-dark .jouele-play,
@@ -274,12 +268,11 @@
 }
 .jouele-skin-dark .jouele-play-lift {
   box-shadow: 0 1px 1px #000;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #ffffff), color-stop(100%, #ededed));
-  background-image: -webkit-linear-gradient(bottom, #ffffff 0%, #ededed 100%);
-  background-image: -moz-linear-gradient(bottom, #ffffff 0%, #ededed 100%);
-  background-image: -o-linear-gradient(bottom, #ffffff 0%, #ededed 100%);
-  background-image: -ms-linear-gradient(bottom, #ffffff 0%, #ededed 100%);
-  background-image: linear-gradient(bottom, #ffffff 0%, #ededed 100%);
+  background: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #ffffff), color-stop(100%, #ededed));
+  background: -webkit-linear-gradient(bottom, #ffffff 0%, #ededed 100%);
+  background: -moz-linear-gradient(bottom, #ffffff 0%, #ededed 100%);
+  background: -o-linear-gradient(bottom, #ffffff 0%, #ededed 100%);
+  background: linear-gradient(bottom, #ffffff 0%, #ededed 100%);
   cursor: pointer;
   cursor: hand;
 }
