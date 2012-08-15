@@ -18,7 +18,6 @@
   margin: 0 8px .375em 8px;
   position: relative;
   border-radius: 8px;
-  box-shadow: 0 2px 16px #f0f0f0;
 }
 
 .jouele-progress-area * {
@@ -147,7 +146,7 @@
 .jouele-info-area {
   position: relative;
   text-align: center;
-  text-shadow: 0px 1px 0px #fff;
+  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
 }
 
 .jouele-play-control {
@@ -171,8 +170,9 @@
 .jouele-play,
 .jouele-pause,
 .jouele-download {
-  background: url("i/jouele-sprite.png") 16px center;
-  background: url("i/jouele-sprite.svg") 16px center;
+  background: 16px center;
+  background-image: url("i/jouele-sprite.png");
+  background-image: url("i/jouele-sprite.svg");
   background-repeat: no-repeat;
 }
 
@@ -225,7 +225,6 @@
   color: #ccc;
 }
 .jouele-skin-dark .jouele-progress-area {
-  box-shadow: 0 2px 8px #fff;
   box-shadow: none;
 }
 .jouele-skin-dark .jouele-mine-left,
@@ -265,6 +264,8 @@
 .jouele-skin-dark .jouele-pause,
 .jouele-skin-dark .jouele-download {
   background-image: url("i/jouele-sprite-skin-dark.png");
+  background-image: url("i/jouele-sprite-skin-dark.svg");
+  background-repeat: no-repeat;
 }
 .jouele-skin-dark .jouele-play-lift {
   box-shadow: 0 1px 1px #000;
@@ -277,6 +278,5 @@
   cursor: hand;
 }
 .jouele-skin-dark .jouele-info-area {
-  text-shadow: 0px -1px 0px black;
-  text-shadow: none;
+  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.5);
 }
