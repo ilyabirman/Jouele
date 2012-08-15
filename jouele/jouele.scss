@@ -163,30 +163,19 @@
 .jouele-pause,
 .jouele-download {
   background: 16px center;
-  background-image: url('i/jouele-sprite.png');
-  background-image: url('i/jouele-sprite.svg');
+  background: url('i/jouele-sprite.png') no-repeat;
+  background: rgba(0,0,0,0) url('i/jouele-sprite.svg') no-repeat;  
   background-repeat: no-repeat; 
 }
   
-
-.jouele-unavailable {
-  background-position: 0px;
-}
-
-.jouele-play {
-  background-position: -16px;
-}
-
-.jouele-pause {
-  background-position: -32px;
-}
 
 .jouele-download {
   position: absolute;
   right: 0;
   width: 16px; height: 16px;
   margin-left: 8px;
-  background-position: -48px;
+  border: none;
+  text-decoration: none;
 }
 
 //*
@@ -274,9 +263,8 @@
   .jouele-play,
   .jouele-pause,
   .jouele-download {
-    background-image: url('i/jouele-sprite-skin-dark.png');
-    background-image: url('i/jouele-sprite-skin-dark.svg');
-    background-repeat: no-repeat; 
+    background: url('i/jouele-sprite-skin-dark.png') no-repeat;
+    background: rgba(0,0,0,0) url('i/jouele-sprite-skin-dark.svg') no-repeat;  
   }
   
   .jouele-play-lift {
@@ -294,4 +282,23 @@
   }
 
   
+}
+
+
+*, .jouele-skin-dark {
+  .jouele-unavailable {
+    background-position: 0px;
+  }
+  
+  .jouele-play {
+    background-position: -16px;
+  }
+  
+  .jouele-pause {
+    background-position: -32px;
+  }
+  
+  .jouele-download {
+    background-position: -48px;
+  }
 }
