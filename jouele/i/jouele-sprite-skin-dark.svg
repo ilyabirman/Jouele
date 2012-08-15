@@ -10,12 +10,12 @@
 		</linearGradient>
 	</defs>
 	<g id="unavailable">
-		<polygon points="3.79 4 7.5 7.7 3.79 9.79" fill="#cccccc" opacity="0.5"/>
-		<polygon points="0 -0.5 0.5 0 11.58 10.08 11.08 10.58" fill="#cccccc" opacity="0.5"/>
-		<polygon points="3.79 1.58 3.79 0.79 11.79 5.29 9.04 6.83" fill="#cccccc" opacity="0.5"/>
-		<polygon points="3.79 5 7.5 8.7 3.79 10.79"/>
-		<polygon points="0 0.5 0.5 0 11.58 11.08 11.08 11.58"/>
-		<polygon points="3.79 2.58 3.79 1.79 11.79 6.29 9.04 7.83"/>
+		<polygon points="3.79 4 7.5 7.7 3.79 9.79" fill="#000000" opacity="0.5"/>
+		<polygon points="0 -0.5 0.5 0 11.58 10.08 11.08 10.58" fill="#000000" opacity="0.5"/>
+		<polygon points="3.79 1.58 3.79 0.79 11.79 5.29 9.04 6.83" fill="#000000" opacity="0.5"/>
+		<polygon points="3.79 5 7.5 8.7 3.79 10.79" fill="#cccccc"/>
+  	<polygon points="0 0.5 0.5 0 11.58 11.08 11.08 11.58" fill="#cccccc"/>
+		<polygon points="3.79 2.58 3.79 1.79 11.79 6.29 9.04 7.83" fill="#cccccc"/>
 	</g>
 	<g id="play">
 		<polygon points="20 1 28 5.5 20 10" fill="#000000" opacity="0.5"/>
