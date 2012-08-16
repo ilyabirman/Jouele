@@ -100,21 +100,17 @@ $ (function () {
 
     $ (thisSelector).append (
       $ ('<div class="jouele-invisible-object"></div>'),
-      $ ('<div class="jouele-progress-area"></div>'),
-      $ ('<div class="jouele-info-area"></div>')
+      $ ('<div class="jouele-info-area"></div>'),
+      $ ('<div class="jouele-progress-area"></div>')
     )
     
     // progress area
     $ (thisSelector).find ('.jouele-progress-area').append (
-      $ ('<div class="jouele-mine-left"></div>'),
-      $ ('<div class="jouele-mine-right"></div>'),
       $ ('<div class="jouele-mine"></div>')
     )
     $ (thisSelector).find ('.jouele-mine').append (
-      $ ('<div class="jouele-load-bar-left jouele-hidden" style="display: none"></div>'),
-      $ ('<div class="jouele-load-bar-right jouele-hidden" style="display: none"></div>'),
+      $ ('<div class="jouele-mine-bar"></div>'),
       $ ('<div class="jouele-load-bar jouele-hidden" style="display: none"></div>'),
-      $ ('<div class="jouele-play-bar-left" style="display: none"></div>'),
       $ ('<div class="jouele-play-bar"></div>'),
       $ ('<div class="jouele-play-lift jouele-hidden" style="display: none">')
     )
@@ -126,9 +122,13 @@ $ (function () {
     $ (thisSelector).find ('.jouele-info-area').append (
       $ ('<a class="jouele-download jouele-hidden" style="display: none"></a>'),
       $ ('<div class="jouele-play-control"></div>'),
-      $ ('<div class="jouele-play-time"></div>'),
-      $ ('<div class="jouele-total-time"></div>'),
+      $ ('<div class="jouele-time"></div>'),
       $ ('<div class="jouele-name">' + thisName + '</div>')
+    )
+    
+    $ (thisSelector).find ('.jouele-time').append (
+      $ ('<div class="jouele-play-time"></div>'),
+      $ ('<div class="jouele-total-time"></div>')
     )
     
     $ (thisSelector).find ('.jouele-play-control').append (
@@ -207,6 +207,8 @@ $ (function () {
       },
       
       play: function (event) { 
+        $ ('.jouele-invisible-object').not (this).parent ().removeClass ('jouele-status-playing')
+        $ (this).parent ().addClass ('jouele-status-playing')
         $ ('.jouele-invisible-object').not (this).jPlayer ('pause')
         $ (this).data ('isDirty', 1)
       },
