@@ -1,5 +1,7 @@
 $ (function () {
 
+  var protectWidth = 8
+    
   var formatTime = function (seconds) {
     
     var sec = Math.round (seconds) % 60
@@ -40,7 +42,8 @@ $ (function () {
   var updateLoadBar = function (playerSelector, seekPercent) {
         
     var maxWidth = $ (playerSelector).find ('.jouele-progress-area').width ()
-    var pixels = Math.floor (Math.min (100, seekPercent) / 100 * maxWidth)
+    var minWidth = protectWidth
+    var pixels = Math.floor (Math.min (100, seekPercent) / 100 * (maxWidth - minWidth)) + protectWidth
 
     $ (playerSelector).find ('.jouele-load-bar').css ('width', pixels + 'px')
     $ (playerSelector).find ('.jouele-load-bar-right').css ('left', pixels + 'px')
@@ -55,16 +58,19 @@ $ (function () {
     } else {
       $ (playerSelector).find ('.jouele-play-bar-left').hide () 
     }
-    $ (playerSelector).find ('.jouele-play-lift').css ('left', pixels + 'px')
+    $ (playerSelector).find ('.jouele-play-lift').css ('left', pixels - (protectWidth/2) + 'px')
     $ (playerSelector).find ('.jouele-play-bar').css ('width', pixels + 'px')
 
   }
 
   var willSeekTo = function (playerSelector, playerObject, tryPixels) {
-
+    
+    tryPixels += (protectWidth/2);
+    
     var maxWidth = $ (playerSelector).find ('.jouele-progress-area').width ()
+    var minWidth = protectWidth
     var loadWidth = $ (playerSelector).find ('.jouele-load-bar').width ()
-    var pixels = Math.min (Math.max (tryPixels, 0), loadWidth)
+    var pixels = Math.min (Math.max (tryPixels, protectWidth), loadWidth)
     var playhead = pixels/maxWidth
     var playheadSeekable = pixels/loadWidth
     
@@ -232,7 +238,10 @@ $ (function () {
         updateLoadBar (thisSelector, event.jPlayer.status.seekPercent)
         
         var maxWidth = $ (thisSelector).find ('.jouele-progress-area').width ()
-        var playpx = Math.floor (event.jPlayer.status.currentTime / $ (thisSelector).data ('totalTime') * (maxWidth))
+        var minWidth = protectWidth
+        var playpx = Math.floor (
+          event.jPlayer.status.currentTime / $ (thisSelector).data ('totalTime') * (maxWidth - minWidth)
+        ) + minWidth
         
         if (event.jPlayer.status.seekPercent >= 100) {
           $ (thisSelector).data ('isExactTotalTime', true)

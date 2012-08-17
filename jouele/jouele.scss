@@ -20,6 +20,7 @@
 .jouele-progress-area {
   position: relative;
   width: 100%;
+  margin: 0 4px;
   height: 16px;
 }
 
@@ -51,6 +52,7 @@
   height: 8px;
   border: 0;
   border-radius: 4px;
+  width: 100%;
   top: 4px;
   z-index: 20;
 	cursor: pointer; cursor: hand;
@@ -75,10 +77,10 @@
 }
 
 .jouele-play-lift {
-  left: 0; top: 0;
+  left: 4px; top: 0px;
   width: 10px; height: 10px;
   border-radius: 5px;
-  margin: 3px -2px;
+  margin: 3px -5px 3px -5px;
 	box-shadow: 0 1px 3px rgba(61,58,12,0.67);
 	z-index: 40;
   @include background(linear-gradient(
@@ -166,7 +168,7 @@
 .jouele-option-hide-progress-when-playing {
   .jouele-progress-area {
     height: 0;
-    overflow: hidden;
+    //overflow: hidden;
     @include transition-property(height);
     @include transition-duration(.33s);
     @include transition-timing-function(ease-out);
@@ -176,7 +178,7 @@
 .jouele-status-playing {
   .jouele-progress-area {
     height: 16px;
-    overflow: visible;
+    //overflow: hidden;
   }
   .jouele-name {
     color: #0d7bd5;
