@@ -206,6 +206,14 @@ $ (function () {
         
       },
       
+      stop: function (event) {
+        $ (this).parent ().removeClass ('jouele-status-playing')
+      },
+      
+      pause: function (event) {
+        $ (this).parent ().removeClass ('jouele-status-playing')
+      },
+      
       play: function (event) { 
         $ ('.jouele-invisible-object').not (this).parent ().removeClass ('jouele-status-playing')
         $ (this).parent ().addClass ('jouele-status-playing')

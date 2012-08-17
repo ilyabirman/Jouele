@@ -14,8 +14,9 @@
 }
 
 .jouele-progress-area {
-  height: 16px;
   position: relative;
+  width: 100%;
+  height: 16px;
 }
 
 .jouele-progress-area * {
@@ -73,11 +74,11 @@
 
 .jouele-play-lift {
   left: 0;
-  top: 0px;
-  width: 16px;
-  height: 16px;
-  border-radius: 8px;
-  margin-left: -8px;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  margin: 3px -2px;
   box-shadow: 0 1px 3px rgba(61, 58, 12, 0.67);
   z-index: 40;
   background: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #e3e3e3), color-stop(100%, #fefefd));
@@ -90,11 +91,11 @@
 }
 
 .jouele-buffering {
-  left: 2px;
-  top: 2px;
-  width: 12px;
-  height: 12px;
-  background: url("i/jouele-buffering.gif");
+  left: 1px;
+  top: 1px;
+  width: 8px;
+  height: 8px;
+  background: url("i/jouele-buffering.gif") no-repeat;
 }
 
 .jouele-info-area {
@@ -173,6 +174,31 @@
   text-align: left;
 }
 
+.jouele-option-hide-progress-when-playing .jouele-progress-area {
+  height: 0;
+  overflow: hidden;
+  -webkit-transition-property: height;
+  -moz-transition-property: height;
+  -o-transition-property: height;
+  transition-property: height;
+  -webkit-transition-duration: 0.33s;
+  -moz-transition-duration: 0.33s;
+  -o-transition-duration: 0.33s;
+  transition-duration: 0.33s;
+  -webkit-transition-timing-function: ease-out;
+  -moz-transition-timing-function: ease-out;
+  -o-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+}
+
+.jouele-status-playing .jouele-progress-area {
+  height: 16px;
+  overflow: visible;
+}
+.jouele-status-playing .jouele-name {
+  color: #0d7bd5;
+}
+
 .jouele-skin-silver .jouele-mine-bar {
   border-color: #929288;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.33), inset 0 1px 0 rgba(255, 255, 255, 0.33);
@@ -220,6 +246,9 @@
 }
 .jouele-skin-dark .jouele-info-area {
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+.jouele-skin-dark .jouele-status-playing .jouele-name {
+  color: #fff;
 }
 
 * .jouele-unavailable, .jouele-skin-dark .jouele-unavailable {

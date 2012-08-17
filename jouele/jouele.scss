@@ -18,8 +18,9 @@
 }
 
 .jouele-progress-area {
-  height: 16px;
   position: relative;
+  width: 100%;
+  height: 16px;
 }
 
 .jouele-progress-area * {
@@ -74,10 +75,10 @@
 }
 
 .jouele-play-lift {
-  left: 0; top: 0px;
-  width: 16px; height: 16px;
-	border-radius: 8px;
-  margin-left: -8px;
+  left: 0; top: 0;
+  width: 10px; height: 10px;
+  border-radius: 5px;
+  margin: 3px -2px;
 	box-shadow: 0 1px 3px rgba(61,58,12,0.67);
 	z-index: 40;
   @include background(linear-gradient(
@@ -89,9 +90,9 @@
 }
 
 .jouele-buffering {
-  left: 2px; top: 2px;
-  width: 12px; height: 12px;
-  background: url('i/jouele-buffering.gif'); 
+  left: 1px; top: 1px;
+  width: 8px; height: 8px;
+  background: url('i/jouele-buffering.gif') no-repeat; 
 }
 
 .jouele-info-area {
@@ -162,6 +163,26 @@
   text-align: left;
 }
 
+.jouele-option-hide-progress-when-playing {
+  .jouele-progress-area {
+    height: 0;
+    overflow: hidden;
+    @include transition-property(height);
+    @include transition-duration(.33s);
+    @include transition-timing-function(ease-out);
+  }
+}
+
+.jouele-status-playing {
+  .jouele-progress-area {
+    height: 16px;
+    overflow: visible;
+  }
+  .jouele-name {
+    color: #0d7bd5;
+  }
+}
+
 
 
 .jouele-skin-silver {
@@ -224,7 +245,12 @@
   .jouele-info-area {
     text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
   }
-
+  
+  .jouele-status-playing {
+    .jouele-name {
+      color: #fff;
+    }
+  }
   
 }
 

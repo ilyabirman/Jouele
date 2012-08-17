@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 13" width="64" height="13">
 	<defs>
 		<linearGradient id="shadow-left" x1="0" y1="0" x2="0" y2="100%" gradientTransform="rotate(-75)">
-			<stop stop-color="#0020FF" offset="0"/>
-			<stop stop-color="#1ABEF1" stop-opacity="0" offset="40%"/>
+			<stop stop-color="#0450c0" offset="0"/>
+			<stop stop-color="#169fde" stop-opacity="0" offset="40%"/>
 		</linearGradient>
 		<linearGradient id="shadow-top" x1="0" y1="0" x2="0" y2="100%" gradientTransform="rotate(15)">
-			<stop stop-color="#0020FF" offset="0"/>
-			<stop stop-color="#1ABEF1" stop-opacity="0" offset="40%"/>
+			<stop stop-color="#0450c0" offset="0"/>
+			<stop stop-color="#169fde" stop-opacity="0" offset="40%"/>
 		</linearGradient>
 	</defs>
 	<g id="unavailable">
