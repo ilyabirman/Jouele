@@ -16,7 +16,6 @@
 .jouele-progress-area {
   position: relative;
   width: 100%;
-  margin: 0 4px;
   height: 16px;
 }
 
@@ -76,7 +75,7 @@
 
 .jouele-play-lift {
   left: 4px;
-  top: 0px;
+  top: 0;
   width: 10px;
   height: 10px;
   border-radius: 5px;
@@ -141,7 +140,7 @@
   width: 16px;
   height: 16px;
   margin-left: 8px;
-  margin-right: -5px;
+  margin-right: -3px;
   border: none;
   text-decoration: none;
 }
@@ -177,26 +176,25 @@
 }
 
 .jouele-option-hide-progress-when-playing .jouele-progress-area {
-  height: 0;
-  -webkit-transition-property: height;
-  -moz-transition-property: height;
-  -o-transition-property: height;
-  transition-property: height;
-  -webkit-transition-duration: 0.33s;
-  -moz-transition-duration: 0.33s;
-  -o-transition-duration: 0.33s;
-  transition-duration: 0.33s;
-  -webkit-transition-timing-function: ease-out;
-  -moz-transition-timing-function: ease-out;
-  -o-transition-timing-function: ease-out;
-  transition-timing-function: ease-out;
+  top: -16px;
+  opacity: 0;
+  -webkit-transition-property: opacity, top;
+  -moz-transition-property: opacity, top;
+  -o-transition-property: opacity, top;
+  transition-property: opacity, top;
+  -webkit-transition-duration: 0.33s, 0.33s;
+  -moz-transition-duration: 0.33s, 0.33s;
+  -o-transition-duration: 0.33s, 0.33s;
+  transition-duration: 0.33s, 0.33s;
+  -webkit-transition-timing-function: ease-out, ease-out;
+  -moz-transition-timing-function: ease-out, ease-out;
+  -o-transition-timing-function: ease-out, ease-out;
+  transition-timing-function: ease-out, ease-out;
 }
 
 .jouele-status-playing .jouele-progress-area {
-  height: 16px;
-}
-.jouele-status-playing .jouele-name {
-  color: #0d7bd5;
+  top: 0;
+  opacity: 1;
 }
 
 .jouele-skin-silver .jouele-mine-bar {

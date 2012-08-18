@@ -1,6 +1,6 @@
 $ (function () {
 
-  var protectWidth = 8
+  var borderRadius = 4
     
   var formatTime = function (seconds) {
     
@@ -42,37 +42,31 @@ $ (function () {
   var updateLoadBar = function (playerSelector, seekPercent) {
         
     var maxWidth = $ (playerSelector).find ('.jouele-progress-area').width ()
-    var minWidth = protectWidth
-    var pixels = Math.floor (Math.min (100, seekPercent) / 100 * (maxWidth - minWidth)) + protectWidth
+    var minWidth = borderRadius*2
+    var pixels = Math.floor (Math.min (100, seekPercent) / 100 * (maxWidth - minWidth)) + minWidth
 
     $ (playerSelector).find ('.jouele-load-bar').css ('width', pixels + 'px')
-    $ (playerSelector).find ('.jouele-load-bar-right').css ('left', pixels + 'px')
     
   }
   
 
   var updatePlayBar = function (playerSelector, pixels) {
-    
-    if (pixels > 0) {
-      $ (playerSelector).find ('.jouele-play-bar-left').show () 
-    } else {
-      $ (playerSelector).find ('.jouele-play-bar-left').hide () 
-    }
-    $ (playerSelector).find ('.jouele-play-lift').css ('left', pixels - (protectWidth/2) + 'px')
-    $ (playerSelector).find ('.jouele-play-bar').css ('width', pixels + 'px')
+
+    $ (playerSelector).find ('.jouele-play-lift').css ('left', pixels  + 'px')//- borderRadius
+    $ (playerSelector).find ('.jouele-play-bar').css ('width', pixels + borderRadius + 'px')
 
   }
 
   var willSeekTo = function (playerSelector, playerObject, tryPixels) {
     
-    tryPixels += (protectWidth/2);
+    //tryPixels += (borderRadius);
     
     var maxWidth = $ (playerSelector).find ('.jouele-progress-area').width ()
-    var minWidth = protectWidth
+    var minWidth = borderRadius*2
     var loadWidth = $ (playerSelector).find ('.jouele-load-bar').width ()
-    var pixels = Math.min (Math.max (tryPixels, protectWidth), loadWidth)
-    var playhead = pixels/maxWidth
-    var playheadSeekable = pixels/loadWidth
+    var pixels = Math.min (Math.max (tryPixels, borderRadius), loadWidth - borderRadius)
+    var playhead = (pixels-borderRadius)/(maxWidth-minWidth)
+    var playheadSeekable = (pixels-borderRadius)/(loadWidth-minWidth)
     
     if ((maxWidth == 0) || (loadWidth == 0)) playheadSeekable = playhead = 0
     
@@ -203,6 +197,7 @@ $ (function () {
         $ (document.body).mouseup (function () { isMouseDown = false })
         
         $ (document.body).mousemove (function (e) {
+          //document.title = e.pageX - $ (thisSelector).find ('.jouele-mine').offset ().left
           if (isMouseDown) {
             e.stopPropagation ()
             e.preventDefault ()
@@ -238,10 +233,12 @@ $ (function () {
         updateLoadBar (thisSelector, event.jPlayer.status.seekPercent)
         
         var maxWidth = $ (thisSelector).find ('.jouele-progress-area').width ()
-        var minWidth = protectWidth
+        var minWidth = borderRadius*2
         var playpx = Math.floor (
           event.jPlayer.status.currentTime / $ (thisSelector).data ('totalTime') * (maxWidth - minWidth)
-        ) + minWidth
+        ) + borderRadius
+        
+        // document.title = event.jPlayer.status.currentTime / $ (thisSelector).data ('totalTime') + '|' + minWidth + '|' + maxWidth + '|' + playpx
         
         if (event.jPlayer.status.seekPercent >= 100) {
           $ (thisSelector).data ('isExactTotalTime', true)
