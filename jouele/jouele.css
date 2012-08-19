@@ -100,6 +100,7 @@
 }
 
 .jouele-info-area {
+  z-index: 100;
   position: relative;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.67);
 }
@@ -148,7 +149,6 @@
 .jouele-time {
   float: right;
   min-width: 120px;
-  height: 100%;
   min-height: 1em;
   font-size: 11px;
   line-height: 18px;
@@ -175,13 +175,14 @@
   text-align: left;
 }
 
-.jouele-option-hide-progress-when-playing .jouele-progress-area {
-  top: -16px;
+.jouele-option-progress-when-playing .jouele-progress-area {
+  margin-top: -16px;
+  top: 0;
   opacity: 0;
-  -webkit-transition-property: opacity, top;
-  -moz-transition-property: opacity, top;
-  -o-transition-property: opacity, top;
-  transition-property: opacity, top;
+  -webkit-transition-property: opacity, margin-top;
+  -moz-transition-property: opacity, margin-top;
+  -o-transition-property: opacity, margin-top;
+  transition-property: opacity, margin-top;
   -webkit-transition-duration: 0.33s, 0.33s;
   -moz-transition-duration: 0.33s, 0.33s;
   -o-transition-duration: 0.33s, 0.33s;
@@ -193,7 +194,7 @@
 }
 
 .jouele-status-playing .jouele-progress-area {
-  top: 0;
+  margin-top: 0;
   opacity: 1;
 }
 
