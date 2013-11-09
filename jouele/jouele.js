@@ -150,7 +150,8 @@
       }).eq (0)
 
       if ($exists.size ()) {
-        swfPath = ($exists.attr ('src').slice (0, -1 - filename.length)) + '/jplayer.swf'
+        var l = $exists.attr ('src').lastIndexOf ('/')
+        swfPath = ($exists.attr ('src').substr (0, l)) + '/jplayer.swf'
       }
 
       if (swfPathA = $aHref.attr ('data-swfSource')) swfPath = swfPathA
