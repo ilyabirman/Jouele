@@ -1,3 +1,4 @@
+// Jouele 0.6 by Ilya Birman, ilyabirman.net //
 (function ($) {
 
   $ (function () {
