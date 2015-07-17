@@ -276,6 +276,10 @@
                 self.$container.find(".jouele-unavailable").addClass("jouele-hidden");
 
                 self.$container.find(".jouele-mine").on("mousedown." + uniqueID, function(event) {
+                    if (event.which !== 1) {
+                        return false;
+                    }
+
                     event.stopPropagation();
                     event.preventDefault();
 
