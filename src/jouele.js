@@ -67,7 +67,9 @@
             instance.$container.find(".jouele-total-time").text(totalTime);
         }
 
-        instance.$container.find(".jouele-play-time").text(playedTime);
+        if (instance.isPlaying || instance.waitForLoad) {
+            instance.$container.find(".jouele-play-time").text(playedTime);
+        }
 
         return instance;
     };
@@ -192,7 +194,7 @@
             return [
                 $(document.createElement("a")).addClass("jouele-download jouele-hidden"),
                 $(document.createElement("div")).addClass("jouele-play-control").append(
-                    $(document.createElement("div")).addClass("jouele-unavailable jouele-to-hide"),
+                    $(document.createElement("div")).addClass("jouele-unavailable"),
                     $(document.createElement("div")).addClass("jouele-play-pause jouele-hidden").append(
                         $(document.createElement("div")).addClass("jouele-play"),
                         $(document.createElement("div")).addClass("jouele-pause").css({"display": "none"})
@@ -270,8 +272,8 @@
                 });
 
                 self.$container.find(".jouele-download").attr("href", audiofileLink);
-                self.$container.find(".jouele-hidden").show();
-                self.$container.find(".jouele-to-hide").hide();
+                self.$container.find(".jouele-hidden").removeClass("jouele-hidden");
+                self.$container.find(".jouele-unavailable").addClass("jouele-hidden");
 
                 self.$container.find(".jouele-mine").on("mousedown." + uniqueID, function(event) {
                     event.stopPropagation();

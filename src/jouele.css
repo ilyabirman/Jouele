@@ -130,6 +130,7 @@
 .jouele-info-area {
     z-index: 100;
     position: relative;
+    overflow: hidden;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.67);
 }
 
@@ -175,31 +176,31 @@
 
 .jouele-time {
     float: right;
-    min-width: 120px;
-    min-height: 1em;
     font-size: 11px;
     line-height: 18px;
     top: 2px;
+    margin: 0 20px 0 0;
     color: #606060;
-    margin-left: 1em;
     text-align: right;
     white-space: nowrap;
 }
 
 .jouele-play-time {
-    display: inline;
-    margin-right: .6em;
+    float: left;
+    margin-right: .5em;
 }
 
 .jouele-total-time {
-    display: inline;
-    margin-right: 20px;
+    float: right;
 }
 
 .jouele-name {
-    margin: 0 16px;
+    margin: 0 0 0 16px;
+    padding: 0 20px 0 0;
     min-height: 16px;
     text-align: left;
+    overflow: hidden;
+    word-wrap: break-word;
 }
 
 .jouele-option-progress-when-playing .jouele-progress-area {
