@@ -2,7 +2,7 @@
 
     "use strict";
 
-    var formatTime = function (rawSeconds) {
+    var formatTime = function(rawSeconds) {
         var seconds = Math.round(rawSeconds) % 60,
             minutes = ((Math.round(rawSeconds) - seconds) % 3600) / 60,
             hours = (Math.round(rawSeconds) - seconds - (minutes * 60)) / 3600;
@@ -10,50 +10,78 @@
         return (hours ? (hours + ":") : "") + ((hours && (minutes < 10)) ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
     };
 
-    var updateLoadBar = function(instance, seekPercent) {
-        instance.seekable = seekPercent;
-        instance.$container.find(".jouele-load-bar").css({"width": Math.floor(Math.min(100, seekPercent)) + "%"});
+    var showPreloader = function(instance) {
+        instance.$container.find(".jouele-buffering").addClass("jouele-buffering_visible_true");
+
+        return instance;
+    };
+
+    var hidePreloader = function(instance) {
+        instance.$container.find(".jouele-buffering").removeClass("jouele-buffering_visible_true");
+
+        return instance;
+    };
+
+    var updateLoadBar = function(instance, status) {
+        if (instance.fullyLoaded && instance.totalTime) {
+            return false;
+        }
+
+        if (status.seekPercent >= 100) {
+            instance.fullyLoaded = true;
+            instance.totalTime = status.duration;
+        } else if (status.seekPercent > 0) {
+            instance.totalTime = status.duration;
+        } else {
+            instance.totalTime = 0;
+        }
+
+        instance.$container.find(".jouele-load-bar").css({"width": Math.floor(Math.min(100, status.seekPercent)) + "%"});
+
+        return instance;
     };
 
     var updatePlayBar = function(instance, percents) {
         instance.$container.find(".jouele-play-lift").css("left", percents  + "%");
         instance.$container.find(".jouele-play-bar").css("width", percents + "%");
+
+        return instance;
     };
 
     var updateTimeDisplay = function(instance, seconds) {
-        var playedTime = "",
-            totalTime = "";
-
-        if (!instance.everPlayed) {
+        if (instance.totalTime <= 0) {
             return false;
         }
 
-        if (seconds >= 0) {
-            playedTime = formatTime(seconds);
-        }
+        var playedTime = formatTime(seconds),
+            totalTime = "";
 
-        if (instance.totalTime > 0) {
-            if (instance.fullyLoaded) {
-                if (!instance.fullTimeDisplayed) {
-                    totalTime = formatTime(instance.totalTime);
-                    instance.$container.find(".jouele-total-time").text(totalTime);
-                    instance.fullTimeDisplayed = true;
-                }
-            } else {
-                totalTime = "~ " + formatTime(instance.totalTime);
+        if (instance.fullyLoaded) {
+            if (!instance.fullTimeDisplayed) {
+                totalTime = formatTime(instance.totalTime);
                 instance.$container.find(".jouele-total-time").text(totalTime);
+                instance.fullTimeDisplayed = true;
             }
+        } else {
+            totalTime = "~ " + formatTime(instance.totalTime);
+            instance.$container.find(".jouele-total-time").text(totalTime);
         }
 
         instance.$container.find(".jouele-play-time").text(playedTime);
+
+        return instance;
     };
 
     var willSeekTo = function(instance, seekPercent) {
-        var seekPercent = seekPercent.toFixed(2);
+        var percent = seekPercent.toFixed(2);
 
-        updatePlayBar(instance, seekPercent);
+        updatePlayBar(instance, percent);
+        showPreloader(instance);
 
-        instance.$jPlayer.jPlayer("play").jPlayer("playHead", seekPercent);
+        instance.waitForLoad = true;
+        instance.$jPlayer.jPlayer("playHead", percent);
+
+        return instance;
     };
 
     $.fn.jouele = function(options) {
@@ -74,18 +102,19 @@
         swfPath: "./jplayer/",
         swfFilename: "jplayer.swf",
         supplied: "mp3",
-        volume: 1
+        volume: 1,
+        scrollOnSpace: false,
+        pauseOnSpace: true
     };
 
     function Jouele($link, options) {
         this.$link = $link;
         this.options = options;
         this.isPlaying = false;
-        this.everPlayed = false;
-        this.seekable = 0;
         this.totalTime = 0;
         this.fullyLoaded = false;
         this.fullTimeDisplayed = false;
+        this.waitForLoad = false;
         this.init();
     }
 
@@ -150,7 +179,6 @@
         $(document).trigger("jouele-stop", this);
         this.$container.addClass("jouele-status-playing");
         this.isPlaying = true;
-        this.everPlayed = true;
     };
 
     Jouele.prototype.createDOM = function createDOM() {
@@ -184,7 +212,7 @@
                 $(document.createElement("div")).addClass("jouele-load-bar jouele-hidden"),
                 $(document.createElement("div")).addClass("jouele-play-bar"),
                 $(document.createElement("div")).addClass("jouele-play-lift jouele-hidden").append(
-                    $(document.createElement("div")).addClass("jouele-buffering jouele-hidden")
+                    $(document.createElement("div")).addClass("jouele-buffering")
                 )
             );
         };
@@ -285,24 +313,19 @@
                 self.onPlay.call(self);
             },
             progress: function(event) {
-                updateLoadBar(self, event.jPlayer.status.seekPercent);
+                updateLoadBar(self, event.jPlayer.status);
+                updateTimeDisplay(self, event.jPlayer.status.currentTime);
             },
             timeupdate: function(event) {
-                updateLoadBar(self, event.jPlayer.status.seekPercent);
-
-                var percents = event.jPlayer.status.currentPercentAbsolute.toFixed(2);
-
-                if (event.jPlayer.status.seekPercent >= 100) {
-                    self.fullyLoaded = true;
-                    self.totalTime = event.jPlayer.status.duration;
-                } else if (event.jPlayer.status.seekPercent > 0) {
-                    self.totalTime = event.jPlayer.status.duration;
-                } else {
-                    self.totalTime = 0;
-                }
-
-                updatePlayBar(self, percents);
+                updateLoadBar(self, event.jPlayer.status);
                 updateTimeDisplay(self, event.jPlayer.status.currentTime);
+                updatePlayBar(self, event.jPlayer.status.currentPercentAbsolute.toFixed(2));
+
+                if (self.waitForLoad) {
+                    self.waitForLoad = false;
+                    self.$jPlayer.jPlayer("play");
+                    hidePreloader(self);
+                }
             }
         });
 
@@ -335,6 +358,19 @@
         $(document).on("jouele-stop." + uniqueID, function() {
             if (self.isPlaying) {
                 self.$jPlayer.jPlayer("pause");
+            }
+        });
+
+        $(document).on("keydown." + uniqueID, function(event) {
+            if (event.keyCode === 32) {
+                if (self.isPlaying && self.options.pauseOnSpace) {
+                    if (!self.options.scrollOnSpace) {
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
+
+                    self.$jPlayer.jPlayer("pause");
+                }
             }
         });
 
