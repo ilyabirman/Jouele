@@ -80,12 +80,12 @@
 }
 
 .jouele-play-lift {
-    left: 4px;
-    top: -4px;
+    left: 0;
+    top: 0;
     width: 10px;
     height: 10px;
-    border-radius: 5px;
-    margin: 3px -5px 3px -5px;
+    margin: -1px 0 0 -5px;
+    border-radius: 50%;
     box-shadow: 0 1px 3px rgba(61, 58, 12, 0.67);
     z-index: 40;
     background: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #e3e3e3), color-stop(100%, #fefefd));
@@ -98,10 +98,11 @@
 }
 
 .jouele-buffering {
-    left: 1px;
-    top: 1px;
+    left: 50%;
+    top: 50%;
     width: 8px;
     height: 8px;
+    margin: -4px 0 0 -4px;
     background: url("i/jouele-buffering.gif") no-repeat 0 0;
 }
 
@@ -166,12 +167,12 @@
 
 .jouele-play-time {
     display: inline;
-    margin-right: .5em;
+    margin-right: .6em;
 }
 
 .jouele-total-time {
     display: inline;
-    margin-right: 16px;
+    margin-right: 20px;
 }
 
 .jouele-name {
