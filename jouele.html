@@ -15,18 +15,26 @@
 <body>
 
     <style>
-        html, body { margin: 0; padding: 0; }
-        .wrapper { padding: 50px; }
-        .wrapper-line { padding: 0 0 50px; }
+        html, body { margin: 0; padding: 0; background: #fff; font-family: "Helvetica", "Arial", sans-serif; font-size: 14px; line-height: 1.2; color: #000; }
+        .wrapper-line { padding: 50px; }
+        .wrapper-line_black { background: #000; color: #fff; }
+        .wrapper-header { font-size: 1.4em; line-height: 1.3; font-weight: 400; padding: 0; margin: 0 0 0.75em; }
     </style>
 
     <div class="wrapper">
         <div class="wrapper-line">
-            <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele">Ilya Birman – News</a>
+            <h1 class="wrapper-header">data-length="9:54"</h1>
+            <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele" data-length="9:54">Ilya Birman – News</a>
         </div>
 
         <div class="wrapper-line">
-            <a href="http://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Axiom.mp3" class="jouele" data-pause-on-space="false">Ilya Birman – Axiom (No pause on space)</a>
+            <h1 class="wrapper-header">data-pause-on-space="false"</h1>
+            <a href="http://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Axiom.mp3" class="jouele" data-pause-on-space="false">Ilya Birman – Axiom</a>
+        </div>
+
+        <div class="wrapper-line">
+            <h1 class="wrapper-header">data-hide-timeline-on-pause="true"</h1>
+            <a href="http://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Skin%20Care.mp3" class="jouele" data-hide-timeline-on-pause="true">Ilya Birman – Skin Care</a>
         </div>
     </div>
 
