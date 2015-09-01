@@ -74,28 +74,44 @@
     cursor: pointer;
 }
 .jouele-play-bar:after {
-    background: #f59331;
+    background-color: #000;
+    transition: background-color 0.14s linear;
+}
+.jouele-status-playing  .jouele-play-bar:after {
+    background-color: #f59331;
+}
+.jouele-mine:hover .jouele-play-bar:after {
+    background-color: #d04000;
 }
 
 .jouele-play-lift {
     left: 0;
     top: 50%;
-    width: 4px;
-    height: 4px;
-    margin: -1px 0 0;
+    width: 5px;
+    height: 5px;
+    margin: -2px 0 0;
     border-radius: 50%;
     z-index: 40;
-    background: #f59331;
+    background-color: #000;
     cursor: pointer;
     position: absolute;
+    transition: width 0.14s linear, height 0.14s linear, margin 0.14s linear, background-color 0.14s linear;
+}
+.jouele-status-playing  .jouele-play-lift {
+    background-color: #f59331;
+}
+.jouele-mine:hover .jouele-play-lift {
+    background-color: #d04000;
+    width: 9px;
+    height: 9px;
+    margin-top: -4px;
+    margin-left: -2px;
 }
 
 .jouele-buffering {
     position: absolute;
     left: -3px;
     top: -3px;
-    width: 8px;
-    height: 8px;
     opacity: 0;
     -webkit-transition-property: opacity;
     -moz-transition-property: opacity;
@@ -116,17 +132,17 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 8px;
-    height: 8px;
+    width: 9px;
+    height: 9px;
     margin: 0 auto;
     border: 1px solid;
     border-radius: 50%;
     border-color: #f59331 #f59331 transparent;
-    animation: cssload-spin 960ms infinite linear;
-    -o-animation: cssload-spin 960ms infinite linear;
-    -ms-animation: cssload-spin 960ms infinite linear;
-    -webkit-animation: cssload-spin 960ms infinite linear;
-    -moz-animation: cssload-spin 960ms infinite linear;
+    animation: cssload-spin 1.33s infinite linear;
+    -o-animation: cssload-spin 1.33s infinite linear;
+    -ms-animation: cssload-spin 1.33s infinite linear;
+    -webkit-animation: cssload-spin 1.33s infinite linear;
+    -moz-animation: cssload-spin 1.33s infinite linear;
 }
 
 .jouele-buffering_visible_true {
@@ -138,7 +154,7 @@
 }
 
 @keyframes cssload-spin {
-    100%{ transform: rotate(360deg); transform: rotate(360deg); }
+    100%{ transform: rotate(360deg); }
 }
 
 @-o-keyframes cssload-spin {
@@ -163,6 +179,7 @@
     position: relative;
     overflow: hidden;
     padding: 0 0 2px;
+    margin: 0 0 0 -3px;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.67);
 }
 
@@ -170,7 +187,6 @@
     float: left;
     width: 16px;
     height: 16px;
-    cursor: pointer;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -185,23 +201,29 @@
 .jouele-play,
 .jouele-pause {
     display: block;
+    height: 100%;
+}
+.jouele-play-pause {
+    cursor: pointer;
+}
+.jouele-svg {
+    vertical-align: top;
+    width: 16px;
     height: 16px;
-    background-repeat: no-repeat;
-    background: url("../dist/i/jouele-sprite.png");
-    background: rgba(0, 0, 0, 0) url("../dist/i/jouele-sprite.svg");
-    background-size: auto 16px;
 }
-
-.jouele-unavailable {
-    background-position: 0 0;
+.jouele-svg-color {
+    transition: fill 0.14s linear;
 }
-
-.jouele-play {
-    background-position: -17px 0;
+.jouele-unavailable .jouele-svg-color,
+.jouele-play .jouele-svg-color {
+    fill: #010101;
 }
-
-.jouele-pause {
-    background-position: -34px 0;
+.jouele-pause .jouele-svg-color {
+    fill: #f59331;
+}
+.jouele-play-control:hover .jouele-play .jouele-svg-color,
+.jouele-play-control:hover .jouele-pause .jouele-svg-color {
+    fill: #d04000;
 }
 
 .jouele-time {

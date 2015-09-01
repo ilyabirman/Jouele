@@ -2,6 +2,20 @@
 
     "use strict";
 
+    var isSVGSupported = false;
+    var checkSVGSupport = function () {
+        /* https://css-tricks.com/a-complete-guide-to-svg-fallbacks/ */
+        var div = document.createElement("div");
+        div.innerHTML = "<svg/>";
+        return (div.firstChild && div.firstChild.namespaceURI) == "http://www.w3.org/2000/svg";
+    };
+    var setSVGSupport = function() {
+        if ((typeof Modernizr === "object" && typeof Modernizr.inlinesvg === "boolean" && Modernizr.inlinesvg) || checkSVGSupport()) {
+            isSVGSupported = true;
+        }
+        return this;
+    };
+
     var formatTime = function(rawSeconds) {
         var seconds = Math.round(rawSeconds) % 60,
             minutes = ((Math.round(rawSeconds) - seconds) % 3600) / 60,
@@ -277,10 +291,16 @@
                 ),
                 $(document.createElement("div")).addClass("jouele-control").append(
                     $(document.createElement("div")).addClass("jouele-play-control").append(
-                        $(document.createElement("div")).addClass("jouele-unavailable"),
+                        $(document.createElement("div")).addClass("jouele-unavailable").html(
+                            isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><g fill="#fff"><path opacity=".5" d="m4 7.7l3.8 3.7-3.8 2.1z"/><path opacity=".5" d="m.2 3.2l.6-.5 11 11.1-.5.5z"/><path opacity=".5" d="m4 5.3v-.8l8 4.5-2.7 1.5z"/></g><g class="jouele-svg-color"><path d="m4 6.7l3.8 3.7-3.8 2.1z"/><path d="m.2 2.2l.6-.5 11 11.1-.5.5z"/><path d="m4 4.3v-.8l8 4.5-2.7 1.5z"/></g></svg>' : ''
+                        ),
                         $(document.createElement("a")).attr("href", self.$link.attr("href")).addClass("jouele-play-pause jouele-hidden").append(
-                            $(document.createElement("span")).addClass("jouele-play"),
-                            $(document.createElement("span")).addClass("jouele-pause jouele-hidden")
+                            $(document.createElement("span")).addClass("jouele-play").html(
+                                isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path opacity=".5" fill="#fff" d="m4 4.5l8 4.5-8 4.5z"/><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>': ''
+                            ),
+                            $(document.createElement("span")).addClass("jouele-pause jouele-hidden").html(
+                                isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path opacity=".5" fill="#fff" d="m4 4.5l8 4.5-8 4.5z"/><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>': ''
+                            )
                         )
                     ),
                     $(document.createElement("div")).addClass("jouele-control-text").html(filename)
@@ -450,6 +470,8 @@
         return this;
     };
 
+    /* It's time to know if SVG supported */
+    setSVGSupport();
 
     /* Autoload Jouele */
     var autoLoadJouele = function() {
