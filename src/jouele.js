@@ -302,7 +302,7 @@
                             isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><g fill="#fff"><path opacity=".5" d="m4 7.7l3.8 3.7-3.8 2.1z"/><path opacity=".5" d="m.2 3.2l.6-.5 11 11.1-.5.5z"/><path opacity=".5" d="m4 5.3v-.8l8 4.5-2.7 1.5z"/></g><g class="jouele-svg-color"><path d="m4 6.7l3.8 3.7-3.8 2.1z"/><path d="m.2 2.2l.6-.5 11 11.1-.5.5z"/><path d="m4 4.3v-.8l8 4.5-2.7 1.5z"/></g></svg>' : ''
                         ),
                         $(document.createElement("a")).attr("href", self.$link.attr("href")).addClass("jouele-control-link jouele-hidden").append(
-                            $(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_play").html(
+                            $(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_play jouele-hidden").html(
                                 isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path opacity=".5" fill="#fff" d="m4 4.5l8 4.5-8 4.5z"/><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>': ''
                             ),
                             $(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_pause jouele-hidden").html(

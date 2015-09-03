@@ -174,7 +174,7 @@
 .jouele-control {
     overflow: hidden;
     font-size: 13px;
-    line-height: 1 !important;
+    line-height: 1;
 }
 
 .jouele-control-button {
@@ -185,10 +185,14 @@
     user-select: none;
 }
 .jouele-control-link {
-    display: block;
     cursor: pointer;
-    text-decoration: none !important;   /* Для любителей каскадных стилей на своих сайтах */
-    border: 0 !important;               /* Для любителей каскадных стилей на своих сайтах */
+    /* Перекрываем все возможные каскады на сайте */
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    display: block !important;
+    text-decoration: none !important;
+    border: 0 !important;
 }
 .jouele-control-button-icon {
     display: block;
@@ -215,7 +219,7 @@
 }
 .jouele-control-text {
     color: #000;
-    line-height: 1.2 !important;
+    line-height: 1.2;
     padding: 0 2em 0 0;
     overflow: hidden;
     word-wrap: break-word;
