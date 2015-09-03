@@ -174,7 +174,7 @@
 .jouele-control {
     overflow: hidden;
     font-size: 13px;
-    line-height: 1;
+    line-height: 1 !important;
 }
 
 .jouele-control-button {
@@ -215,7 +215,7 @@
 }
 .jouele-control-text {
     color: #000;
-    line-height: 1.2;
+    line-height: 1.2 !important;
     padding: 0 2em 0 0;
     overflow: hidden;
     word-wrap: break-word;
