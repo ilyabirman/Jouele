@@ -40,7 +40,7 @@
     };
 
     var showPreloader = function(instance) {
-        if (instance.preloaderTimeout) {
+        if (instance.preloaderTimeout || !instance.waitForLoad) {
             return instance;
         }
 
