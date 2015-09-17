@@ -326,6 +326,12 @@
             );
         };
 
+        /*
+         <div class="la-ball-clip-rotate la-dark la-sm">
+         <div></div>
+         </div>
+         */
+
         this.$container = $container
             .data("jouele", this)
             .addClass("jouele" + (this.options.hideTimelineOnPause ? " jouele_timeline_hide" : ""))

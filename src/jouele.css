@@ -111,54 +111,88 @@
 }
 
 .jouele-buffering {
+    width: 200%;
+    height: 200%;
+    display: block;
+    font-size: 0;
     position: absolute;
-    left: -3px;
-    top: -3px;
+    left: -61%;
+    top: -63%;
     opacity: 0;
-    transition: opacity 0.33s ease-out;
 }
-
 .jouele-buffering:after {
     content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 9px;
-    height: 9px;
-    margin: 0 auto;
-    border: 1px solid;
-    border-radius: 50%;
-    border-color: #f59331 #f59331 transparent;
-    animation: cssload-spin 1.33s infinite linear;
-    -o-animation: cssload-spin 1.33s infinite linear;
-    -ms-animation: cssload-spin 1.33s infinite linear;
-    -webkit-animation: cssload-spin 1.33s infinite linear;
-    -moz-animation: cssload-spin 1.33s infinite linear;
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #000;
+    background: transparent;
+    border-bottom-color: transparent;
+    border-radius: 100%;
+    transition: border-color 0.14s linear, width 0.14s linear, height 0.14s linear;
+    -webkit-animation: ball-clip-rotate .75s linear infinite;
+    -moz-animation: ball-clip-rotate .75s linear infinite;
+    -o-animation: ball-clip-rotate .75s linear infinite;
+    animation: ball-clip-rotate .75s linear infinite;
+}
+.jouele-status-playing .jouele-buffering:after {
+    border-color: #f59331;
+    border-bottom-color: transparent;
+}
+.jouele-mine:hover .jouele-buffering:after {
+    border-color: #d04000;
+    border-bottom-color: transparent;
+    transition: none;
+}
+@-webkit-keyframes ball-clip-rotate {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+@-moz-keyframes ball-clip-rotate {
+    0% {
+        -moz-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+@-o-keyframes ball-clip-rotate {
+    0% {
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+@keyframes ball-clip-rotate {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
 
 .jouele-buffering_visible_true {
     opacity: 1;
-    transition-timing-function: ease-in;
-}
-
-@keyframes cssload-spin {
-    100%{ transform: rotate(360deg); }
-}
-
-@-o-keyframes cssload-spin {
-    100%{ -o-transform: rotate(360deg); transform: rotate(360deg); }
-}
-
-@-ms-keyframes cssload-spin {
-    100%{ -ms-transform: rotate(360deg); transform: rotate(360deg); }
-}
-
-@-webkit-keyframes cssload-spin {
-    100%{ -webkit-transform: rotate(360deg); transform: rotate(360deg); }
-}
-
-@-moz-keyframes cssload-spin {
-    100%{ -moz-transform: rotate(360deg); transform: rotate(360deg); }
 }
 
 
@@ -218,7 +252,6 @@
     transition: none;
 }
 .jouele-control-text {
-    color: #000;
     line-height: 1.2;
     padding: 0 2em 0 0;
     overflow: hidden;
