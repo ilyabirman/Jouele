@@ -1,1 +1,496 @@
-!function(e){"use strict";function t(e,t){this.version="2.0.0",this.$link=e,this.options=t,this.isPlaying=!1,this.isPlayed=!1,this.totalTime=0,this.fullyLoaded=!1,this.fullTimeDisplayed=!1,this.waitForLoad=!1,this.seekTime=0,this.isPreloaderVisible=!1,this.preloaderTimeout=null,this.isSeeking=!1,this.init()}var n=!1,o=function(){var e=document.createElement("div");return e.innerHTML="<svg/>","http://www.w3.org/2000/svg"==(e.firstChild&&e.firstChild.namespaceURI)},i=function(){return("object"==typeof Modernizr&&"boolean"==typeof Modernizr.inlinesvg&&Modernizr.inlinesvg||o())&&(n=!0),this},a=function(e){var t=Math.round(e)%60,n=(Math.round(e)-t)%3600/60,o=(Math.round(e)-t-60*n)/3600;return(o?o+":":"")+(o&&10>n?"0"+n:n)+":"+(10>t?"0"+t:t)},l=function(e){if("number"==typeof e)return e;for(var t=e.split(":").reverse(),n=0,o=0;o<t.length;o++)n+=t[o]*Math.pow(60,o);return n},s=function(e){return e.preloaderTimeout||!e.waitForLoad?e:(e.preloaderTimeout=setTimeout(function(){return e.isSeeking?(e.preloaderTimeout=null,e):(e.isPreloaderVisible=!0,void e.$container.find(".jouele-buffering").addClass("jouele-buffering_visible_true"))},500),e)},r=function(e){return e.preloaderTimeout?(e.isPreloaderVisible=!1,clearTimeout(e.preloaderTimeout),e.preloaderTimeout=null,e.$container.find(".jouele-buffering").removeClass("jouele-buffering_visible_true"),e):e},u=function(e,t){return e.fullyLoaded&&e.totalTime||!e.isPlayed?e:(t.seekPercent>=100?(e.fullyLoaded=!0,e.totalTime=t.duration):t.seekPercent>0?e.totalTime=t.duration:e.totalTime=0,e.$container.find(".jouele-load-bar").css({width:Math.floor(Math.min(100,t.seekPercent))+"%"}),e)},d=function(e,t){return e.$container.find(".jouele-play-lift").css("left",t+"%"),e.$container.find(".jouele-play-bar").css("width",t+"%"),e},c=function(e,t){if(e.totalTime<=0&&!e.options.length)return e;var n="";return e.fullyLoaded&&e.totalTime?e.fullTimeDisplayed||(n=a(e.totalTime),e.$container.find(".jouele-total-time").text(n),e.fullTimeDisplayed=!0):e.options.length?(n=a(l(e.options.length)),e.$container.find(".jouele-total-time").text(n)):(n=e.options.length?e.options.length:"≈ "+a(e.totalTime),e.$container.find(".jouele-total-time").text(n)),(e.isPlaying||e.waitForLoad)&&(e.totalTime||e.seekTime)&&e.$container.find(".jouele-play-time").text(a(e.seekTime?e.seekTime:t)),e},p=function(e,t){var n=t.toFixed(2);return 0>n?n=0:n>100&&(n=100),d(e,n),s(e),e.waitForLoad=!0,e.$jPlayer.jPlayer("playHead",n),e.pseudoPlay(),e.fullTimeDisplayed?(e.seekTime=e.totalTime/100*n,c(e,e.seekTime)):e.options.length&&(e.seekTime=l(e.options.length)/100*n,c(e,e.seekTime)),e};e.fn.jouele=function(n){return this.each(function(){var o=e(this),i=o.data("jouele");i||new t(o,e.extend({},e.fn.jouele.defaults,n,o.data()))})},e.fn.jouele.defaults={swfPath:"./jplayer/",swfFilename:"jplayer.swf",supplied:"mp3",volume:1,length:0,scrollOnSpace:!1,pauseOnSpace:!0,hideTimelineOnPause:!1},t.prototype.init=function(){this.createDOM(),this.initPlayerPlugin(),this.bindEvents(),this.insertDOM()},t.prototype.destroy=function(){var t=this.$container.attr("id");return this.$container.after(this.$link).remove(),e(document).off("."+t),this.$link},t.prototype.pause=function(){return this.waitForLoad=!1,r(this),"undefined"!=typeof this.$jPlayer&&this.$jPlayer.jPlayer&&this.isPlaying&&this.$jPlayer.jPlayer("pause"),this.isPlaying||this.pseudoPause(),this},t.prototype.pseudoPause=function(){this.$container.removeClass("jouele-status-playing"),this.$container.find(".jouele-control-button-icon_play").removeClass("jouele-hidden"),this.$container.find(".jouele-control-button-icon_pause").addClass("jouele-hidden")},t.prototype.stop=function(){return"undefined"!=typeof this.$jPlayer&&this.$jPlayer.jPlayer&&this.isPlaying&&this.$jPlayer.jPlayer("stop"),this},t.prototype.play=function(){return s(this),"undefined"!=typeof this.$jPlayer&&this.$jPlayer.jPlayer&&(this.isPlaying||this.$jPlayer.jPlayer("play")),this},t.prototype.pseudoPlay=function(){e(document).trigger("jouele-pause",this),this.$container.addClass("jouele-status-playing"),this.$container.find(".jouele-control-button-icon_pause").removeClass("jouele-hidden"),this.$container.find(".jouele-control-button-icon_play").addClass("jouele-hidden")},t.prototype.onPause=function(){this.isPlaying=!1,this.$container.removeClass("jouele-status-playing"),this.$container.find(".jouele-control-button-icon_play").removeClass("jouele-hidden"),this.$container.find(".jouele-control-button-icon_pause").addClass("jouele-hidden")},t.prototype.onStop=function(){this.isPlaying=!1,this.$container.removeClass("jouele-status-playing")},t.prototype.onPlay=function(){e(document).trigger("jouele-pause",this),this.$container.addClass("jouele-status-playing"),this.$container.find(".jouele-control-button-icon_pause").removeClass("jouele-hidden"),this.$container.find(".jouele-control-button-icon_play").addClass("jouele-hidden"),this.isPlaying=!0,this.isPlayed=!0},t.prototype.createDOM=function(){var t=e(document.createElement("div")),o=e(document.createElement("div")),i=e(document.createElement("div")),a=e(document.createElement("div")),l=this.$link.text(),s=this,r=function(){return[e(document.createElement("div")).addClass("jouele-time").append(e(document.createElement("div")).addClass("jouele-play-time").text(s.options.length?"0:00":""),e(document.createElement("div")).addClass("jouele-total-time").text(s.options.length?s.options.length:"")),e(document.createElement("div")).addClass("jouele-control").append(e(document.createElement("div")).addClass("jouele-control-button").append(e(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_unavailable").html(n?'<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><g fill="#fff"><path opacity=".5" d="m4 7.7l3.8 3.7-3.8 2.1z"/><path opacity=".5" d="m.2 3.2l.6-.5 11 11.1-.5.5z"/><path opacity=".5" d="m4 5.3v-.8l8 4.5-2.7 1.5z"/></g><g class="jouele-svg-color"><path d="m4 6.7l3.8 3.7-3.8 2.1z"/><path d="m.2 2.2l.6-.5 11 11.1-.5.5z"/><path d="m4 4.3v-.8l8 4.5-2.7 1.5z"/></g></svg>':""),e(document.createElement("a")).attr("href",s.$link.attr("href")).addClass("jouele-control-link jouele-hidden").append(e(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_play jouele-hidden").html(n?'<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path opacity=".5" fill="#fff" d="m4 4.5l8 4.5-8 4.5z"/><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>':""),e(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_pause jouele-hidden").html(n?'<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path opacity=".5" fill="#fff" d="m4 4.5l8 4.5-8 4.5z"/><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>':""))),e(document.createElement("div")).addClass("jouele-control-text").html(l))]},u=function(){return e(document.createElement("div")).addClass("jouele-mine").append(e(document.createElement("div")).addClass("jouele-mine-bar"),e(document.createElement("div")).addClass("jouele-load-bar jouele-hidden"),e(document.createElement("div")).addClass("jouele-play-bar"),e(document.createElement("div")).addClass("jouele-play-lift jouele-hidden").append(e(document.createElement("div")).addClass("jouele-buffering")))};return this.$container=t.data("jouele",this).addClass("jouele"+(this.options.hideTimelineOnPause?" jouele_timeline_hide":"")).attr("id","jouele-ui-zone-"+(1e3+Math.round(8999*Math.random()))).append(o.addClass("jouele-invisible-object"),i.addClass("jouele-info-area").append(r()),a.addClass("jouele-progress-area").append(u())),this},t.prototype.initPlayerPlugin=function(){var t=this,n=t.$container.find(".jouele-invisible-object");return this.$jPlayer=n.jPlayer({solution:"html,flash",preload:"metadata",errorAlerts:!1,swfPath:t.options.swfPath+t.options.swfFilename,supplied:t.options.supplied,volume:t.options.volume,ready:function(){var o=t.$link.attr("href"),i=t.$container.attr("id");n.jPlayer("setMedia",{mp3:o}),t.$container.find(".jouele-hidden").removeClass("jouele-hidden"),t.$container.find(".jouele-control-button-icon_unavailable").addClass("jouele-hidden"),t.$container.find(".jouele-control-button-icon_pause").addClass("jouele-hidden"),t.$container.find(".jouele-control-link").on("click",function(e){e.preventDefault(),e.stopPropagation()}),t.$container.find(".jouele-control-button-icon_play").on("click",function(){t.pseudoPlay.call(t),t.play.call(t)}),t.$container.find(".jouele-control-button-icon_pause").on("click",function(){t.pseudoPause.call(t),t.pause.call(t)}),t.$container.find(".jouele-mine").on("mousedown."+i,function(n){if(1!==n.which)return!1;n.stopPropagation(),n.preventDefault(),t.isSeeking=!0;var o=e(this),a=(n.pageX-o.offset().left)/o.width()*100;e(document).off("mouseup."+i).on("mouseup."+i,function(){t.isSeeking=!1,s(t)}),e(document).off("mousemove."+i).on("mousemove."+i,function(e){if(e.stopPropagation(),e.preventDefault(),!t.isSeeking)return!1;var n=(e.pageX-o.offset().left)/o.width()*100;p(t,n)}),p(t,a)})},pause:function(){t.onPause.call(t)},stop:function(){t.onStop.call(t)},play:function(){t.onPlay.call(t)},progress:function(e){u(t,e.jPlayer.status),c(t,e.jPlayer.status.currentTime)},timeupdate:function(e){u(t,e.jPlayer.status),c(t,e.jPlayer.status.currentTime),d(t,e.jPlayer.status.currentPercentAbsolute.toFixed(2)),t.isPreloaderVisible&&r(t),t.waitForLoad&&(t.waitForLoad=!1,t.seekTime=0,t.play(),r(t))}}),this},t.prototype.insertDOM=function(){return this.$link.after(this.$container),this.$link.detach(),this},t.prototype.bindEvents=function(){var t=this,n=t.$container.attr("id");return e(document).on("jouele-pause."+n,function(e,n){t!==n&&t.pause()}),e(document).on("keydown."+n,function(e){32===e.keyCode&&t.isPlaying&&t.options.pauseOnSpace&&(t.options.scrollOnSpace||(e.stopPropagation(),e.preventDefault()),t.$jPlayer.jPlayer("pause"))}),this},i();var h=function(){e(".jouele").jouele()};e(h)}(jQuery);
+(function($) {
+
+    "use strict";
+
+    var isSVGSupported = false;
+    var checkSVGSupport = function () {
+        /* https://css-tricks.com/a-complete-guide-to-svg-fallbacks/ */
+        var div = document.createElement("div");
+        div.innerHTML = "<svg/>";
+        return (div.firstChild && div.firstChild.namespaceURI) == "http://www.w3.org/2000/svg";
+    };
+    var setSVGSupport = function() {
+        if ((typeof Modernizr === "object" && typeof Modernizr.inlinesvg === "boolean" && Modernizr.inlinesvg) || checkSVGSupport()) {
+            isSVGSupported = true;
+        }
+        return this;
+    };
+
+    var formatTime = function(rawSeconds) {
+        var seconds = Math.round(rawSeconds) % 60,
+            minutes = ((Math.round(rawSeconds) - seconds) % 3600) / 60,
+            hours = (Math.round(rawSeconds) - seconds - (minutes * 60)) / 3600;
+
+        return (hours ? (hours + ":") : "") + ((hours && (minutes < 10)) ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+    };
+
+    var makeSeconds = function(time) {
+        if (typeof time === "number") {
+            return time;
+        }
+
+        var array = time.split(":").reverse(),
+            seconds = 0;
+
+        for (var i = 0; i < array.length; i++) {
+            seconds += array[i] * Math.pow(60, i);
+        }
+
+        return seconds;
+    };
+
+    var showPreloader = function(instance) {
+        if (instance.preloaderTimeout || !instance.waitForLoad) {
+            return instance;
+        }
+
+        instance.preloaderTimeout = setTimeout(function() {
+            if (instance.isSeeking) {
+                instance.preloaderTimeout = null;
+                return instance;
+            }
+            instance.isPreloaderVisible = true;
+            instance.$container.find(".jouele-play-lift").addClass("jouele-play-lift_buffering");
+        }, 50);
+
+        return instance;
+    };
+
+    var hidePreloader = function(instance) {
+        if (!instance.preloaderTimeout) {
+            return instance;
+        }
+
+        instance.isPreloaderVisible = false;
+        clearTimeout(instance.preloaderTimeout);
+        instance.preloaderTimeout = null;
+        instance.$container.find(".jouele-play-lift").removeClass("jouele-play-lift_buffering");
+
+        return instance;
+    };
+
+    var updateLoadBar = function(instance, status) {
+        if ((instance.fullyLoaded && instance.totalTime) || !instance.isPlayed) {
+            return instance;
+        }
+
+        if (status.seekPercent >= 100) {
+            instance.fullyLoaded = true;
+            instance.totalTime = status.duration;
+        } else if (status.seekPercent > 0) {
+            instance.totalTime = status.duration;
+        } else {
+            instance.totalTime = 0;
+        }
+
+        instance.$container.find(".jouele-load-bar").css({"width": Math.floor(Math.min(100, status.seekPercent)) + "%"});
+
+        return instance;
+    };
+
+    var updatePlayBar = function(instance, percents) {
+        instance.$container.find(".jouele-play-lift").css("left", percents  + "%");
+        instance.$container.find(".jouele-play-bar").css("width", percents + "%");
+
+        return instance;
+    };
+
+    var updateTimeDisplay = function(instance, seconds) {
+        if (instance.totalTime <= 0 && !instance.options.length) {
+            return instance;
+        }
+
+        var totalTime = "";
+
+        if (instance.fullyLoaded && instance.totalTime) {
+            if (!instance.fullTimeDisplayed) {
+                totalTime = formatTime(instance.totalTime);
+                instance.$container.find(".jouele-total-time").text(totalTime);
+                instance.fullTimeDisplayed = true;
+            }
+        } else if (instance.options.length) {
+            totalTime = formatTime(makeSeconds(instance.options.length));
+            instance.$container.find(".jouele-total-time").text(totalTime);
+        } else {
+            totalTime = instance.options.length ? instance.options.length : "≈ " + formatTime(instance.totalTime);
+            instance.$container.find(".jouele-total-time").text(totalTime);
+        }
+
+        if ((instance.isPlaying || instance.waitForLoad) && (instance.totalTime || instance.seekTime)) {
+            instance.$container.find(".jouele-play-time").text(formatTime(instance.seekTime ? instance.seekTime : seconds));
+        }
+
+        return instance;
+    };
+
+    var willSeekTo = function(instance, seekPercent) {
+        var percent = seekPercent.toFixed(2);
+
+        if (percent < 0) {
+            percent = 0;
+        } else if (percent > 100) {
+            percent = 100;
+        }
+
+        updatePlayBar(instance, percent);
+        showPreloader(instance);
+
+        instance.waitForLoad = true;
+        instance.$jPlayer.jPlayer("playHead", percent);
+        instance.pseudoPlay();
+
+        if (instance.fullTimeDisplayed) {
+            instance.seekTime = (instance.totalTime / 100) * percent;
+            updateTimeDisplay(instance, instance.seekTime);
+        } else if (instance.options.length) {
+            instance.seekTime = (makeSeconds(instance.options.length) / 100) * percent;
+            updateTimeDisplay(instance, instance.seekTime);
+        }
+
+        return instance;
+    };
+
+    $.fn.jouele = function(options) {
+        return this.each(function() {
+            var $this = $(this),
+                joueleInstance = $this.data("jouele");
+
+            if (joueleInstance) {
+                /* Update current instance (soon) */
+            } else {
+                /* Create new instance */
+                new Jouele($this, $.extend({}, $.fn.jouele.defaults, options, $this.data()));
+            }
+        });
+    };
+
+    $.fn.jouele.defaults = {
+        swfPath: "./jplayer/",
+        swfFilename: "jplayer.swf",
+        supplied: "mp3",
+        volume: 1,
+        length: 0,
+        scrollOnSpace: false,
+        pauseOnSpace: true,
+        hideTimelineOnPause: false
+    };
+
+    function Jouele($link, options) {
+        this.version = "2.0.0";
+        this.$link = $link;
+        this.options = options;
+        this.isPlaying = false;
+        this.isPlayed = false;
+        this.totalTime = 0;
+        this.fullyLoaded = false;
+        this.fullTimeDisplayed = false;
+        this.waitForLoad = false;
+        this.seekTime = 0;
+        this.isPreloaderVisible = false;
+        this.preloaderTimeout = null;
+        this.isSeeking = false;
+        this.init();
+    }
+
+    Jouele.prototype.init = function init() {
+        this.createDOM();
+        this.initPlayerPlugin();
+        this.bindEvents();
+        this.insertDOM();
+    };
+
+    Jouele.prototype.destroy = function destroy() {
+        var uniqueID = this.$container.attr("id");
+
+        this.$container.after(this.$link).remove();
+        $(document).off("." + uniqueID);
+
+        return this.$link;
+    };
+
+    Jouele.prototype.pause = function pause() {
+        this.waitForLoad = false;
+        hidePreloader(this);
+
+        if (typeof this.$jPlayer !== "undefined" && this.$jPlayer.jPlayer) {
+            if (this.isPlaying) {
+                this.$jPlayer.jPlayer("pause");
+            }
+        }
+
+        if (!this.isPlaying) {
+            this.pseudoPause();
+        }
+
+        return this;
+    };
+
+    Jouele.prototype.pseudoPause = function pseudoPause() {
+        this.$container.removeClass("jouele-status-playing");
+        this.$container.find(".jouele-control-button-icon_play").removeClass("jouele-hidden");
+        this.$container.find(".jouele-control-button-icon_pause").addClass("jouele-hidden");
+    };
+
+    Jouele.prototype.stop = function stop() {
+        if (typeof this.$jPlayer !== "undefined" && this.$jPlayer.jPlayer) {
+            if (this.isPlaying) {
+                this.$jPlayer.jPlayer("stop");
+            }
+        }
+
+        return this;
+    };
+
+    Jouele.prototype.play = function play() {
+        showPreloader(this);
+
+        if (typeof this.$jPlayer !== "undefined" && this.$jPlayer.jPlayer) {
+            if (!this.isPlaying) {
+                this.$jPlayer.jPlayer("play");
+            }
+        }
+
+        return this;
+    };
+
+    Jouele.prototype.pseudoPlay = function pseudoPlay() {
+        $(document).trigger("jouele-pause", this);
+        this.$container.addClass("jouele-status-playing");
+        this.$container.find(".jouele-control-button-icon_pause").removeClass("jouele-hidden");
+        this.$container.find(".jouele-control-button-icon_play").addClass("jouele-hidden");
+    };
+
+    Jouele.prototype.onPause = function onPause() {
+        this.isPlaying = false;
+        this.$container.removeClass("jouele-status-playing");
+        this.$container.find(".jouele-control-button-icon_play").removeClass("jouele-hidden");
+        this.$container.find(".jouele-control-button-icon_pause").addClass("jouele-hidden");
+    };
+
+    Jouele.prototype.onStop = function onStop() {
+        this.isPlaying = false;
+        this.$container.removeClass("jouele-status-playing");
+    };
+
+    Jouele.prototype.onPlay = function onPlay() {
+        $(document).trigger("jouele-pause", this);
+        this.$container.addClass("jouele-status-playing");
+        this.$container.find(".jouele-control-button-icon_pause").removeClass("jouele-hidden");
+        this.$container.find(".jouele-control-button-icon_play").addClass("jouele-hidden");
+        this.waitForLoad = false;
+        this.isPlaying = true;
+        this.isPlayed = true;
+    };
+
+    Jouele.prototype.createDOM = function createDOM() {
+        var $container = $(document.createElement("div")),
+            $invisibleObject = $(document.createElement("div")),
+            $infoArea = $(document.createElement("div")),
+            $progressArea = $(document.createElement("div")),
+            filename = this.$link.text(),
+
+            self = this;
+
+        var createInfoAreaDOM = function() {
+            return [
+                $(document.createElement("div")).addClass("jouele-time").append(
+                    $(document.createElement("div")).addClass("jouele-play-time").text(self.options.length ? "0:00" : ""),
+                    $(document.createElement("div")).addClass("jouele-total-time").text(self.options.length ? self.options.length : "")
+                ),
+                $(document.createElement("div")).addClass("jouele-control").append(
+                    $(document.createElement("div")).addClass("jouele-control-button").append(
+                        $(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_unavailable").html(
+                            isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><g fill="#fff"><path opacity=".5" d="m4 7.7l3.8 3.7-3.8 2.1z"/><path opacity=".5" d="m.2 3.2l.6-.5 11 11.1-.5.5z"/><path opacity=".5" d="m4 5.3v-.8l8 4.5-2.7 1.5z"/></g><g class="jouele-svg-color"><path d="m4 6.7l3.8 3.7-3.8 2.1z"/><path d="m.2 2.2l.6-.5 11 11.1-.5.5z"/><path d="m4 4.3v-.8l8 4.5-2.7 1.5z"/></g></svg>' : ''
+                        ),
+                        $(document.createElement("a")).attr("href", self.$link.attr("href")).addClass("jouele-control-link jouele-hidden").append(
+                            $(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_play jouele-hidden").html(
+                                isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path opacity=".5" fill="#fff" d="m4 4.5l8 4.5-8 4.5z"/><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>': ''
+                            ),
+                            $(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_pause jouele-hidden").html(
+                                isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path opacity=".5" fill="#fff" d="m4 4.5l8 4.5-8 4.5z"/><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>': ''
+                            )
+                        )
+                    ),
+                    $(document.createElement("div")).addClass("jouele-control-text").html(filename)
+                )
+            ];
+        };
+
+        var createProgressAreaDOM = function() {
+            return $(document.createElement("div")).addClass("jouele-mine").append(
+                $(document.createElement("div")).addClass("jouele-mine-bar"),
+                $(document.createElement("div")).addClass("jouele-load-bar jouele-hidden"),
+                $(document.createElement("div")).addClass("jouele-play-bar"),
+                $(document.createElement("div")).addClass("jouele-play-lift jouele-hidden").append()
+            );
+        };
+
+        /*
+         <div class="la-ball-clip-rotate la-dark la-sm">
+         <div></div>
+         </div>
+         */
+
+        this.$container = $container
+            .data("jouele", this)
+            .addClass("jouele" + (this.options.hideTimelineOnPause ? " jouele_timeline_hide" : ""))
+            .attr("id", "jouele-ui-zone-" + (1000 + Math.round(Math.random() * 8999)))
+            .append(
+                $invisibleObject.addClass("jouele-invisible-object"),
+                $infoArea.addClass("jouele-info-area").append(createInfoAreaDOM()),
+                $progressArea.addClass("jouele-progress-area").append(createProgressAreaDOM())
+            );
+
+        return this;
+    };
+
+    Jouele.prototype.initPlayerPlugin = function initPlayerPlugin() {
+        var self = this,
+            $jPlayer = self.$container.find(".jouele-invisible-object");
+
+        this.$jPlayer = $jPlayer.jPlayer({
+            solution: "html,flash",
+            preload: "metadata",
+            errorAlerts: false,
+
+            swfPath: self.options.swfPath + self.options.swfFilename,
+            supplied: self.options.supplied,
+            volume: self.options.volume,
+
+            ready: function() {
+                var audiofileLink = self.$link.attr("href"),
+                    uniqueID = self.$container.attr("id");
+
+                $jPlayer.jPlayer("setMedia", {
+                    mp3: audiofileLink
+                });
+
+                self.$container.find(".jouele-hidden").removeClass("jouele-hidden");
+                self.$container.find(".jouele-control-button-icon_unavailable").addClass("jouele-hidden");
+                self.$container.find(".jouele-control-button-icon_pause").addClass("jouele-hidden");
+
+                self.$container.find(".jouele-control-link").on("click", function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                });
+                self.$container.find(".jouele-control-button-icon_play").on("click", function() {
+                    self.waitForLoad = true;
+                    self.pseudoPlay.call(self);
+                    self.play.call(self);
+                });
+                self.$container.find(".jouele-control-button-icon_pause").on("click", function() {
+                    self.waitForLoad = false;
+                    self.pseudoPause.call(self);
+                    self.pause.call(self);
+                });
+
+                self.$container.find(".jouele-mine").on("mousedown." + uniqueID, function(event) {
+                    if (event.which !== 1) {
+                        return false;
+                    }
+
+                    event.stopPropagation();
+                    event.preventDefault();
+
+                    self.isSeeking = true;
+
+                    var $this = $(this),
+                        clickPoint = ((event.pageX - $this.offset().left) / $this.width()) * 100;
+
+                    $(document).off("mouseup." + uniqueID).on("mouseup." + uniqueID, function() {
+                        self.isSeeking = false;
+                        showPreloader(self);
+                    });
+                    $(document).off("mousemove." + uniqueID).on("mousemove." + uniqueID, function(event) {
+                        event.stopPropagation();
+                        event.preventDefault();
+
+                        if (!self.isSeeking) {
+                            return false;
+                        }
+
+                        var clickPoint = ((event.pageX - $this.offset().left) / $this.width()) * 100;
+
+                        willSeekTo(self, clickPoint);
+                    });
+
+                    willSeekTo(self, clickPoint);
+                });
+            },
+            pause: function() {
+                self.onPause.call(self);
+            },
+            stop: function() {
+                self.onStop.call(self);
+            },
+            play: function() {
+                self.onPlay.call(self);
+            },
+            progress: function(event) {
+                updateLoadBar(self, event.jPlayer.status);
+                updateTimeDisplay(self, event.jPlayer.status.currentTime);
+            },
+            timeupdate: function(event) {
+                updateLoadBar(self, event.jPlayer.status);
+                updateTimeDisplay(self, event.jPlayer.status.currentTime);
+                updatePlayBar(self, event.jPlayer.status.currentPercentAbsolute.toFixed(2));
+
+                if (self.isPreloaderVisible) {
+                    hidePreloader(self);
+                }
+
+                if (self.waitForLoad) {
+                    self.waitForLoad = false;
+                    self.seekTime = 0;
+                    self.play();
+                    hidePreloader(self);
+                }
+            }
+        });
+
+        return this;
+    };
+
+    Jouele.prototype.insertDOM = function insertDOM() {
+        this.$link.after(this.$container);
+        this.$link.detach();
+
+        return this;
+    };
+
+    Jouele.prototype.bindEvents = function bindEvents() {
+        var self = this,
+            uniqueID = self.$container.attr("id");
+
+        $(document).on("jouele-pause." + uniqueID, function(event, triggeredJouele) {
+            if (self !== triggeredJouele) {
+                self.pause();
+            }
+        });
+
+        $(document).on("keydown." + uniqueID, function(event) {
+            if (event.keyCode === 32) {
+                if (self.isPlaying && self.options.pauseOnSpace) {
+                    if (!self.options.scrollOnSpace) {
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
+
+                    self.$jPlayer.jPlayer("pause");
+                }
+            }
+        });
+
+        return this;
+    };
+
+    /* It's time to know if SVG supported */
+    setSVGSupport();
+
+    /* Autoload Jouele */
+    var autoLoadJouele = function() {
+        $(".jouele").jouele();
+    };
+    $(autoLoadJouele);
+
+}(jQuery));

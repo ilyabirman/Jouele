@@ -50,8 +50,8 @@
                 return instance;
             }
             instance.isPreloaderVisible = true;
-            instance.$container.find(".jouele-buffering").addClass("jouele-buffering_visible_true");
-        }, 500);
+            instance.$container.find(".jouele-play-lift").addClass("jouele-play-lift_buffering");
+        }, 50);
 
         return instance;
     };
@@ -64,7 +64,7 @@
         instance.isPreloaderVisible = false;
         clearTimeout(instance.preloaderTimeout);
         instance.preloaderTimeout = null;
-        instance.$container.find(".jouele-buffering").removeClass("jouele-buffering_visible_true");
+        instance.$container.find(".jouele-play-lift").removeClass("jouele-play-lift_buffering");
 
         return instance;
     };
@@ -277,6 +277,7 @@
         this.$container.addClass("jouele-status-playing");
         this.$container.find(".jouele-control-button-icon_pause").removeClass("jouele-hidden");
         this.$container.find(".jouele-control-button-icon_play").addClass("jouele-hidden");
+        this.waitForLoad = false;
         this.isPlaying = true;
         this.isPlayed = true;
     };
@@ -320,9 +321,7 @@
                 $(document.createElement("div")).addClass("jouele-mine-bar"),
                 $(document.createElement("div")).addClass("jouele-load-bar jouele-hidden"),
                 $(document.createElement("div")).addClass("jouele-play-bar"),
-                $(document.createElement("div")).addClass("jouele-play-lift jouele-hidden").append(
-                    $(document.createElement("div")).addClass("jouele-buffering")
-                )
+                $(document.createElement("div")).addClass("jouele-play-lift jouele-hidden").append()
             );
         };
 
@@ -375,10 +374,12 @@
                     event.stopPropagation();
                 });
                 self.$container.find(".jouele-control-button-icon_play").on("click", function() {
+                    self.waitForLoad = true;
                     self.pseudoPlay.call(self);
                     self.play.call(self);
                 });
                 self.$container.find(".jouele-control-button-icon_pause").on("click", function() {
+                    self.waitForLoad = false;
                     self.pseudoPause.call(self);
                     self.pause.call(self);
                 });

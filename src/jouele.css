@@ -75,7 +75,7 @@
 }
 .jouele-play-bar:after {
     background-color: #000;
-    transition: background-color 0.14s linear;
+    transition: background-color 0.16s linear;
 }
 .jouele-status-playing  .jouele-play-bar:after {
     background-color: #f59331;
@@ -96,64 +96,48 @@
     background-color: #000;
     cursor: pointer;
     position: absolute;
-    transition: width 0.14s linear, height 0.14s linear, margin 0.14s linear, background-color 0.14s linear;
+    transition: width 0.16s linear, height 0.16s linear, margin 0.16s linear, background-color 0.16s linear;
 }
 .jouele-status-playing  .jouele-play-lift {
     background-color: #f59331;
 }
 .jouele-mine:hover .jouele-play-lift {
     background-color: #d04000;
-    width: 9px;
-    height: 9px;
-    margin-top: -4px;
-    margin-left: -2px;
+    width: 7px;
+    height: 7px;
+    margin-top: -3px;
+    margin-left: -1px;
     transition: none;
 }
 
-.jouele-buffering {
-    width: 10px;
-    height: 10px;
+.jouele-play-lift:before {
+    content: '';
+    width: 210%;
+    height: 210%;
     display: block;
     font-size: 0;
     position: absolute;
-    left: -3px;
-    top: -3px;
-    transition: top 0.14s linear, left 0.14s linear;
-    /*opacity: 0;*/
-}
-.jouele-buffering:after {
-    content: '';
-    display: inline-block;
-    vertical-align: top;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    border: 1px solid #000;
-    background: transparent;
-    border-bottom-color: transparent;
-    border-radius: 100%;
-    transition: border-color 0.14s linear, width 0.14s linear, height 0.14s linear;
+    left: -50%;
+    top: -50%;
+    box-shadow: inset 0 0 0 1px #000;
+    clip: rect(auto,7px,auto,auto);
+    border-radius: 50%;
+    transition: box-shadow 0.16s linear, opacity 0.16s linear, clip 0.16s linear;
     -webkit-animation: ball-clip-rotate .75s linear infinite;
     -moz-animation: ball-clip-rotate .75s linear infinite;
     -o-animation: ball-clip-rotate .75s linear infinite;
     animation: ball-clip-rotate .75s linear infinite;
+    /*opacity: 0;*/
 }
-.jouele-status-playing .jouele-buffering:after {
-    border-color: #f59331;
-    border-bottom-color: transparent;
+.jouele-play-lift_buffering:before {
+    opacity: 1;
 }
-.jouele-mine:hover .jouele-buffering {
-    left: -5px;
-    top: -5px;
-    transition: none;
+.jouele-status-playing .jouele-play-lift:before {
+    box-shadow: inset 0 0 0 1px #f59331;
 }
-.jouele-mine:hover .jouele-buffering:after {
-    border-color: #d04000;
-    border-bottom-color: transparent;
-    width: 18px;
-    height: 18px;
+.jouele-mine:hover .jouele-play-lift:before {
+    clip: rect(auto,10px,auto,auto);
+    box-shadow: inset 0 0 0 1px #d04000;
     transition: none;
 }
 @-webkit-keyframes ball-clip-rotate {
@@ -247,7 +231,7 @@
     height: 16px;
 }
 .jouele-svg-color {
-    transition: fill 0.14s linear;
+    transition: fill 0.16s linear;
 }
 .jouele-control-button-icon_unavailable .jouele-svg-color,
 .jouele-control-button-icon_play .jouele-svg-color {
