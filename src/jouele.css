@@ -238,6 +238,24 @@
 .jouele-control-button-icon {
     display: block;
 }
+.jouele-control-button_nosvg .jouele-control-button-icon {
+    width: 16px;
+    height: 16px;
+    background: url(i/jouele-sprite.png) no-repeat;
+}
+.jouele-control-button_nosvg .jouele-control-button-icon_unavailable {
+    background-position: 0 50%;
+}
+.jouele-control-button_nosvg .jouele-control-button-icon_play {
+    background-position: -16px 50%;
+}
+.jouele-control-button_nosvg .jouele-control-button-icon_pause {
+    background-position: -32px 50%;
+}
+.jouele-control-button_nosvg:hover .jouele-control-button-icon_play,
+.jouele-control-button_nosvg:hover .jouele-control-button-icon_pause {
+    background-position: -48px 50%;
+}
 .jouele-svg {
     vertical-align: middle;
     width: 16px;
