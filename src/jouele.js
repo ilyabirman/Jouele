@@ -17,6 +17,10 @@
     };
 
     var formatTime = function(rawSeconds) {
+        if (typeof rawSeconds !== "number") {
+            return rawSeconds;
+        }
+
         var seconds = Math.round(rawSeconds) % 60,
             minutes = ((Math.round(rawSeconds) - seconds) % 3600) / 60,
             hours = (Math.round(rawSeconds) - seconds - (minutes * 60)) / 3600;
@@ -39,8 +43,10 @@
         return seconds;
     };
 
-    var showPreloader = function(instance) {
-        if (instance.preloaderTimeout || !instance.waitForLoad) {
+    var showPreloader = function(instance, timeout) {
+        var timeout = timeout || 50;
+
+        if (instance.preloaderTimeout || instance.isSeeking || !instance.waitForLoad) {
             return instance;
         }
 
@@ -51,7 +57,7 @@
             }
             instance.isPreloaderVisible = true;
             instance.$container.find(".jouele-play-lift").addClass("jouele-play-lift_buffering");
-        }, 50);
+        }, timeout);
 
         return instance;
     };
@@ -89,6 +95,10 @@
     };
 
     var updatePlayBar = function(instance, percents) {
+        if (instance.seekTime && !instance.isSeeking) {
+            return instance;
+        }
+
         instance.$container.find(".jouele-play-lift").css("left", percents  + "%");
         instance.$container.find(".jouele-play-bar").css("width", percents + "%");
 
@@ -145,6 +155,8 @@
         } else if (instance.options.length) {
             instance.seekTime = (makeSeconds(instance.options.length) / 100) * percent;
             updateTimeDisplay(instance, instance.seekTime);
+        } else {
+            instance.seekTime = 0.01;
         }
 
         return instance;
@@ -193,6 +205,7 @@
     }
 
     Jouele.prototype.init = function init() {
+        this.checkOptions();
         this.createDOM();
         this.initPlayerPlugin();
         this.bindEvents();
@@ -209,11 +222,16 @@
     };
 
     Jouele.prototype.pause = function pause() {
-        this.waitForLoad = false;
         hidePreloader(this);
 
+        if (!this.seekTime) {
+            this.waitForLoad = false;
+        }
+
         if (typeof this.$jPlayer !== "undefined" && this.$jPlayer.jPlayer) {
-            if (this.isPlaying) {
+            if (this.isPlaying || this.waitForLoad) {
+                this.isPlaying = false;
+                this.waitForLoad = false;
                 this.$jPlayer.jPlayer("pause");
             }
         }
@@ -242,7 +260,9 @@
     };
 
     Jouele.prototype.play = function play() {
-        showPreloader(this);
+        showPreloader(this, this.seekTime ? 50 : 500);
+
+        this.isPlayed = true;
 
         if (typeof this.$jPlayer !== "undefined" && this.$jPlayer.jPlayer) {
             if (!this.isPlaying) {
@@ -255,6 +275,7 @@
 
     Jouele.prototype.pseudoPlay = function pseudoPlay() {
         $(document).trigger("jouele-pause", this);
+        this.isPlayed = true;
         this.$container.addClass("jouele-status-playing");
         this.$container.find(".jouele-control-button-icon_pause").removeClass("jouele-hidden");
         this.$container.find(".jouele-control-button-icon_play").addClass("jouele-hidden");
@@ -262,6 +283,8 @@
 
     Jouele.prototype.onPause = function onPause() {
         this.isPlaying = false;
+        this.isSeeking = false;
+        this.waitForLoad = false;
         this.$container.removeClass("jouele-status-playing");
         this.$container.find(".jouele-control-button-icon_play").removeClass("jouele-hidden");
         this.$container.find(".jouele-control-button-icon_pause").addClass("jouele-hidden");
@@ -269,6 +292,9 @@
 
     Jouele.prototype.onStop = function onStop() {
         this.isPlaying = false;
+        this.seekTime = 0;
+        this.isSeeking = false;
+        this.waitForLoad = false;
         this.$container.removeClass("jouele-status-playing");
     };
 
@@ -280,6 +306,12 @@
         this.waitForLoad = false;
         this.isPlaying = true;
         this.isPlayed = true;
+    };
+
+    Jouele.prototype.checkOptions = function checkOptions() {
+        if (!parseInt(this.options.length)) {
+            this.options.length = 0;
+        }
     };
 
     Jouele.prototype.createDOM = function createDOM() {
@@ -295,7 +327,7 @@
             return [
                 $(document.createElement("div")).addClass("jouele-time").append(
                     $(document.createElement("div")).addClass("jouele-play-time").text(self.options.length ? "0:00" : ""),
-                    $(document.createElement("div")).addClass("jouele-total-time").text(self.options.length ? self.options.length : "")
+                    $(document.createElement("div")).addClass("jouele-total-time").text(self.options.length ? formatTime(makeSeconds(self.options.length)) : "")
                 ),
                 $(document.createElement("div")).addClass("jouele-control").append(
                     $(document.createElement("div")).addClass("jouele-control-button").append(
@@ -324,12 +356,6 @@
                 $(document.createElement("div")).addClass("jouele-play-lift jouele-hidden").append()
             );
         };
-
-        /*
-         <div class="la-ball-clip-rotate la-dark la-sm">
-         <div></div>
-         </div>
-         */
 
         this.$container = $container
             .data("jouele", this)
@@ -379,7 +405,6 @@
                     self.play.call(self);
                 });
                 self.$container.find(".jouele-control-button-icon_pause").on("click", function() {
-                    self.waitForLoad = false;
                     self.pseudoPause.call(self);
                     self.pause.call(self);
                 });
@@ -397,7 +422,7 @@
                     var $this = $(this),
                         clickPoint = ((event.pageX - $this.offset().left) / $this.width()) * 100;
 
-                    $(document).off("mouseup." + uniqueID).on("mouseup." + uniqueID, function() {
+                    $(document).off("mouseup." + uniqueID).one("mouseup." + uniqueID, function() {
                         self.isSeeking = false;
                         showPreloader(self);
                     });
