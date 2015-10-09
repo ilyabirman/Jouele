@@ -329,6 +329,9 @@
 .jouele-total-time {
     float: right;
 }
+.jouele-total-time__approx {
+    padding-right: 0.3em;
+}
 
 .jouele_timeline_hide .jouele-progress-area {
     margin-top: -16px;

@@ -113,19 +113,19 @@
         if (instance.fullyLoaded && instance.totalTime) {
             if (!instance.fullTimeDisplayed) {
                 totalTime = formatTime(instance.totalTime);
-                instance.$container.find(".jouele-total-time").text(totalTime);
+                instance.$container.find(".jouele-total-time").html(totalTime);
                 instance.fullTimeDisplayed = true;
             }
         } else if (instance.options.length) {
             totalTime = formatTime(makeSeconds(instance.options.length));
-            instance.$container.find(".jouele-total-time").text(totalTime);
+            instance.$container.find(".jouele-total-time").html(totalTime);
         } else {
-            totalTime = instance.options.length ? instance.options.length : "~" + formatTime(instance.totalTime);
-            instance.$container.find(".jouele-total-time").text(totalTime);
+            totalTime = instance.options.length ? instance.options.length : "<span class=\"jouele-total-time__approx\">~</span>" + formatTime(instance.totalTime);
+            instance.$container.find(".jouele-total-time").html(totalTime);
         }
 
         if ((instance.isPlaying || instance.waitForLoad) && (instance.totalTime || instance.seekTime)) {
-            instance.$container.find(".jouele-play-time").text(formatTime(instance.seekTime ? instance.seekTime : seconds));
+            instance.$container.find(".jouele-play-time").html(formatTime(instance.seekTime ? instance.seekTime : seconds));
         }
 
         return instance;
