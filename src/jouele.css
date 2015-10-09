@@ -66,6 +66,9 @@
 .jouele-load-bar:after {
     background: #bfbfbf;
 }
+.jouele_black .jouele-load-bar:after {
+    background: currentColor;
+}
 
 .jouele-play-bar {
     height: 11px;
@@ -77,7 +80,10 @@
     background-color: #000;
     transition: background-color 0.16s linear;
 }
-.jouele-status-playing  .jouele-play-bar:after {
+.jouele_black .jouele-play-bar:after {
+    background-color: currentColor;
+}
+.jouele-status-playing .jouele-play-bar:after {
     background-color: #f59331;
 }
 .jouele-mine:hover .jouele-play-bar:after {
@@ -97,6 +103,9 @@
     cursor: pointer;
     position: absolute;
     transition: width 0.16s linear, height 0.16s linear, margin 0.16s linear, background-color 0.16s linear;
+}
+.jouele_black .jouele-play-lift {
+    background-color: currentColor;
 }
 .jouele-status-playing  .jouele-play-lift {
     background-color: #f59331;
@@ -212,6 +221,10 @@
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.67);
 }
 
+.jouele_black .jouele-info-area {
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.95);
+}
+
 .jouele-control {
     overflow: hidden;
     font-size: 13px;
@@ -234,6 +247,7 @@
     display: block !important;
     text-decoration: none !important;
     border: 0 !important;
+    color: currentColor !important;
 }
 .jouele-control-button-icon {
     display: block;
@@ -261,12 +275,23 @@
     width: 16px;
     height: 16px;
 }
-.jouele-svg-color {
+.jouele-svg-color,
+.jouele-svg-subcolor {
     transition: fill 0.16s linear;
+}
+.jouele-svg-subcolor {
+    fill: #ffffff;
+}
+.jouele_black .jouele-svg-subcolor {
+    fill: #000000;
 }
 .jouele-control-button-icon_unavailable .jouele-svg-color,
 .jouele-control-button-icon_play .jouele-svg-color {
     fill: #010101;
+}
+.jouele_black .jouele-control-button-icon_unavailable .jouele-svg-color,
+.jouele_black .jouele-control-button-icon_play .jouele-svg-color {
+    fill: currentColor;
 }
 .jouele-control-button-icon_pause .jouele-svg-color {
     fill: #f59331;
@@ -298,7 +323,7 @@
 
 .jouele-play-time {
     float: left;
-    margin-right: .5em;
+    margin-right: .65em;
 }
 
 .jouele-total-time {

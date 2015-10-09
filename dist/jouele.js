@@ -55,7 +55,6 @@
                 instance.preloaderTimeout = null;
                 return instance;
             }
-            instance.isPreloaderVisible = true;
             instance.$container.find(".jouele-play-lift").addClass("jouele-play-lift_buffering");
         }, timeout);
 
@@ -67,7 +66,6 @@
             return instance;
         }
 
-        instance.isPreloaderVisible = false;
         clearTimeout(instance.preloaderTimeout);
         instance.preloaderTimeout = null;
         instance.$container.find(".jouele-play-lift").removeClass("jouele-play-lift_buffering");
@@ -122,7 +120,7 @@
             totalTime = formatTime(makeSeconds(instance.options.length));
             instance.$container.find(".jouele-total-time").text(totalTime);
         } else {
-            totalTime = instance.options.length ? instance.options.length : "≈ " + formatTime(instance.totalTime);
+            totalTime = instance.options.length ? instance.options.length : "~" + formatTime(instance.totalTime);
             instance.$container.find(".jouele-total-time").text(totalTime);
         }
 
@@ -184,7 +182,8 @@
         length: 0,
         scrollOnSpace: false,
         pauseOnSpace: true,
-        hideTimelineOnPause: false
+        hideTimelineOnPause: false,
+        skin: ""
     };
 
     function Jouele($link, options) {
@@ -198,7 +197,6 @@
         this.fullTimeDisplayed = false;
         this.waitForLoad = false;
         this.seekTime = 0;
-        this.isPreloaderVisible = false;
         this.preloaderTimeout = null;
         this.isSeeking = false;
         this.init();
@@ -336,10 +334,10 @@
                         ),
                         $(document.createElement("a")).attr("href", self.$link.attr("href")).addClass("jouele-control-link jouele-hidden").append(
                             $(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_play jouele-hidden").html(
-                                isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path opacity=".5" fill="#fff" d="m4 4.5l8 4.5-8 4.5z"/><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>': ''
+                                isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path opacity=".5" class="jouele-svg-subcolor" d="m4 4.5l8 4.5-8 4.5z"/><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>': ''
                             ),
                             $(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_pause jouele-hidden").html(
-                                isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path opacity=".5" fill="#fff" d="m4 4.5l8 4.5-8 4.5z"/><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>': ''
+                                isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path opacity=".5" class="jouele-svg-subcolor" d="m4 4.5l8 4.5-8 4.5z"/><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>': ''
                             )
                         )
                     ),
@@ -359,7 +357,7 @@
 
         this.$container = $container
             .data("jouele", this)
-            .addClass("jouele" + (this.options.hideTimelineOnPause ? " jouele_timeline_hide" : ""))
+            .addClass("jouele" + (this.options.hideTimelineOnPause ? " jouele_timeline_hide" : "") + (this.options.skin ? " jouele_" + this.options.skin : ""))
             .attr("id", "jouele-ui-zone-" + (1000 + Math.round(Math.random() * 8999)))
             .append(
                 $invisibleObject.addClass("jouele-invisible-object"),
@@ -460,9 +458,7 @@
                 updateTimeDisplay(self, event.jPlayer.status.currentTime);
                 updatePlayBar(self, event.jPlayer.status.currentPercentAbsolute.toFixed(2));
 
-                if (self.isPreloaderVisible) {
-                    hidePreloader(self);
-                }
+                hidePreloader(self);
 
                 if (self.waitForLoad) {
                     self.waitForLoad = false;
