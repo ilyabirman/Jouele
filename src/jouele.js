@@ -44,11 +44,11 @@
     };
 
     var showPreloader = function(instance, timeout) {
-        var timeout = timeout || 50;
-
         if (instance.preloaderTimeout || instance.isSeeking || !instance.waitForLoad) {
             return instance;
         }
+
+        var timeout = timeout || 50; // 50 is default timeout which is almost not visible for user ('instant preloader') but enough to making script works
 
         instance.preloaderTimeout = setTimeout(function() {
             if (instance.isSeeking) {
@@ -199,6 +199,7 @@
         this.seekTime = 0;
         this.preloaderTimeout = null;
         this.isSeeking = false;
+
         this.init();
     }
 
@@ -258,7 +259,7 @@
     };
 
     Jouele.prototype.play = function play() {
-        showPreloader(this, this.seekTime ? 50 : 500);
+        showPreloader(this, this.seekTime ? false : 500); // 500 is enough to play the loaded fragment, if it's loaded; if isn't — preloader will appear after 500ms
 
         this.isPlayed = true;
 
