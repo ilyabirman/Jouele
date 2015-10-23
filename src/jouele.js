@@ -78,16 +78,18 @@
             return instance;
         }
 
-        if (status.seekPercent >= 100) {
+        var roundedSeekPercent = Math.round(status.seekPercent); // because Safari sometimes shows 99.999999999
+
+        if (roundedSeekPercent >= 100) {
             instance.fullyLoaded = true;
             instance.totalTime = status.duration;
-        } else if (status.seekPercent > 0) {
+        } else if (roundedSeekPercent > 0) {
             instance.totalTime = status.duration;
         } else {
             instance.totalTime = 0;
         }
 
-        instance.$container.find(".jouele-load-bar").css({"width": Math.floor(Math.min(100, status.seekPercent)) + "%"});
+        instance.$container.find(".jouele-load-bar").css({"width": Math.floor(Math.min(100, roundedSeekPercent)) + "%"});
 
         return instance;
     };
@@ -163,13 +165,19 @@
     $.fn.jouele = function(options) {
         return this.each(function() {
             var $this = $(this),
-                joueleInstance = $this.data("jouele");
+                thisClass = $this.attr("class"),
+                skinClassPosition = thisClass.indexOf("jouele-skin-"),
+                joueleInstance = $this.data("jouele"),
+                skin = "";
 
             if (joueleInstance) {
                 /* Update current instance (soon) */
             } else {
                 /* Create new instance */
-                new Jouele($this, $.extend({}, $.fn.jouele.defaults, options, $this.data()));
+                if (skinClassPosition > 0) {
+                    skin = thisClass.substr(skinClassPosition + 12, thisClass.indexOf(" ", skinClassPosition) > 0 ? thisClass.indexOf(" ", skinClassPosition) : thisClass.length);
+                }
+                new Jouele($this, $.extend({}, $.fn.jouele.defaults, options, $this.data(), {skin: skin}));
             }
         });
     };
@@ -331,14 +339,14 @@
                 $(document.createElement("div")).addClass("jouele-control").append(
                     $(document.createElement("div")).addClass("jouele-control-button" + (isSVGSupported ? "" : " jouele-control-button_nosvg")).append(
                         $(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_unavailable").html(
-                            isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><g fill="#fff"><path opacity=".5" d="m4 7.7l3.8 3.7-3.8 2.1z"/><path opacity=".5" d="m.2 3.2l.6-.5 11 11.1-.5.5z"/><path opacity=".5" d="m4 5.3v-.8l8 4.5-2.7 1.5z"/></g><g class="jouele-svg-color"><path d="m4 6.7l3.8 3.7-3.8 2.1z"/><path d="m.2 2.2l.6-.5 11 11.1-.5.5z"/><path d="m4 4.3v-.8l8 4.5-2.7 1.5z"/></g></svg>' : ''
+                            isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><g class="jouele-svg-color"><path d="m4 6.7l3.8 3.7-3.8 2.1z"/><path d="m.2 2.2l.6-.5 11 11.1-.5.5z"/><path d="m4 4.3v-.8l8 4.5-2.7 1.5z"/></g></svg>' : ''
                         ),
                         $(document.createElement("a")).attr("href", self.$link.attr("href")).addClass("jouele-control-link jouele-hidden").append(
                             $(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_play jouele-hidden").html(
-                                isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path opacity=".5" class="jouele-svg-subcolor" d="m4 4.5l8 4.5-8 4.5z"/><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>': ''
+                                isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>': ''
                             ),
                             $(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_pause jouele-hidden").html(
-                                isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path opacity=".5" class="jouele-svg-subcolor" d="m4 4.5l8 4.5-8 4.5z"/><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>': ''
+                                isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>': ''
                             )
                         )
                     ),
@@ -358,7 +366,7 @@
 
         this.$container = $container
             .data("jouele", this)
-            .addClass("jouele" + (this.options.hideTimelineOnPause ? " jouele_timeline_hide" : "") + (this.options.skin ? " jouele_" + this.options.skin : ""))
+            .addClass("jouele" + (this.options.hideTimelineOnPause ? " jouele_timeline_hide" : "") + (this.options.skin ? " jouele-skin-" + this.options.skin : ""))
             .attr("id", "jouele-ui-zone-" + (1000 + Math.round(Math.random() * 8999)))
             .append(
                 $invisibleObject.addClass("jouele-invisible-object"),

@@ -5,7 +5,7 @@ var cssmin = require('gulp-cssmin');
 
 gulp.task('uglify', function () {
     gulp.src(['src/jouele.js'])
-        //.pipe(uglify())
+        .pipe(uglify())
         .pipe(gulp.dest('dist'))
 });
 gulp.task('cssmin', function () {

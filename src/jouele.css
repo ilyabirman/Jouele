@@ -210,7 +210,6 @@
     overflow: hidden;
     padding: 0 0 2px;
     margin: 0 0 0 -4px;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.67);
 }
 
 .jouele-control {
@@ -263,16 +262,12 @@
     width: 16px;
     height: 16px;
 }
-.jouele-svg-color,
-.jouele-svg-subcolor {
+.jouele-svg-color {
     transition: fill 0.16s linear;
-}
-.jouele-svg-subcolor {
-    fill: #ffffff;
 }
 .jouele-control-button-icon_unavailable .jouele-svg-color,
 .jouele-control-button-icon_play .jouele-svg-color {
-    fill: #010101;
+    fill: #000;
 }
 .jouele-control-button-icon_pause .jouele-svg-color {
     fill: #f59331;
@@ -332,22 +327,17 @@
 
 
 /* Black skin */
-.jouele_black .jouele-load-bar:after {
+.jouele-skin-dark .jouele-load-bar:after,
+.jouele-skin-dark .jouele-play-bar:after {
     background: currentColor;
 }
-.jouele_black .jouele-play-bar:after {
+.jouele-skin-dark .jouele-play-lift {
     background-color: currentColor;
 }
-.jouele_black .jouele-play-lift {
-    background-color: currentColor;
+.jouele-skin-dark .jouele-play-lift:before {
+    border-color: currentColor;
 }
-.jouele_black .jouele-info-area {
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.95);
-}
-.jouele_black .jouele-svg-subcolor {
-    fill: #000000;
-}
-.jouele_black .jouele-control-button-icon_unavailable .jouele-svg-color,
-.jouele_black .jouele-control-button-icon_play .jouele-svg-color {
+.jouele-skin-dark .jouele-control-button-icon_unavailable .jouele-svg-color,
+.jouele-skin-dark .jouele-control-button-icon_play .jouele-svg-color {
     fill: currentColor;
 }
