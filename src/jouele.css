@@ -215,7 +215,10 @@
 .jouele-control {
     overflow: hidden;
     font-size: 13px;
-    line-height: 1 !important; /* Перекрываем все возможные каскады на сайте */
+    line-height: 1;
+}
+.jouele-control * {
+    line-height: 1;
 }
 
 .jouele-control-button {
