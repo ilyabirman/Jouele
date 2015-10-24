@@ -225,6 +225,8 @@
         this.$container.after(this.$link).remove();
         $(document).off("." + uniqueID);
 
+        this.$link.removeData("jouele");
+
         return this.$link;
     };
 
@@ -483,6 +485,7 @@
 
     Jouele.prototype.insertDOM = function insertDOM() {
         this.$link.after(this.$container);
+        this.$link.data("jouele", this);
         this.$link.detach();
 
         return this;
