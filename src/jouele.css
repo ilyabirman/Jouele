@@ -334,7 +334,8 @@
 .jouele-skin-dark .jouele-play-bar:after {
     background: currentColor;
 }
-.jouele-skin-dark.jouele-status-playing .jouele-play-bar:after {
+.jouele-skin-dark.jouele-status-playing .jouele-play-bar:after,
+.jouele-skin-dark .jouele-status-playing .jouele-play-bar:after {
     background-color: #f59331;
 }
 .jouele-skin-dark .jouele-mine:hover .jouele-play-bar:after {
@@ -343,7 +344,8 @@
 .jouele-skin-dark .jouele-play-lift {
     background-color: currentColor;
 }
-.jouele-skin-dark.jouele-status-playing .jouele-play-lift {
+.jouele-skin-dark.jouele-status-playing .jouele-play-lift,
+.jouele-skin-dark .jouele-status-playing .jouele-play-lift {
     background-color: #f59331;
 }
 .jouele-skin-dark .jouele-mine:hover .jouele-play-lift {
