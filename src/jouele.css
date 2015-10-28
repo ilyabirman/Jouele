@@ -12,6 +12,10 @@
     box-sizing: content-box;
 }
 
+.jouele-invisible-object img {
+    display: none; /* jPlayer lol */
+}
+
 .jouele-progress-area {
     position: relative;
     width: 100%;
@@ -128,10 +132,12 @@
     -moz-animation: preloader-animate .75s ease infinite;
     -o-animation: preloader-animate .75s ease infinite;
     animation: preloader-animate .75s ease infinite;
+    display: none\0/; /* IE 8 */
     opacity: 0;
 }
 .jouele-play-lift_buffering:before {
     opacity: 1;
+    display: block\0/; /* IE 8 */
 }
 .jouele-status-playing .jouele-play-lift:before {
     border-color: #f59331;
@@ -243,6 +249,8 @@
     display: block;
 }
 .jouele-control-button_nosvg .jouele-control-button-icon {
+    display: inline-block;
+    vertical-align: middle;
     width: 16px;
     height: 16px;
     background: url(i/jouele-sprite.png) no-repeat;
@@ -314,7 +322,7 @@
 
 .jouele_timeline_hide .jouele-progress-area {
     margin-top: -16px;
-    top: 0;
+    display: none\0/; /* IE 8 */
     opacity: 0;
     transition: opacity 0.33s ease-out, margin-top 0.33s ease-out;
 }
@@ -322,8 +330,9 @@
 .jouele-status-playing .jouele-progress-area {
     margin-top: 0;
     opacity: 1;
+    display: block\0/; /* IE 8 */
 }
 
 .jouele-hidden {
-    display: none;
+    display: none !important;
 }
