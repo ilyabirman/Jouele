@@ -384,7 +384,7 @@
             $jPlayer = self.$container.find(".jouele-invisible-object");
 
         this.$jPlayer = $jPlayer.jPlayer({
-            solution: "flash",
+            solution: "flash,html",
             wmode: "window",
             preload: "metadata",
 
