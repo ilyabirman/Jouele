@@ -183,7 +183,7 @@
     };
 
     $.fn.jouele.defaults = {
-        swfPath: "./",
+        swfPath: "./dist/",
         swfFilename: "jquery.jplayer.swf",
         supplied: "mp3",
         volume: 1,
@@ -384,7 +384,7 @@
             $jPlayer = self.$container.find(".jouele-invisible-object");
 
         this.$jPlayer = $jPlayer.jPlayer({
-            solution: "flash,html",
+            solution: "html",
             wmode: "window",
             preload: "metadata",
 
