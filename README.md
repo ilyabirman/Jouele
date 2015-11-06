@@ -18,7 +18,7 @@
 ```html
 <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele">Ilya Birman: News</a>
 ```
-Обратитесь к файлу `index.html`, чтобы увидеть дополнительные примеры использования.
+Обратитесь к файлу `jouele.html`, чтобы увидеть дополнительные примеры использования.
 
 ## Расширенные возможности
 
@@ -109,9 +109,8 @@ Jouele.totalTime (Number)
 Хранит длительность трека в виде количества секунд. Может быть дробным.
 
 ## Титры
-Идея и разработка — [Илья Бирман](http://ilyabirman.ru)
-
-Разработка — [Евгений Лазарев](http://www.eugene-lazarev.ru)
+- Идея и разработка — [Илья Бирман](http://ilyabirman.ru)
+- Разработка — [Евгений Лазарев](http://www.eugene-lazarev.ru)
 
 ## Лицензия
 MIT License
