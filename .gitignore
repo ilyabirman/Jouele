@@ -1,3 +1,5 @@
 .DS_Store
-profile
-jouele/.sass-cache
+.idea/
+node_modules/
+future/
+dist/jplayer/jquery.jplayer.js
