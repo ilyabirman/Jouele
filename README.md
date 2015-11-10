@@ -1,3 +1,102 @@
+# Jouele
+Jouele is a simple and beautiful audio player for the web. 
+
+[Project page](http://ilyabirman.ru/projects/jouele/)
+
+## Setup
+```html
+<!-- Dependencies -->
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="dist/jquery.jplayer.min.js"></script>
+<!-- Jouele -->
+<script src="dist/jouele.js"></script>
+<link href="dist/jouele.css" rel="stylesheet"/>
+```
+
+## Basic Usage
+Each link with jouele class automatically becomes a player for the linked MP3. For example:
+```html
+<a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele">Ilya Birman: News</a>
+```
+Check `jouele.html` to see more examples of usage.
+
+## Advanced features
+
+### data-attributes
+Adding some data-attributes to change the behavior or appearance of the player.
+
+#### `data-length (String)`
+Specifies the total length of the track, so that it occurs immediately without pressing the "play" button.
+Examples for track of 2 minutes 47 seconds length: `data-length="2:47"`, `data-length="167"`
+
+#### `data-pause-on-space (Boolean)`
+Specifies whether to stop the track by pressing the space bar. Default parameter is `true`.
+
+#### `data-scroll-on-space (Boolean)`
+Specifies whether to scroll the page after pressing the space bar and pausing the playing track. Works only if the `data-pause-on-space` is set to `true`. Default parameter is `false`.
+
+#### `data-hide-timeline-on-pause (Boolean)`
+Specifies whether to hide timeline of the track, when it is not playing. Default parameter is `false`.
+
+### Skin
+Adding `jouele-skin-dark` class to the link initialized by Jouele changes to predefined "dark" skin. For example:
+```html
+<a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele jouele-skin-dark">Ilya Birman: News</a>
+```
+
+A developer can create a custom skin having examined the CSS-file `jouele.skin.css`.
+To install a new skin you need to do the following steps:
+- In `jouele.skin.css` change all `jouele-skin-dark` selectors to the new name following the pattern `jouele-skin-` (for example, `jouele-skin-blue`).
+- Add to the link initialized by Jouele `jouele-skin-{skin_name}`class.
+- Link the changed `jouele.skin.css` file to the page after `jouele.css`. 
+
+## Dynamic initialization
+
+#### `$(selector).jouele()`
+Turns `selector` link into a player. Returns a jQuery-object modified by `$(selector)` method. If everything goes right, this `$(selector)` gets an additional `data` with `jouele` name, which  contains an instance of `Jouele` player (the entire API works with this instance, see below). `selector` DOM-object is excluded from DOM using jQuery.detach().
+The player block added to DOM with `jouele` class and unique id also has an instance of `Jouele` player in its `data.jouele`.
+
+## API
+The easiest way to access API:
+```javascript
+$(".jouele").data("jouele") // Get an instance of Jouele
+```
+
+### API Methods
+
+#### `Jouele.play()`
+Starts playing the track. Returns an instance of`Jouelle` player. 
+
+#### `Jouele.pause()`
+Pauses the track. Returns an instance of`Jouelle` player. 
+
+#### `Jouele.destroy()`
+Destroys the player by returning the link from which it was created to the DOM-tree. Returns a jQuery-object of the link. 
+
+### API Properties
+
+#### `Jouele.$link (jQuery object)`
+Stores jQuery-object from which the player was created.
+
+#### `Jouele.isPlaying (Boolean)`
+Shows wherther the track is playing. 
+
+#### `Jouele.isPlayed (Boolean)`
+Shows wherther the track was played.
+
+#### `Jouele.totalTime (Number)`
+Stores the track length in seconds. May be float.
+
+## Credits
+- Idea and development — [Ilya Birman](http://ilyabirman.ru)
+- Development — [Eugene Lazarev](http://www.eugene-lazarev.ru)
+
+## License
+MIT License
+
+
+
+
 # Жуэль
 Жуэль — простой и красивый плеер для веба.
 
@@ -48,7 +147,7 @@
 Для подключения нового скина нужно следующее:
 - Заменить в `jouele.skin.css` все селекторы `jouele-skin-dark` на новое название, сохранив паттерн `jouele-skin-` (например, `jouele-skin-blue`).
 - Добавить в ссылку, которая будет инициализирована Жуэлем, класс `jouele-skin-{название_скина}`.
-- Подключить на сайт исправленный файл `joule.skin.css` после `jouele.css`.
+- Подключить на сайт исправленный файл `jouele.skin.css` после `jouele.css`.
 
 ## Динамическая инициализация
 
@@ -94,3 +193,5 @@ $(".jouele").data("jouele") // Получить экземпляр Jouele
 
 ## Лицензия
 MIT License
+
+
