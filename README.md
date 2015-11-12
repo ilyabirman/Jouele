@@ -2,6 +2,7 @@
 Jouele is a simple and beautiful audio player for the web. 
 
 [Project page](http://ilyabirman.ru/projects/jouele/)
+[Russian translation of this documentation](https://github.com/ilyabirman/Jouele/blob/master/README-ru.md)
 
 ## Setup
 ```html
