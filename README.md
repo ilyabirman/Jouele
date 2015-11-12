@@ -1,9 +1,9 @@
-# Жуэль
-Жуэль — простой и красивый плеер для веба.
+# Jouele
+Jouele is a simple and beautiful audio player for the web. 
 
-[Страница проекта](http://ilyabirman.ru/projects/jouele/)
+[Project page](http://ilyabirman.ru/projects/jouele/)
 
-## Как установить
+## Setup
 ```html
 <!-- Dependencies -->
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -13,84 +13,84 @@
 <link href="dist/jouele.css" rel="stylesheet"/>
 ```
 
-## Как использовать
-Каждая ссылка с классом jouele превратится в плеер МП3-файла, на который она ведёт. Например:
+## Basic Usage
+Each link with `jouele` class automatically becomes a player for the linked MP3. For example:
 ```html
 <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele">Ilya Birman: News</a>
 ```
-Обратитесь к файлу `jouele.html`, чтобы увидеть дополнительные примеры использования.
+Check `jouele.html` to see more examples of usage.
 
-## Расширенные возможности
+## Advanced features
 
-### data-атрибуты
-Добавление некоторых data-атрибутов изменит поведение или внешний вид плеера.
+### data-attributes
+Adding some data-attributes changes the behavior or appearance of the player.
 
 #### `data-length (String)`
-Указывает общую продолжительность трека, чтобы время показывалось сразу, а не после нажатия кнопки «плей».
-Примеры для трека длительностью 2 минуты 47 секунд: `data-length="2:47"`, `data-length="167"`
+Shows the total length of the track, so that it is displayed immediately without pressing the "play" button.
+Examples for track of 2 minutes 47 seconds length: `data-length="2:47"`, `data-length="167"`
 
 #### `data-pause-on-space (Boolean)`
-Определяет, нужно ли останавливать этот трек по нажатию пробела. По умолчанию `true`.
+Specifies whether to stop playback by pressing the spacebar. Default parameter is `true`.
 
 #### `data-scroll-on-space (Boolean)`
-Определяет, нужно ли проскроллить страницу после нажатия пробела и остановки играющего трека. Работает только если `data-pause-on-space` установлен в `true`. По умолчанию `false`.
+Specifies whether to scroll the page after pressing the spacebar which stops the playback. Works only if the `data-pause-on-space` is set to `true`. Default parameter is `false`.
 
 #### `data-hide-timeline-on-pause (Boolean)`
-Определяет, нужно ли скрывать таймлайн трека, когда он не играет. По умолчанию `false`.
+Specifies whether to hide timeline of the track, when track is not playing. Default parameter is `false`.
 
-### Скин
-Добавление класса `jouele-skin-dark` к ссылке, которая будет инициализирована Жуэлем, включает предустановленный «тёмный» скин. Например:
+### Skin
+Adding `jouele-skin-dark` class to the link initialized by Jouele changes to predefined "dark" theme. For example:
 ```html
 <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele jouele-skin-dark">Ilya Birman: News</a>
 ```
 
-Разработчик может создать собственный скин, изучив CSS-файл `jouele.skin.css`.
-Для подключения нового скина нужно следующее:
-- Заменить в `jouele.skin.css` все селекторы `jouele-skin-dark` на новое название, сохранив паттерн `jouele-skin-` (например, `jouele-skin-blue`).
-- Добавить в ссылку, которая будет инициализирована Жуэлем, класс `jouele-skin-{название_скина}`.
-- Подключить на сайт исправленный файл `joule.skin.css` после `jouele.css`.
+A developer can create a custom theme having examined the CSS-file `jouele.skin.css`.
+Follow these steps to install a new theme:
+- In `jouele.skin.css` change all `jouele-skin-dark` selectors to the new name following the pattern `jouele-skin-` (for example, `jouele-skin-blue`).
+- Add `jouele-skin-{skin_name}`class to the link initialized by Jouele.
+- Link the changed `jouele.skin.css` file to the page after `jouele.css`. 
 
-## Динамическая инициализация
+## Dynamic initialization
 
 #### `$(selector).jouele()`
-Превращает ссылку `selector` в плеер. Возвращает jQuery-объект, к которому применялся метод — `$(selector)`.
-Если всё прошло хорошо, то в этот же jQuery-объект `$(selector)` добавится дополнительная `data` с именем `jouele`, в которой будет лежать экземпляр плеера `Jouele` (с этим экземпляром и работает весь API, см. ниже). DOM-объект `selector` будет исключен из DOM при помощи jQuery.detach().
-Добавленный в DOM блок плеера с классом `jouele` и уникальным id будет также иметь в своём `data.jouele` экземпляр плеера `Jouele`.
+Turns `selector` link into a player. Returns a jQuery-object modified by `$(selector)` method. If everything is correct, this `$(selector)` gets an additional `data` attribute with `jouele` name, which  contains an instance of `Jouele` player (the entire API works with this instance, see below). `selector` DOM-object is excluded from DOM using jQuery.detach() method.
+The player block added to DOM with `jouele` class and unique id also has an instance of `Jouele` player in its `data.jouele`.
+
 
 ## API
-Самый простой способ обратиться к API:
+The easiest way to access API:
 ```javascript
-$(".jouele").data("jouele") // Получить экземпляр Jouele
+$(".jouele").data("jouele") // Get an instance of Jouele
 ```
 
-### Методы API
+### API Methods
 
 #### `Jouele.play()`
-Начинает воспроизведение трека. Возвращает экземпляр плеера `Jouele`.
+Starts the playback. Returns an instance of `Jouele` player. 
 
 #### `Jouele.pause()`
-Останавливает воспроизведение трека. Возвращает экземпляр плеера `Jouele`.
+Pauses the playback. Returns an instance of `Jouele` player. 
 
 #### `Jouele.destroy()`
-Уничтожает плеер, возвращая в DOM-дерево ссылку, из которой он был создан. Возвращает jQuery-объект ссылки.
+Destroys the player, then adds back to the DOM the link, which created the player. Returns the jQuery-object of the link. 
 
-### Свойства API
+### API Properties
 
 #### `Jouele.$link (jQuery object)`
-Хранит jQuery-объект, из которого был создан плеер.
+Stores jQuery-object of the link from which the player was created.
 
 #### `Jouele.isPlaying (Boolean)`
-Указывает, играет ли сейчас этот трек.
+Indicates whether the track is currently playing. 
 
 #### `Jouele.isPlayed (Boolean)`
-Указывает, запускался ли этот трек.
+Indicates whether the track was played.
 
 #### `Jouele.totalTime (Number)`
-Хранит длительность трека в виде количества секунд. Может быть дробным.
+Stores the track length in seconds. Can be a floating-point number.
 
-## Титры
-- Идея и разработка — [Илья Бирман](http://ilyabirman.ru)
-- Разработка — [Евгений Лазарев](http://www.eugene-lazarev.ru)
+## Credits
+- Idea and development — [Ilya Birman](http://ilyabirman.ru)
+- Development — [Eugene Lazarev](http://www.eugene-lazarev.ru)
 
-## Лицензия
+## License
 MIT License
