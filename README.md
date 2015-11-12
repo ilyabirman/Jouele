@@ -33,7 +33,7 @@ Examples for track of 2 minutes 47 seconds length: `data-length="2:47"`, `data-l
 Specifies whether to stop playback by pressing the spacebar. Default parameter is `true`.
 
 #### `data-scroll-on-space (Boolean)`
-Specifies whether to scroll the page after pressing the spacebar or stopping the playback. Works only if the `data-pause-on-space` is set to `true`. Default parameter is `false`.
+Specifies whether to scroll the page after pressing the spacebar which stops the playback. Works only if the `data-pause-on-space` is set to `true`. Default parameter is `false`.
 
 #### `data-hide-timeline-on-pause (Boolean)`
 Specifies whether to hide timeline of the track, when track is not playing. Default parameter is `false`.
