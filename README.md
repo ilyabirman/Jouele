@@ -20,7 +20,7 @@ Each link with `jouele` class automatically becomes a player for the linked MP3.
 ```html
 <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele">Ilya Birman: News</a>
 ```
-Check `jouele.html` to see more examples of usage.
+Check [`jouele.html`](jouele.html) to see more examples of usage.
 
 ## Advanced features
 

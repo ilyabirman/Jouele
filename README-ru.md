@@ -18,7 +18,7 @@
 ```html
 <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele">Ilya Birman: News</a>
 ```
-Обратитесь к файлу `jouele.html`, чтобы увидеть дополнительные примеры использования.
+Обратитесь к файлу [`jouele.html`](jouele.html), чтобы увидеть дополнительные примеры использования.
 
 ## Расширенные возможности
 
