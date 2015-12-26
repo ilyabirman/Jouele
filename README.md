@@ -46,7 +46,7 @@ Adding `jouele-skin-dark` class to the link initialized by Jouele changes to pre
 <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele jouele-skin-dark">Ilya Birman: News</a>
 ```
 
-A developer can create a custom theme having examined the CSS-file `jouele.skin.css`.
+A developer can create a custom theme having examined the CSS-file [`jouele.skin.css`](dist/jouele.skin.css).
 Follow these steps to install a new theme:
 - In [`jouele.skin.css`](dist/jouele.skin.css) change all `jouele-skin-dark` selectors to the new name following the pattern `jouele-skin-{skin_name}` (for example, `jouele-skin-blue`).
 - Add `jouele-skin-{skin_name}`class to the link initialized by Jouele.

@@ -44,7 +44,7 @@
 <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele jouele-skin-dark">Ilya Birman: News</a>
 ```
 
-Разработчик может создать собственный скин, изучив CSS-файл `jouele.skin.css`.
+Разработчик может создать собственный скин, изучив CSS-файл [`jouele.skin.css`](dist/jouele.skin.css).
 Для подключения нового скина нужно следующее:
 - Заменить в [`jouele.skin.css`](dist/jouele.skin.css) все селекторы `jouele-skin-dark` на новое название, сохранив паттерн `jouele-skin-{название_скина}` (например, `jouele-skin-blue`).
 - Добавить в ссылку, которая будет инициализирована Жуэлем, класс `jouele-skin-{название_скина}`.
