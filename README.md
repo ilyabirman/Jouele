@@ -48,9 +48,9 @@ Adding `jouele-skin-dark` class to the link initialized by Jouele changes to pre
 
 A developer can create a custom theme having examined the CSS-file `jouele.skin.css`.
 Follow these steps to install a new theme:
-- In `jouele.skin.css` change all `jouele-skin-dark` selectors to the new name following the pattern `jouele-skin-` (for example, `jouele-skin-blue`).
+- In [`jouele.skin.css`](dist/jouele.skin.css) change all `jouele-skin-dark` selectors to the new name following the pattern `jouele-skin-{skin_name}` (for example, `jouele-skin-blue`).
 - Add `jouele-skin-{skin_name}`class to the link initialized by Jouele.
-- Link the changed `jouele.skin.css` file to the page after `jouele.css`. 
+- Link the changed [`jouele.skin.css`](dist/jouele.skin.css) file to the page after [`jouele.css`](dist/jouele.css).
 
 ## Dynamic initialization
 

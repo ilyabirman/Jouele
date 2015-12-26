@@ -46,9 +46,9 @@
 
 Разработчик может создать собственный скин, изучив CSS-файл `jouele.skin.css`.
 Для подключения нового скина нужно следующее:
-- Заменить в `jouele.skin.css` все селекторы `jouele-skin-dark` на новое название, сохранив паттерн `jouele-skin-` (например, `jouele-skin-blue`).
+- Заменить в [`jouele.skin.css`](dist/jouele.skin.css) все селекторы `jouele-skin-dark` на новое название, сохранив паттерн `jouele-skin-{название_скина}` (например, `jouele-skin-blue`).
 - Добавить в ссылку, которая будет инициализирована Жуэлем, класс `jouele-skin-{название_скина}`.
-- Подключить на сайт исправленный файл `jouele.skin.css` после `jouele.css`.
+- Подключить на сайт исправленный файл [`jouele.skin.css`](dist/jouele.skin.css) после [`jouele.css`](dist/jouele.css).
 
 ## Динамическая инициализация
 
