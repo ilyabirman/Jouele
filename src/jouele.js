@@ -142,12 +142,20 @@
             percent = 100;
         }
 
+        if (!instance.isPlaying) {
+            if ($.Jouele.lastPlayed !== instance) {
+                $.Jouele.lastPlayed = instance;
+                $.Jouele("setMedia", instance);
+            }
+            instance.pseudoPlay();
+        }
+
+        $.Jouele.$jPlayer.jPlayer("playHead", percent);
+
         updatePlayBar(instance, percent);
         showPreloader(instance);
 
         instance.waitForLoad = true;
-        instance.$jPlayer.jPlayer("playHead", percent);
-        instance.pseudoPlay();
 
         if (instance.fullTimeDisplayed) {
             instance.seekTime = (instance.totalTime / 100) * percent;
@@ -171,7 +179,10 @@
                 skin = "";
 
             if (joueleInstance) {
-                /* Update current instance (soon) */
+                /* Call method */
+                if (typeof options === "string" && typeof joueleInstance[options] !== "undefined" && $.isFunction(joueleInstance[options])) {
+                    return joueleInstance[options]();
+                }
             } else {
                 /* Create new instance */
                 if (skinClassPosition > 0) {
@@ -183,19 +194,17 @@
     };
 
     $.fn.jouele.defaults = {
-        swfPath: "./dist/",
-        swfFilename: "jquery.jplayer.swf",
-        supplied: "mp3",
-        volume: 1,
         length: 0,
+        playFrom: 0,
         scrollOnSpace: false,
         pauseOnSpace: true,
+        playOnSpace: true,
         hideTimelineOnPause: false,
         skin: ""
     };
 
-    function Jouele($link, options) {
-        this.version = "2.0.0";
+    var Jouele = function ($link, options) {
+        this.version = "2.1.0";
         this.$link = $link;
         this.options = options;
         this.isPlaying = false;
@@ -207,20 +216,39 @@
         this.seekTime = 0;
         this.preloaderTimeout = null;
         this.isSeeking = false;
+        this.playFrom = 0;
 
         this.init();
-    }
+    };
 
     Jouele.prototype.init = function init() {
+        $.Jouele.playlist.push(this);
+
         this.checkOptions();
         this.createDOM();
-        this.initPlayerPlugin();
+
+        if (!$.Jouele.$jPlayer) {
+            $.Jouele("init", this);
+        } else {
+            $.Jouele("_jPlayerReady", this);
+        }
+
         this.bindEvents();
         this.insertDOM();
     };
 
     Jouele.prototype.destroy = function destroy() {
-        var uniqueID = this.$container.attr("id");
+        var self = this,
+            uniqueID = this.$container.attr("id");
+
+        $.each($.Jouele.playlist, function (index, element) {
+            if (element === self) {
+                $.Jouele.playlist.splice(index, 1);
+            }
+            if ($.Jouele.lastPlayed === self) {
+                $.Jouele.lastPlayed = null;
+            }
+        });
 
         this.$container.after(this.$link).remove();
         $(document).off("." + uniqueID);
@@ -269,6 +297,17 @@
     };
 
     Jouele.prototype.play = function play() {
+        if ($.Jouele.lastPlayed !== this) {
+            if (this.playFrom) {
+                showPreloader(this);
+                willSeekTo(this, this.totalTime ? (this.playFrom / (this.totalTime / 100)) : 0);
+                return this;
+            } else {
+                $.Jouele.lastPlayed = this;
+                $.Jouele("setMedia", this);
+            }
+        }
+
         showPreloader(this, this.seekTime ? false : 500); // 500 is enough to play the loaded fragment, if it's loaded; if isn't — preloader will appear after 500ms
 
         this.isPlayed = true;
@@ -284,10 +323,11 @@
 
     Jouele.prototype.pseudoPlay = function pseudoPlay() {
         $(document).trigger("jouele-pause", this);
-        this.isPlayed = true;
         this.$container.addClass("jouele-status-playing");
         this.$container.find(".jouele-control-button-icon_pause").removeClass("jouele-hidden");
         this.$container.find(".jouele-control-button-icon_play").addClass("jouele-hidden");
+
+        this.isPlayed = true;
     };
 
     Jouele.prototype.onPause = function onPause() {
@@ -312,9 +352,12 @@
         this.$container.addClass("jouele-status-playing");
         this.$container.find(".jouele-control-button-icon_pause").removeClass("jouele-hidden");
         this.$container.find(".jouele-control-button-icon_play").addClass("jouele-hidden");
+
         this.waitForLoad = false;
         this.isPlaying = true;
         this.isPlayed = true;
+
+        $.Jouele.lastPlayed = this;
     };
 
     Jouele.prototype.checkOptions = function checkOptions() {
@@ -379,110 +422,6 @@
         return this;
     };
 
-    Jouele.prototype.initPlayerPlugin = function initPlayerPlugin() {
-        var self = this,
-            $jPlayer = self.$container.find(".jouele-invisible-object");
-
-        this.$jPlayer = $jPlayer.jPlayer({
-            solution: "html",
-            wmode: "window",
-            preload: "metadata",
-
-            swfPath: self.options.swfPath + self.options.swfFilename,
-            supplied: self.options.supplied,
-            volume: self.options.volume,
-
-            ready: function() {
-                var audiofileLink = self.$link.attr("href"),
-                    uniqueID = self.$container.attr("id");
-
-                $jPlayer.jPlayer("setMedia", {
-                    mp3: audiofileLink
-                });
-
-                self.$container.find(".jouele-hidden").removeClass("jouele-hidden");
-                self.$container.find(".jouele-control-button-icon_unavailable").addClass("jouele-hidden");
-                self.$container.find(".jouele-control-button-icon_pause").addClass("jouele-hidden");
-
-                self.$container.find(".jouele-control-link").on("click", function(event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                });
-                self.$container.find(".jouele-control-button-icon_play").on("click", function() {
-                    self.waitForLoad = true;
-                    self.pseudoPlay.call(self);
-                    self.play.call(self);
-                });
-                self.$container.find(".jouele-control-button-icon_pause").on("click", function() {
-                    self.pseudoPause.call(self);
-                    self.pause.call(self);
-                });
-
-                self.$container.find(".jouele-mine").on("mousedown." + uniqueID, function(event) {
-                    if (event.which !== 1) {
-                        return false;
-                    }
-
-                    event.stopPropagation();
-                    event.preventDefault();
-
-                    self.isSeeking = true;
-
-                    var $this = $(this),
-                        clickPoint = ((event.pageX - $this.offset().left) / $this.width()) * 100;
-
-                    $(document).off("mouseup." + uniqueID).one("mouseup." + uniqueID, function() {
-                        self.isSeeking = false;
-                        showPreloader(self);
-                    });
-                    $(document).off("mousemove." + uniqueID).on("mousemove." + uniqueID, function(event) {
-                        event.stopPropagation();
-                        event.preventDefault();
-
-                        if (!self.isSeeking) {
-                            return false;
-                        }
-
-                        var clickPoint = ((event.pageX - $this.offset().left) / $this.width()) * 100;
-
-                        willSeekTo(self, clickPoint);
-                    });
-
-                    willSeekTo(self, clickPoint);
-                });
-            },
-            pause: function() {
-                self.onPause.call(self);
-            },
-            stop: function() {
-                self.onStop.call(self);
-            },
-            play: function() {
-                self.onPlay.call(self);
-            },
-            progress: function(event) {
-                updateLoadBar(self, event.jPlayer.status);
-                updateTimeDisplay(self, event.jPlayer.status.currentTime);
-            },
-            timeupdate: function(event) {
-                updateLoadBar(self, event.jPlayer.status);
-                updateTimeDisplay(self, event.jPlayer.status.currentTime);
-                updatePlayBar(self, event.jPlayer.status.currentPercentAbsolute.toFixed(2));
-
-                hidePreloader(self);
-
-                if (self.waitForLoad) {
-                    self.waitForLoad = false;
-                    self.seekTime = 0;
-                    self.play();
-                    hidePreloader(self);
-                }
-            }
-        });
-
-        return this;
-    };
-
     Jouele.prototype.insertDOM = function insertDOM() {
         this.$link.after(this.$container);
         this.$link.data("jouele", this);
@@ -501,21 +440,176 @@
             }
         });
 
-        $(document).on("keydown." + uniqueID, function(event) {
-            if (event.keyCode === 32) {
-                if (self.isPlaying && self.options.pauseOnSpace) {
-                    if (!self.options.scrollOnSpace) {
-                        event.stopPropagation();
-                        event.preventDefault();
-                    }
-
-                    self.$jPlayer.jPlayer("pause");
-                }
-            }
-        });
-
         return this;
     };
+
+    $.Jouele = function(method, context) {
+        this.init = function(context) {
+            var self = this,
+                $jPlayer = $("<div>");
+
+            $(document).on("keydown.jouele", function(event) {
+                if (event.keyCode === 32 && $.Jouele.lastPlayed) {
+                    if ($.Jouele.lastPlayed.isPlaying) {
+                        if ($.Jouele.lastPlayed.options.pauseOnSpace) {
+                            if (!$.Jouele.lastPlayed.options.scrollOnSpace) {
+                                event.stopPropagation();
+                                event.preventDefault();
+                            }
+                            $.Jouele.lastPlayed.pause();
+                        }
+                    } else {
+                        if ($.Jouele.lastPlayed.options.playOnSpace) {
+                            if (!$.Jouele.lastPlayed.options.scrollOnSpace) {
+                                event.stopPropagation();
+                                event.preventDefault();
+                            }
+                            $.Jouele.lastPlayed.play();
+                        }
+                    }
+                }
+            });
+
+            $.Jouele.$jPlayer = $jPlayer.jPlayer({
+                solution: "html",
+                wmode: "window",
+                preload: "metadata",
+
+                supplied: "mp3",
+                volume: 1,
+
+                ready: function() {
+                    self._jPlayerReady(context);
+                }
+            });
+        };
+
+        this.setMedia = function(context) {
+            var self = this;
+
+            context.$jPlayer.off($.jPlayer.event.pause).on($.jPlayer.event.pause, function() {
+                self._jPlayerPause(context);
+            });
+            context.$jPlayer.off($.jPlayer.event.stop).on($.jPlayer.event.stop, function() {
+                self._jPlayerStop(context);
+            });
+            context.$jPlayer.off($.jPlayer.event.play).on($.jPlayer.event.play, function() {
+                self._jPlayerPlay(context);
+            });
+            context.$jPlayer.off($.jPlayer.event.progress).on($.jPlayer.event.progress, function(event) {
+                self._jPlayerProgress(context, event);
+            });
+            context.$jPlayer.off($.jPlayer.event.timeupdate).on($.jPlayer.event.timeupdate, function(event) {
+                self._jPlayerTimeupdate(context, event);
+            });
+
+            $.Jouele.$jPlayer.jPlayer("setMedia", {
+                mp3: context.$link.attr("href")
+            });
+        };
+
+        this._jPlayerReady = function(context) {
+            var uniqueID = context.$container.attr("id");
+
+            context.$jPlayer = $.Jouele.$jPlayer;
+            context.totalTime = makeSeconds(context.options.length);
+            context.playFrom = makeSeconds(context.options.playFrom);
+
+            context.$container.find(".jouele-hidden").removeClass("jouele-hidden");
+            context.$container.find(".jouele-control-button-icon_unavailable").addClass("jouele-hidden");
+            context.$container.find(".jouele-control-button-icon_pause").addClass("jouele-hidden");
+
+            context.$container.find(".jouele-control-link").off("click.jouele").on("click.jouele", function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+            });
+            context.$container.find(".jouele-control-button-icon_play").off("click.jouele").on("click.jouele", function() {
+                context.waitForLoad = true;
+                context.pseudoPlay.call(context);
+                context.play.call(context);
+            });
+            context.$container.find(".jouele-control-button-icon_pause").off("click.jouele").on("click.jouele", function() {
+                context.pseudoPause.call(context);
+                context.pause.call(context);
+            });
+
+            context.$container.find(".jouele-mine").off("mousedown." + uniqueID).on("mousedown." + uniqueID, function(event) {
+                if (event.which !== 1) {
+                    return false;
+                }
+
+                event.stopPropagation();
+                event.preventDefault();
+
+                context.isSeeking = true;
+
+                var $this = $(this),
+                    clickPoint = ((event.pageX - $this.offset().left) / $this.width()) * 100;
+
+                $(document).off("mouseup." + uniqueID).one("mouseup." + uniqueID, function() {
+                    $(document).off("mousemove." + uniqueID);
+                    context.isSeeking = false;
+                    showPreloader(context);
+                });
+                $(document).off("mousemove." + uniqueID).on("mousemove." + uniqueID, function(event) {
+                    event.stopPropagation();
+                    event.preventDefault();
+
+                    if (!context.isSeeking) {
+                        return false;
+                    }
+
+                    var clickPoint = ((event.pageX - $this.offset().left) / $this.width()) * 100;
+
+                    willSeekTo(context, clickPoint);
+                });
+
+                willSeekTo(context, clickPoint);
+            });
+        };
+
+        this._jPlayerPause = function(context) {
+            context.onPause.call(context);
+        };
+
+        this._jPlayerStop = function(context) {
+            context.onStop.call(context);
+        };
+
+        this._jPlayerPlay = function(context) {
+            context.onPlay.call(context);
+        };
+
+        this._jPlayerProgress = function(context, event) {
+            updateLoadBar(context, event.jPlayer.status);
+            updateTimeDisplay(context, event.jPlayer.status.currentTime);
+        };
+
+        this._jPlayerTimeupdate = function(context, event) {
+            updateLoadBar(context, event.jPlayer.status);
+            updateTimeDisplay(context, event.jPlayer.status.currentTime);
+            updatePlayBar(context, event.jPlayer.status.currentPercentAbsolute.toFixed(2));
+
+            context.playFrom = event.jPlayer.status.currentTime;
+
+            hidePreloader(context);
+
+            if (context.waitForLoad) {
+                context.waitForLoad = false;
+                context.seekTime = 0;
+                context.play();
+                hidePreloader(context);
+            }
+        };
+
+        if (typeof method === "string" && $.isFunction(this[method])) {
+            this[method](context);
+        }
+    };
+
+    $.Jouele.playlist = [];
+    $.Jouele.lastPlayed = null;
+    $.Jouele.$jPlayer = null;
 
     /* It's time to know if SVG supported */
     setSVGSupport();
