@@ -3,7 +3,7 @@ Jouele is a simple and beautiful audio player for the web.
 
 [Project page](http://ilyabirman.ru/projects/jouele/)
 
-[Russian translation of this documentation](https://github.com/ilyabirman/Jouele/blob/master/README-ru.md)
+[Russian translation of the documentation](https://github.com/ilyabirman/Jouele/blob/master/README-ru.md)
 
 ## Setup
 ```html
@@ -34,8 +34,11 @@ Examples for track of 2 minutes 47 seconds length: `data-length="2:47"`, `data-l
 #### `data-pause-on-space (Boolean)`
 Specifies whether to stop playback by pressing the spacebar. Default parameter is `true`.
 
+#### `data-play-on-space (Boolean)`
+Specifies whether to resume playback by pressing the spacebar after the track was stopped. Default parameter is `true`.
+
 #### `data-scroll-on-space (Boolean)`
-Specifies whether to scroll the page after pressing the spacebar which stops the playback. Works only if the `data-pause-on-space` is set to `true`. Default parameter is `false`.
+Specifies whether to scroll the page after pressing the spacebar which stops/resumes the playback. Works only if the `data-pause-on-space` corresponding to the action (pause/resume) is set to `true`. Default parameter is `false`.
 
 #### `data-hide-timeline-on-pause (Boolean)`
 Specifies whether to hide timeline of the track, when track is not playing. Default parameter is `false`.
@@ -58,22 +61,35 @@ Follow these steps to install a new theme:
 Turns `selector` link into a player. Returns a jQuery-object modified by `$(selector)` method. If everything is correct, this `$(selector)` gets an additional `data` attribute with `jouele` name, which  contains an instance of `Jouele` player (the entire API works with this instance, see below). `selector` DOM-object is excluded from DOM using jQuery.detach() method.
 The player block added to DOM with `jouele` class and unique id also has an instance of `Jouele` player in its `data.jouele`.
 
+## Global Object '$.Jouele'
+The object contains 3 properties:
+
+#### `$.Jouele.playlist (Array)`
+Array, containing all instances of `Jouele` player on the page, arranged in order of their position in DOM. Empty if there is no active instance on the page.
+
+#### `$.Jouele.lastPlayed (Jouele / null)`
+Link to the last played or now playing instance of `Jouele` player.
+`null` if nothing has been played yet or if the last played track has been destroyed with `destroy` method.
+
+#### `$.Jouele.$jPlayer (jQuery object / null)`
+jQuery-object with jPlayer instance binded.
+`null`, if none of `Jouele` player instances was initialized or if jPlayer is unavailable.
 
 ## API
-The easiest way to access API:
+Recommended way to access API:
 ```javascript
 $(".jouele").data("jouele") // Get an instance of Jouele
 ```
 
 ### API Methods
 
-#### `Jouele.play()`
+#### `Jouele.play()` or `$(".jouele").jouele("play")`
 Starts the playback. Returns an instance of `Jouele` player. 
 
-#### `Jouele.pause()`
+#### `Jouele.pause()` or `$(".jouele").jouele("pause")`
 Pauses the playback. Returns an instance of `Jouele` player. 
 
-#### `Jouele.destroy()`
+#### `Jouele.destroy()` or `$(".jouele").jouele("destroy")`
 Destroys the player, then adds back to the DOM the link, which created the player. Returns the jQuery-object of the link. 
 
 ### API Properties
@@ -92,7 +108,8 @@ Stores the track length in seconds. Can be a floating-point number.
 
 ## Credits
 - Idea and development — [Ilya Birman](http://ilyabirman.ru)
-- Development — [Eugene Lazarev](http://www.eugene-lazarev.ru)
+- Development — [Eugene Lazarev](http://eugene-lazarev.ru)
+- Documentation translation - [Alexandra Godun]
 
 ## License
 MIT License
