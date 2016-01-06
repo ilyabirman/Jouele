@@ -490,9 +490,6 @@
             context.$jPlayer.off($.jPlayer.event.pause).on($.jPlayer.event.pause, function() {
                 self._jPlayerPause(context);
             });
-            context.$jPlayer.off($.jPlayer.event.stop).on($.jPlayer.event.stop, function() {
-                self._jPlayerStop(context);
-            });
             context.$jPlayer.off($.jPlayer.event.play).on($.jPlayer.event.play, function() {
                 self._jPlayerPlay(context);
             });
