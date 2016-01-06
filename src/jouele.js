@@ -174,7 +174,7 @@
         return this.each(function() {
             var $this = $(this),
                 thisClass = $this.attr("class"),
-                skinClassPosition = thisClass.indexOf("jouele-skin-"),
+                skinClassPosition = thisClass ? thisClass.indexOf("jouele-skin-") : -1,
                 joueleInstance = $this.data("jouele"),
                 skin = "";
 
