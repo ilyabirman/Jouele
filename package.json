@@ -1,6 +1,6 @@
 {
   "name": "Jouele",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-concat-css": "^2.2.0",
