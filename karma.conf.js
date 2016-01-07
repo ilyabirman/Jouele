@@ -13,7 +13,7 @@ module.exports = function(config) {
       'src/jouele.css',
       'src/jouele.skin.css',
       'http://code.jquery.com/jquery-1.11.3.min.js',
-      'dist/jquery.jplayer.min.js',
+      'test/jplayer.mock.js',
       'src/jouele.js',
       'test/helpers.js',
       'test/tests.js'
@@ -52,7 +52,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits

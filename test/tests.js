@@ -28,18 +28,9 @@ test('jouele player', function () {
   equal($.Jouele.playlist.length, 1, 'playlist length equal track numbers');
 });
 
-test('jPlayer', function (assert) {
-	expect(3);
-	var done = assert.async();
-
+test('jPlayer', function () {
   ok($.Jouele.$jPlayer !== null, 'jPlayer instance exist');
-
-	waitPlayerReady(function () {
-		ok(true, 'ready event occur');
-		equal(joueleInstance.$jPlayer, $.Jouele.$jPlayer, 'jPlayer instance set to context');
-		done();
-	});
-
+	equal(joueleInstance.$jPlayer, $.Jouele.$jPlayer, 'jPlayer instance set to context');
 });
 
 test('DOM', function () {
