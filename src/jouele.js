@@ -174,7 +174,7 @@
         return this.each(function() {
             var $this = $(this),
                 thisClass = $this.attr("class"),
-                skinClassPosition = thisClass.indexOf("jouele-skin-"),
+                skinClassPosition = thisClass ? thisClass.indexOf("jouele-skin-") : -1,
                 joueleInstance = $this.data("jouele"),
                 skin = "";
 
@@ -204,7 +204,7 @@
     };
 
     var Jouele = function ($link, options) {
-        this.version = "2.1.0";
+        this.version = "2.1.1";
         this.$link = $link;
         this.options = options;
         this.isPlaying = false;

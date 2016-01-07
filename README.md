@@ -61,7 +61,7 @@ Follow these steps to install a new theme:
 Turns `selector` link into a player. Returns a jQuery-object modified by `$(selector)` method. If everything is correct, this `$(selector)` gets an additional `data` attribute with `jouele` name, which  contains an instance of `Jouele` player (the entire API works with this instance, see below). `selector` DOM-object is excluded from DOM using jQuery.detach() method.
 The player block added to DOM with `jouele` class and unique id also has an instance of `Jouele` player in its `data.jouele`.
 
-## Global Object '$.Jouele'
+## Global Object `$.Jouele`
 The object contains 3 properties:
 
 #### `$.Jouele.playlist (Array)`
