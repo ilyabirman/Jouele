@@ -1,12 +1,22 @@
 
 var $elms;
 var joueleInstance;
+var joueleOpts = {playFrom: '3:30'};
+var isjPlayerReady = false;
 
 var lifecycle = {
 	beforeEach: function (assert) {
 		setupDOM();
-		$elms = $('.jouele-track').jouele();
+		$elms = $('.jouele-track').jouele(joueleOpts || {});
 		joueleInstance = getInstance($elms[0]);
+
+		if (!isjPlayerReady) {
+			var done = assert.async();
+			waitPlayerReady(function () {
+				isjPlayerReady = true;
+				done();
+			});
+		}
 	},
 
 	afterEach: function () {
@@ -67,7 +77,7 @@ test('event handlers - seek control', function (assert) {
 	var $elmMine = joueleInstance.$container.find('.jouele-mine');
 
 	joueleInstance.onPlay = function () {
-		ok(true, 'play after willSeekTo');
+		ok(joueleInstance.isSeeking, 'play after willSeekTo');
 		done();
 	}
 
@@ -77,6 +87,36 @@ test('event handlers - seek control', function (assert) {
 			which: 1
 		})
 	);
+});
+
+test('evet handlers - space keydown play/pause', function (assert) {
+	expect(3);
+	var done = assert.async();
+	var _onPlay = joueleInstance.onPlay;
+	var _onPause = joueleInstance.onPause;
+	var playInvoked = 0;
+
+	joueleInstance.onPause = function () {
+		ok(true, 'pause after space keydown');
+		_onPause.call(joueleInstance);
+		$(document).trigger($.Event('keydown.jouele', {keyCode: 32}));
+	}
+
+	joueleInstance.onPlay = function () {
+		playInvoked++;
+
+		if (playInvoked === 2) {
+			ok(true, 'play after onPause and space keydown');
+			done();
+			return;
+		}
+
+		ok(true, 'play on space keydown');
+		_onPlay.call(joueleInstance);
+		$(document).trigger($.Event('keydown.jouele', {keyCode: 32}));
+	}
+
+	joueleInstance.play();
 });
 
 module('API', lifecycle);
@@ -150,4 +190,18 @@ test('destroy', function (assert) {
 
 	$link.remove();
 	$elms = null;
+});
+
+QUnit.module('Options', lifecycle);
+
+test('playFrom', function (assert) {
+	assert.expect(2);
+	var done = assert.async();
+
+	strictEqual(joueleInstance.playFrom, 210);
+	joueleInstance.onPlay = function () {
+		ok(true, 'onPlay callback');
+		done();
+	}
+	joueleInstance.play();
 });

@@ -10,9 +10,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'src/jouele.css',
-      'src/jouele.skin.css',
-      'http://code.jquery.com/jquery-1.11.3.min.js',
+      'dist/jquery-1.11.3.min.js',
       'test/jplayer.mock.js',
       'src/jouele.js',
       'test/helpers.js',
@@ -29,7 +27,7 @@ module.exports = function(config) {
     },
 
     coverageReporter: {
-        type : 'text-summary'
+        type : 'text'
     },
 
     // test results reporter to use

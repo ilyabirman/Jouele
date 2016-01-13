@@ -1,5 +1,5 @@
 # Jouele
-Jouele is a simple and beautiful audio player for the web. 
+Jouele is a simple and beautiful audio player for the web.
 
 [Project page](http://ilyabirman.ru/projects/jouele/)
 
@@ -84,13 +84,13 @@ $(".jouele").data("jouele") // Get an instance of Jouele
 ### API Methods
 
 #### `Jouele.play()` or `$(".jouele").jouele("play")`
-Starts the playback. Returns an instance of `Jouele` player. 
+Starts the playback. Returns an instance of `Jouele` player.
 
 #### `Jouele.pause()` or `$(".jouele").jouele("pause")`
-Pauses the playback. Returns an instance of `Jouele` player. 
+Pauses the playback. Returns an instance of `Jouele` player.
 
 #### `Jouele.destroy()` or `$(".jouele").jouele("destroy")`
-Destroys the player, then adds back to the DOM the link, which created the player. Returns the jQuery-object of the link. 
+Destroys the player, then adds back to the DOM the link, which created the player. Returns the jQuery-object of the link.
 
 ### API Properties
 
@@ -98,7 +98,7 @@ Destroys the player, then adds back to the DOM the link, which created the playe
 Stores jQuery-object of the link from which the player was created.
 
 #### `Jouele.isPlaying (Boolean)`
-Indicates whether the track is currently playing. 
+Indicates whether the track is currently playing.
 
 #### `Jouele.isPlayed (Boolean)`
 Indicates whether the track was played.

@@ -9,21 +9,10 @@
 	var UPDATE_INTERVAL = 0.2; // seconds
 	var DEFAULT_STATUS = { // Cut little bit
 		src: '',
-		media: {},
-		paused: true,
-		format: {},
-		formatType: '',
-		waitForPlay: true,
-		waitForLoad: true,
 		seekPercent: 0,
-		currentPercentRelative: 0,
 		currentPercentAbsolute: 0,
 		currentTime: 0,
 		duration: 0,
-		remaining: 0,
-		readyState: 0,
-		networkState: 0,
-		playbackRate: 1,
 		ended: 0
 	};
 
@@ -40,11 +29,8 @@
 
 	$.jPlayer.event = {};
 
-	$.each([
-			'ready', 'setmedia', 'loadstart', 'progress', 'suspend', 'abort', 'emptied', 'stalled',
-			'play', 'pause', 'loadedmetadata', 'loadeddata', 'waiting', 'playing', 'canplay', 'canplaythrough',
-			'seeking', 'seeked', 'timeupdate', 'ended', 'ratechange', 'durationchange', 'volumechange'
-		],
+	$.each(
+		['progress', 'play', 'pause', 'timeupdate', 'ready'],
 		function() {
 			$.jPlayer.event[this] = 'jPlayer_' + this;
 		}
@@ -53,11 +39,11 @@
 	$.extend($.jPlayer.prototype, {
 
 		setMedia: function (data) {
-			this.mp3 = data.mp3;
+			this.status.src = data.mp3;
 		},
 
 		play: function () {
-			if (!this.mp3) {
+			if (!this.status.src) {
 				this.onError({reason: 'Set media before play'});
 				return;
 			}
@@ -121,6 +107,7 @@
 
 		onReady: function () {
 			this.options.ready && this.options.ready();
+			this.$element.trigger($.jPlayer.event.ready);
 		},
 
 		onError: function (error) {
