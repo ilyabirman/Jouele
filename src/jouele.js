@@ -600,6 +600,10 @@
                 context.play();
                 hidePreloader(context);
             }
+
+            if (event.jPlayer.status.currentTime === event.jPlayer.status.duration) {
+                context.pause();
+            }
         };
 
         if (typeof method === "string" && $.isFunction(this[method])) {
