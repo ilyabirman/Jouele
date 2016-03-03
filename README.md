@@ -29,20 +29,20 @@ Adding some data-attributes changes the behavior or appearance of the player.
 
 #### `data-length`
 Type: `String`
-Defualt value: `0`
+Default value: `0`
 
 Shows the total length of the track, so that it is displayed immediately without pressing the "play" button.
 Examples for track of 2 minutes 47 seconds length: `data-length="2:47"`, `data-length="167"`
 
 #### `data-pause-on-space`
 Type: `Boolean`  
-Defualt value: `true`
+Default value: `true`
 
 Specifies whether to stop playback by pressing the spacebar.
 
 #### `data-play-on-space`
 Type: `Boolean`  
-Defualt value: `true`
+Default value: `true`
 
 Specifies whether to resume playback by pressing the spacebar after the track was stopped. 
 
@@ -103,7 +103,7 @@ jQuery-object with jPlayer instance binded.
 ## API
 Recommended way to access API:
 ```javascript
-$(".jouele").data("jouele") // Get an instance of Jouele
+var JoueleInstance = $(".jouele").data("jouele") // Get an instance of Jouele
 ```
 
 ### API Methods
