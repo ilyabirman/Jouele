@@ -28,7 +28,7 @@ Check [`jouele.html`](jouele.html) to see more examples of usage.
 Adding some data-attributes changes the behavior or appearance of the player.
 
 #### `data-length`
-Type: `String`
+Type: `String`  
 Default value: `0`
 
 Shows the total length of the track, so that it is displayed immediately without pressing the "play" button.
