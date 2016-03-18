@@ -74,7 +74,7 @@ Follow these steps to install a new theme:
 ## Dynamic initialization
 
 #### `$(selector).jouele()`
-Turns `selector` link into a player. Returns a jQuery-object modified by `$(selector)` method. If everything is correct, this jQuery-object `$(selector)` gets a data` attribute with an additional `jouele` property, which  contains an instance of `Jouele` player (the entire API works with this instance, see below). `selector` DOM-element is excluded from DOM using jQuery.detach() method.
+Turns `selector` link into a player. Returns a jQuery-object modified by `$(selector)` method. If everything is correct, this jQuery-object `$(selector)` gets a `data` attribute with an additional `jouele` property, which  contains an instance of `Jouele` player (the entire API works with this instance, see below). `selector` DOM-element is excluded from DOM using jQuery.detach() method.
 The player block is added to DOM instead of excluded element and also has an instance of `Jouele` player in its `data.jouele`.
 
 ## Global Object `$.Jouele`
