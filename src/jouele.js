@@ -204,7 +204,7 @@
     };
 
     var Jouele = function ($link, options) {
-        this.version = "2.1.1";
+        this.version = "2.1.2";
         this.$link = $link;
         this.options = options;
         this.isPlaying = false;
