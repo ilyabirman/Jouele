@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 
 var uglify = require('gulp-uglify');
-var minifyCss = require('gulp-minify-css');
+var cleanCSS = require('gulp-clean-css');
 var concatCss = require('gulp-concat-css');
 
 gulp.task('uglify', function () {
@@ -13,7 +13,7 @@ gulp.task('concat', function () {
     gulp.src(['src/jouele.css', 'src/jouele.skin.css'])
         .pipe(concatCss('dist/jouele.css', {rebaseUrls: false}))
         .pipe(gulp.dest('./'))
-        .pipe(minifyCss({compatibility: 'ie6'}))
+        .pipe(cleanCSS({compatibility: 'ie6'}))
         .pipe(gulp.dest('./'))
 });
 gulp.task('copy', function () {

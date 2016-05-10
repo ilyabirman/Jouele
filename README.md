@@ -5,12 +5,13 @@ Jouele is a simple and beautiful audio player for the web.
 
 [Russian translation of the documentation](https://github.com/ilyabirman/Jouele/blob/master/README-ru.md)
 
-## Setup
+## Famous 2-steps Setup
 ```html
-<!-- Dependencies -->
+<!-- Include dependencies that are mandatory for Jouele: jQuery and jPlayer -->
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="dist/jquery.jplayer.min.js"></script>
-<!-- Jouele -->
+
+<!-- Include Jouele -->
 <script src="dist/jouele.js"></script>
 <link href="dist/jouele.css" rel="stylesheet"/>
 ```
@@ -20,9 +21,9 @@ Each link with `jouele` class automatically becomes a player for the linked MP3.
 ```html
 <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele">Ilya Birman: News</a>
 ```
-Check [`jouele.html`](jouele.html) to see more examples of usage.
+Check [`dist/example.html`](example.html) to see more examples of usage.
 
-## Advanced features
+## Advanced Features
 
 ### data-attributes
 Adding some data-attributes changes the behavior or appearance of the player.
@@ -71,7 +72,7 @@ Follow these steps to install a new theme:
 - Add `jouele-skin-{skin_name}`class to the link initialized by Jouele.
 - Link the changed [`jouele.skin.css`](dist/jouele.skin.css) file to the page after [`jouele.css`](dist/jouele.css).
 
-## Dynamic initialization
+## Dynamic Initialization
 
 #### `$(selector).jouele()`
 Turns `selector` link into a player. Returns a jQuery-object modified by `$(selector)` method. If everything is correct, this jQuery-object `$(selector)` gets a `data` attribute with an additional `jouele` property, which  contains an instance of `Jouele` player (the entire API works with this instance, see below). `selector` DOM-element is excluded from DOM using jQuery.detach() method.
@@ -119,16 +120,24 @@ Destroys the player, then adds back to the DOM the link, which has created the p
 
 ### API Properties
 
-#### `JoueleInstance.$link (jQuery object)`
+#### `JoueleInstance.$link`
+Type: `jQuery-object`
+
 Stores jQuery-object of the link from which the player was created.
 
-#### `JoueleInstance.isPlaying (Boolean)`
+#### `JoueleInstance.isPlaying`
+Type: `boolean`
+
 Indicates whether the track is currently playing. 
 
-#### `JoueleInstance.isPlayed (Boolean)`
+#### `JoueleInstance.isPlayed`
+Type: `boolean`
+
 Indicates whether the track has been played.
 
-#### `JoueleInstance.totalTime (Number)`
+#### `JoueleInstance.totalTime`
+Type: `number`
+
 Stores the track length in seconds. Can be a floating-point number.
 
 ## Credits

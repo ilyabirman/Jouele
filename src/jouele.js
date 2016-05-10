@@ -3,7 +3,7 @@
     "use strict";
 
     var isSVGSupported = false;
-    var checkSVGSupport = function () {
+    var checkSVGSupport = function() {
         /* https://css-tricks.com/a-complete-guide-to-svg-fallbacks/ */
         var div = document.createElement("div");
         div.innerHTML = "<svg/>";
@@ -196,16 +196,23 @@
     $.fn.jouele.defaults = {
         length: 0,
         playFrom: 0,
-        scrollOnSpace: false,
-        pauseOnSpace: true,
-        playOnSpace: true,
+        scrollOnSpace: true,
+        pauseOnSpace: false,
+        playOnSpace: false,
         hideTimelineOnPause: false,
         skin: ""
     };
 
-    var Jouele = function ($link, options) {
-        this.version = "2.1.2";
+    var Jouele = function($link, options) {
+        var href = this.checkHref($link);
+
+        if (!href) {
+            return false;
+        }
+
+        this.version = "2.2.0";
         this.$link = $link;
+        this.href = href;
         this.options = options;
         this.isPlaying = false;
         this.isPlayed = false;
@@ -221,11 +228,16 @@
         this.init();
     };
 
-    Jouele.prototype.init = function init() {
-        $.Jouele.playlist.push(this);
+    Jouele.prototype.checkHref = function checkHref($link) {
+        var href = $link.attr("href");
 
+        return href ? href : false;
+    };
+
+    Jouele.prototype.init = function init() {
         this.checkOptions();
         this.createDOM();
+        this.pushToPlaylist();
 
         if (!$.Jouele.$jPlayer) {
             $.Jouele("init", this);
@@ -239,14 +251,21 @@
 
     Jouele.prototype.destroy = function destroy() {
         var self = this,
-            uniqueID = this.$container.attr("id");
+            uniqueID = this.joueleID;
 
-        $.each($.Jouele.playlist, function (index, element) {
+        $.each(self.playlist, function(index, element) {
             if (element === self) {
-                $.Jouele.playlist.splice(index, 1);
-            }
-            if ($.Jouele.lastPlayed === self) {
-                $.Jouele.lastPlayed = null;
+                self.playlist.splice(index, 1);
+                if ($.Jouele.lastPlayed === self) {
+                    $.Jouele.lastPlayed = null;
+                }
+                if (self.playlist.length === 0) {
+                    $.each($.Jouele.playlist, function(index_playlist, element_playlist) {
+                        if (element_playlist === self.playlist) {
+                            $.Jouele.playlist.splice(index_playlist, 1);
+                        }
+                    });
+                }
             }
         });
 
@@ -297,28 +316,33 @@
     };
 
     Jouele.prototype.play = function play() {
-        if ($.Jouele.lastPlayed !== this) {
-            if (this.playFrom) {
-                showPreloader(this);
-                willSeekTo(this, this.totalTime ? (this.playFrom / (this.totalTime / 100)) : 0);
-                return this;
+        var self = this;
+
+        if ($.Jouele.lastPlayed !== self) {
+            if (self.playFrom) {
+                showPreloader(self);
+                willSeekTo(self, self.totalTime ? (self.playFrom / (self.totalTime / 100)) : 0);
+                return self;
             } else {
-                $.Jouele.lastPlayed = this;
-                $.Jouele("setMedia", this);
+                $(document).trigger("jouele-pause", self); // do not touch
+                $.Jouele.lastPlayed = self;
+                $.Jouele("setMedia", self);
             }
         }
 
-        showPreloader(this, this.seekTime ? false : 500); // 500 is enough to play the loaded fragment, if it's loaded; if isn't — preloader will appear after 500ms
+        showPreloader(self, self.seekTime ? false : 500); // 500 is enough to play the loaded fragment, if it's loaded; if isn't — preloader will appear after 500ms
 
-        this.isPlayed = true;
+        self.isPlayed = true;
 
-        if (typeof this.$jPlayer !== "undefined" && this.$jPlayer.jPlayer) {
-            if (!this.isPlaying) {
-                this.$jPlayer.jPlayer("play");
+        if (typeof self.$jPlayer !== "undefined" && self.$jPlayer.jPlayer) {
+            if (!self.isPlaying) {
+                setTimeout(function() { // do not touch
+                    self.$jPlayer.jPlayer("play");
+                }, 1);
             }
         }
 
-        return this;
+        return self;
     };
 
     Jouele.prototype.pseudoPlay = function pseudoPlay() {
@@ -386,7 +410,7 @@
                         $(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_unavailable").html(
                             isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><g class="jouele-svg-color"><path d="m4 6.7l3.8 3.7-3.8 2.1z"/><path d="m.2 2.2l.6-.5 11 11.1-.5.5z"/><path d="m4 4.3v-.8l8 4.5-2.7 1.5z"/></g></svg>' : ''
                         ),
-                        $(document.createElement("a")).attr("href", self.$link.attr("href")).addClass("jouele-control-link jouele-hidden").append(
+                        $(document.createElement("a")).attr("href", self.href).addClass("jouele-control-link jouele-hidden").append(
                             $(document.createElement("span")).addClass("jouele-control-button-icon jouele-control-button-icon_play jouele-hidden").html(
                                 isSVGSupported ? '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>': ''
                             ),
@@ -411,15 +435,76 @@
 
         this.$container = $container
             .data("jouele", this)
-            .addClass("jouele" + (this.options.hideTimelineOnPause ? " jouele_timeline_hide" : "") + (this.options.skin ? " jouele-skin-" + this.options.skin : ""))
-            .attr("id", "jouele-ui-zone-" + (1000 + Math.round(Math.random() * 8999)))
+            .addClass("jouele jouele_inited" + (this.options.hideTimelineOnPause ? " jouele_timeline_hide" : "") + (this.options.skin ? " jouele-skin-" + this.options.skin : ""))
             .append(
                 $invisibleObject.addClass("jouele-invisible-object"),
                 $infoArea.addClass("jouele-info-area").append(createInfoAreaDOM()),
                 $progressArea.addClass("jouele-progress-area").append(createProgressAreaDOM())
             );
 
+        this.joueleID = "jouele-" + (1000 + Math.round(Math.random() * 99999));
+        this.$playlist = this.$link.parents(".jouele-playlist").eq(0);
+
         return this;
+    };
+
+    Jouele.prototype.pushToPlaylist = function pushToPlaylist() {
+        var self = this,
+            index_of_playlist;
+
+        $(".jouele").filter(":not(.jouele-playlist .jouele)").add(".jouele-playlist").each(function(index, element) {
+            if (self.$playlist.length > 0 && self.$playlist[0] === element) {
+                index_of_playlist = index;
+                return false;
+            } else if (self.$link[0] === element) {
+                index_of_playlist = index;
+                return false;
+            }
+        });
+
+        if (self.$playlist.length > 0) {
+            var $jouele_links = self.$playlist.find(".jouele").filter("[href]"),
+                $jouele_inited = self.$playlist.find(".jouele_inited"),
+                index_of_position_in_playlist,
+                previous_inited_jouele,
+                index_of_previous_jouele;
+
+            $jouele_links.add($jouele_inited).each(function(index, element) {
+                var $element = $(element);
+
+                if ($element.hasClass("jouele_inited")) {
+                    previous_inited_jouele = $element.data("jouele");
+                }
+                if (element === self.$link[0]) {
+                    index_of_position_in_playlist = index;
+                    return false;
+                }
+            });
+
+            if ($.isArray($.Jouele.playlist[index_of_playlist])) {
+                if ($.Jouele.playlist[index_of_playlist][0].$playlist[0] !== self.$playlist[0]) {
+                    $.Jouele.playlist.splice(index_of_playlist, 0, [self]);
+                } else {
+                    for (var i = 0; i < $.Jouele.playlist[index_of_playlist].length; i++) {
+                        if ($.Jouele.playlist[index_of_playlist][i] === previous_inited_jouele) {
+                            index_of_previous_jouele = i;
+                            break;
+                        }
+                    }
+                    if (typeof $.Jouele.playlist[index_of_playlist][index_of_previous_jouele + 1] === "undefined") {
+                        $.Jouele.playlist[index_of_playlist].push(self);
+                    } else {
+                        $.Jouele.playlist[index_of_playlist].splice(index_of_previous_jouele + 1, 0, self);
+                    }
+                }
+            } else {
+                $.Jouele.playlist[index_of_playlist] = [self];
+            }
+        } else {
+            $.Jouele.playlist.splice(index_of_playlist, 0, [self]);
+        }
+
+        self.playlist = $.Jouele.playlist[index_of_playlist];
     };
 
     Jouele.prototype.insertDOM = function insertDOM() {
@@ -432,7 +517,7 @@
 
     Jouele.prototype.bindEvents = function bindEvents() {
         var self = this,
-            uniqueID = self.$container.attr("id");
+            uniqueID = self.joueleID;
 
         $(document).on("jouele-pause." + uniqueID, function(event, triggeredJouele) {
             if (self !== triggeredJouele) {
@@ -504,12 +589,12 @@
             });
 
             $.Jouele.$jPlayer.jPlayer("setMedia", {
-                mp3: context.$link.attr("href")
+                mp3: context.href
             });
         };
 
         this._jPlayerReady = function(context) {
-            var uniqueID = context.$container.attr("id");
+            var uniqueID = context.joueleID;
 
             context.$jPlayer = $.Jouele.$jPlayer;
             context.totalTime = makeSeconds(context.options.length);
@@ -601,8 +686,23 @@
                 hidePreloader(context);
             }
 
-            if (event.jPlayer.status.currentTime === event.jPlayer.status.duration) {
+            if (event.jPlayer.status.duration && event.jPlayer.status.currentTime === event.jPlayer.status.duration) {
                 context.pause();
+                context.playFrom = 0;
+
+                for (var i = 0; i < context.playlist.length; i++) {
+                    if (context.playlist[i] === context) {
+                        break;
+                    }
+                }
+
+                if (typeof context.playlist[i + 1] !== "undefined") {
+                    context.playlist[i + 1].play();
+                } else {
+                    if (context.$playlist.data("repeat")) {
+                        context.playlist[0].play();
+                    }
+                }
             }
         };
 
@@ -620,7 +720,7 @@
 
     /* Autoload Jouele */
     var autoLoadJouele = function() {
-        $(".jouele").jouele();
+        $("a.jouele[href]").jouele();
     };
     $(autoLoadJouele);
 
