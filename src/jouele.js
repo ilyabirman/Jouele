@@ -201,7 +201,7 @@
         hideTimelineOnPause: false,
         skin: "",
 
-        space: false,
+        spaceControl: false,
         pauseOnSpace: false,
         playOnSpace: false,
         scrollOnSpace: true
