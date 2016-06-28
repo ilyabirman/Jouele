@@ -99,6 +99,8 @@
             return instance;
         }
 
+        percents = percents > 100 ? 100 : percents;
+
         instance.$container.find(".jouele-play-lift").css("left", percents  + "%");
         instance.$container.find(".jouele-play-bar").css("width", percents + "%");
 
@@ -196,11 +198,13 @@
     $.fn.jouele.defaults = {
         length: 0,
         playFrom: 0,
-        scrollOnSpace: true,
+        hideTimelineOnPause: false,
+        skin: "",
+
+        space: false,
         pauseOnSpace: false,
         playOnSpace: false,
-        hideTimelineOnPause: false,
-        skin: ""
+        scrollOnSpace: true
     };
 
     var Jouele = function($link, options) {
@@ -238,6 +242,7 @@
         this.checkOptions();
         this.createDOM();
         this.pushToPlaylist();
+        this.checkGlobalOptions();
 
         if (!$.Jouele.$jPlayer) {
             $.Jouele("init", this);
@@ -388,6 +393,28 @@
         if (!parseInt(this.options.length)) {
             this.options.length = 0;
         }
+
+        return this;
+    };
+
+    Jouele.prototype.checkGlobalOptions = function checkGlobalOptions() {
+        if (this.options.pauseOnSpace || this.$playlist.data("pauseOnSpace")) {
+            $.Jouele.options.pauseOnSpace = true;
+        }
+        if (this.options.playOnSpace || this.$playlist.data("playOnSpace")) {
+            $.Jouele.options.playOnSpace = true;
+        }
+        if (!this.options.scrollOnSpace || this.$playlist.data("scrollOnSpace")) {
+            $.Jouele.options.scrollOnSpace = false;
+        }
+
+        if (this.options.spaceControl || this.$playlist.data("spaceControl")) {
+            $.Jouele.options.pauseOnSpace = true;
+            $.Jouele.options.playOnSpace = true;
+            $.Jouele.options.scrollOnSpace = false;
+        }
+
+        return this;
     };
 
     Jouele.prototype.createDOM = function createDOM() {
@@ -534,22 +561,26 @@
                 $jPlayer = $("<div>");
 
             $(document).on("keydown.jouele", function(event) {
-                if (event.keyCode === 32 && $.Jouele.lastPlayed) {
-                    if ($.Jouele.lastPlayed.isPlaying) {
-                        if ($.Jouele.lastPlayed.options.pauseOnSpace) {
-                            if (!$.Jouele.lastPlayed.options.scrollOnSpace) {
+                if (event.keyCode === 32) {
+                    if ($.Jouele.lastPlayed && $.Jouele.lastPlayed.isPlaying) {
+                        if ($.Jouele.options.pauseOnSpace) {
+                            if (!$.Jouele.options.scrollOnSpace) {
                                 event.stopPropagation();
                                 event.preventDefault();
                             }
                             $.Jouele.lastPlayed.pause();
                         }
                     } else {
-                        if ($.Jouele.lastPlayed.options.playOnSpace) {
-                            if (!$.Jouele.lastPlayed.options.scrollOnSpace) {
+                        if ($.Jouele.options.playOnSpace) {
+                            if (!$.Jouele.options.scrollOnSpace) {
                                 event.stopPropagation();
                                 event.preventDefault();
                             }
-                            $.Jouele.lastPlayed.play();
+                            if ($.Jouele.lastPlayed) {
+                                $.Jouele.lastPlayed.play();
+                            } else {
+                                $.Jouele.playlist[0][0].play();
+                            }
                         }
                     }
                 }
@@ -558,7 +589,7 @@
             $.Jouele.$jPlayer = $jPlayer.jPlayer({
                 solution: "html",
                 wmode: "window",
-                preload: "metadata",
+                preload: "none",
 
                 supplied: "mp3",
                 volume: 1,
@@ -686,7 +717,7 @@
                 hidePreloader(context);
             }
 
-            if (event.jPlayer.status.duration && event.jPlayer.status.currentTime === event.jPlayer.status.duration) {
+            if (event.jPlayer.status.duration && (event.jPlayer.status.duration.toFixed(3) - event.jPlayer.status.currentTime.toFixed(3) < 0.01) && (event.jPlayer.status.duration.toFixed(3) - event.jPlayer.status.currentTime.toFixed(3) > -1)) { // Не спрашивайте. Это Safari.
                 context.pause();
                 context.playFrom = 0;
 
@@ -714,6 +745,12 @@
     $.Jouele.playlist = [];
     $.Jouele.lastPlayed = null;
     $.Jouele.$jPlayer = null;
+
+    $.Jouele.options = {
+        pauseOnSpace: false,
+        playOnSpace: false,
+        scrollOnSpace: true
+    };
 
     /* It's time to know if SVG supported */
     setSVGSupport();

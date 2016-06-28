@@ -6,12 +6,12 @@
 ## Знаменитая установка в 2 шага
 ```html
 <!-- Подключите на страницу скрипты, необходимые для работы Жуэля: jQuery и jPlayer -->
-<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="dist/jquery.jplayer.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="jquery.jplayer.min.js"></script>
 
 <!-- Подключите Жуэль -->
-<script src="dist/jouele.js"></script>
-<link href="dist/jouele.css" rel="stylesheet"/>
+<script src="jouele.js"></script>
+<link href="jouele.css" rel="stylesheet"/>
 ```
 
 ## Как использовать
@@ -35,13 +35,13 @@
 
 #### `data-pause-on-space`
 Тип: `Boolean`  
-По умолчанию: `true`
+По умолчанию: `false`
 
 Определяет, нужно ли останавливать этот трек нажатием пробела.
 
 #### `data-play-on-space`
 Тип: `Boolean`  
-По умолчанию: `true`
+По умолчанию: `false`
 
 Определяет, нужно ли воспроизводить этот трек нажатием пробела после того, как он был остановлен.
 

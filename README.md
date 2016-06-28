@@ -8,12 +8,12 @@ Jouele is a simple and beautiful audio player for the web.
 ## Famous 2-steps Setup
 ```html
 <!-- Include dependencies that are mandatory for Jouele: jQuery and jPlayer -->
-<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="dist/jquery.jplayer.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="jquery.jplayer.min.js"></script>
 
 <!-- Include Jouele -->
-<script src="dist/jouele.js"></script>
-<link href="dist/jouele.css" rel="stylesheet"/>
+<script src="jouele.js"></script>
+<link href="jouele.css" rel="stylesheet"/>
 ```
 
 ## Basic Usage
@@ -37,13 +37,13 @@ Examples for track of 2 minutes 47 seconds length: `data-length="2:47"`, `data-l
 
 #### `data-pause-on-space`
 Type: `Boolean`  
-Default value: `true`
+Default value: `false`
 
 Specifies whether to stop playback by pressing the spacebar.
 
 #### `data-play-on-space`
 Type: `Boolean`  
-Default value: `true`
+Default value: `false`
 
 Specifies whether to resume playback by pressing the spacebar after the track was stopped. 
 
