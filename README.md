@@ -21,7 +21,7 @@ Each link with `jouele` class automatically becomes a player for the linked MP3.
 ```html
 <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele">Ilya Birman: News</a>
 ```
-Check [`dist/example.html`](example.html) to see more examples of usage.
+Check [`dist/example.html`](dist/example.html) to see more examples of usage.
 
 ## Advanced Features
 
