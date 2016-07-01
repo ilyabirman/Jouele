@@ -725,6 +725,10 @@
                 context.pause();
                 context.playFrom = 0;
 
+                if (context.$playlist.length === 0) {
+                    return false;
+                }
+
                 for (var i = 0; i < context.playlist.length; i++) {
                     if (context.playlist[i] === context) {
                         break;
