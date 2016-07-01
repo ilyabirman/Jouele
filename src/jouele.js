@@ -519,7 +519,11 @@
                         }
                     }
                     if (typeof $.Jouele.playlist[index_of_playlist][index_of_previous_jouele + 1] === "undefined") {
-                        $.Jouele.playlist[index_of_playlist].push(self);
+                        if (index_of_position_in_playlist === 0) {
+                            $.Jouele.playlist[index_of_playlist].splice(0, 0, self);
+                        } else {
+                            $.Jouele.playlist[index_of_playlist].push(self);
+                        }
                     } else {
                         $.Jouele.playlist[index_of_playlist].splice(index_of_previous_jouele + 1, 0, self);
                     }
