@@ -142,7 +142,7 @@ Type: `jQuery-object`
 Stores jQuery-object of the link from which the player was created.
 
 #### `JoueleInstance.$playlist`
-Type: `jQuery-объект`
+Type: `jQuery-object`
 
 Stores link to jQuery-object of the playlist containing the player.
 
