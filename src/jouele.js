@@ -462,7 +462,7 @@
 
         this.$container = $container
             .data("jouele", this)
-            .addClass("jouele jouele_inited" + (this.options.hideTimelineOnPause ? " jouele_timeline_hide" : "") + (this.options.skin ? " jouele-skin-" + this.options.skin : ""))
+            .addClass("jouele jouele_inited" + (this.$link.data("first") === true ? " jouele_first" : "") + (this.options.hideTimelineOnPause ? " jouele_timeline_hide" : "") + (this.options.skin ? " jouele-skin-" + this.options.skin : ""))
             .append(
                 $invisibleObject.addClass("jouele-invisible-object"),
                 $infoArea.addClass("jouele-info-area").append(createInfoAreaDOM()),
@@ -583,7 +583,12 @@
                             if ($.Jouele.lastPlayed) {
                                 $.Jouele.lastPlayed.play();
                             } else {
-                                $.Jouele.playlist[0][0].play();
+                                var $firstJouele = $(".jouele_inited").filter(".jouele_first");
+                                if ($firstJouele.length > 0) {
+                                    $firstJouele.eq(0).data("jouele").play();
+                                } else {
+                                    $.Jouele.playlist[0][0].play();
+                                }
                             }
                         }
                     }
