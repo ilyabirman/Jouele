@@ -5,7 +5,7 @@ Jouele is a simple and beautiful audio player for the web.
 
 [Russian translation of the documentation](https://github.com/ilyabirman/Jouele/blob/master/README-ru.md)
 
-## Famous 2-steps Setup
+## Famous 2-step Setup
 ```html
 <!-- Include dependencies that are mandatory for Jouele: jQuery and jPlayer -->
 <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
@@ -17,44 +17,53 @@ Jouele is a simple and beautiful audio player for the web.
 ```
 
 ## Basic Usage
-Each link with `jouele` class automatically becomes a player for the linked MP3. For example:
+### Single track
+Each link with `href` attribute and `jouele` class automatically becomes a player for the linked MP3. For example:
 ```html
 <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele">Ilya Birman: News</a>
 ```
+
+### Playlists
+Add `jouele-playlist` class to the element, which contains links with `jouele` class, to create a playlist of files corresponding to these link. For example:
+```html
+<div class="jouele-playlist">
+    <p><a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20The%20Endgame.mp3" class="jouele">The Endgame</a></p>
+    <p><a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20Tastes%20Like%20Steel.mp3" class="jouele">Tastes Like Steel</a></p>
+    <p><a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20Glass.mp3" class="jouele">Glass</a></p>
+    <p><a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20I%20Will%20Always.mp3" class="jouele">I Will Always</a></p>
+</div>
+```
+
 Check [`dist/example.html`](dist/example.html) to see more examples of usage.
 
 ## Advanced Features
 
 ### data-attributes
-Adding some data-attributes changes the behavior or appearance of the player.
+Adding some data-attributes changes the behavior or appearance of the player (or of the playlist).
+
+#### `data-repeat`
+Is applied to the playlist.  
+Type: `boolean`  
+Default value: `false`
+
+Defines whether to repeat the playback of playlist after the last track is finished.
 
 #### `data-length`
-Type: `String`  
+Type: `string`  
 Default value: `0`
 
 Shows the total length of the track, so that it is displayed immediately without pressing the "play" button.
-Examples for track of 2 minutes 47 seconds length: `data-length="2:47"`, `data-length="167"`
+Examples for track of 9 minutes 54 seconds length: `data-length="9:54"`, `data-length="954"`
 
-#### `data-pause-on-space`
-Type: `Boolean`  
+#### `data-space-control`
+Type: `boolean`  
 Default value: `false`
 
-Specifies whether to stop playback by pressing the spacebar.
-
-#### `data-play-on-space`
-Type: `Boolean`  
-Default value: `false`
-
-Specifies whether to resume playback by pressing the spacebar after the track was stopped. 
-
-#### `data-scroll-on-space`
-Type: `Boolean`  
-Default value: `true`
-
-Specifies whether to scroll the page after pressing the spacebar which stops/resumes the playback. Works only if the `data-pause-on-space` corresponding to the action (pause/resume) is set to `true`.
+Specifies globally whether to handle pressing the space bar and to stop/start the playback.
+If you turn on this data-attribute at least on one of the playlists or one instance of the player, the setting will apply to all players on the page.
 
 #### `data-hide-timeline-on-pause`
-Type: `Boolean`  
+Type: `boolean`  
 Default value: `false`
 
 Specifies whether to hide timeline of the track, when track is not playing.
@@ -79,20 +88,21 @@ Turns `selector` link into a player. Returns a jQuery-object modified by `$(sele
 The player block is added to DOM instead of excluded element and also has an instance of `Jouele` player in its `data.jouele`.
 
 ## Global Object `$.Jouele`
-The object contains 3 properties:
+The object contains 3 properties and one extended object of options:
 
 #### `$.Jouele.playlist`
-Type: `array`  
+Type: `array`
 Default value: `[]`
 
-Array containing all instances of `Jouele` player on the page arranged in order of their position in DOM. Empty if there is no active instance on the page.
+Array containing all playlists on the page arranged in order of their position in DOM. Each playlist contains an array of `Jouele` player instances.
+Empty if there is no active instance on the page.
 
 #### `$.Jouele.lastPlayed`
 Type: `Jouele`  
 Default value: `null`
 
 Link to the last played or now playing instance of `Jouele` player.
-`null` if nothing has been played yet or if the last played track has been destroyed with `destroy` method.
+`null` if nothing has been played yet or if the last played track has been destroyed with the `destroy` method.
 
 #### `$.Jouele.$jPlayer`
 Type: `Jouele`  
@@ -100,6 +110,12 @@ Default value: `null`
 
 jQuery-object with jPlayer instance binded.
 `null`, if none of `Jouele` player instances has been initialized or if jPlayer is unavailable.
+
+#### `$.Jouele.options`
+Type: `object`
+
+Object with a set of properties: `pauseOnSpace` (`false` by default), `playOnSpace` (`false` by default), `scrollOnSpace` (`true` by default).
+Manually toggling each of the property globally changes the behaviour of the spacebar to control the playback and scroll.
 
 ## API
 Recommended way to access API:
@@ -124,6 +140,16 @@ Destroys the player, then adds back to the DOM the link, which has created the p
 Type: `jQuery-object`
 
 Stores jQuery-object of the link from which the player was created.
+
+#### `JoueleInstance.$playlist`
+Type: `jQuery-объект`
+
+Stores link to jQuery-object of the playlist containing the player.
+
+#### `JoueleInstance.playlist`
+Type: `array`
+
+Stores link to the element of `$.Jouele.playlist` array — playlist containing the track.
 
 #### `JoueleInstance.isPlaying`
 Type: `boolean`
