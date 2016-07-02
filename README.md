@@ -91,7 +91,7 @@ The player block is added to DOM instead of excluded element and also has an ins
 The object contains 3 properties and one extended object of options:
 
 #### `$.Jouele.playlist`
-Type: `array`
+Type: `array`  
 Default value: `[]`
 
 Array containing all playlists on the page arranged in order of their position in DOM. Each playlist contains an array of `Jouele` player instances.
@@ -169,7 +169,7 @@ Stores the track length in seconds. Can be a floating-point number.
 ## Credits
 - Idea and development — [Ilya Birman](http://ilyabirman.ru)
 - Development — [Eugene Lazarev](http://eugene-lazarev.ru)
-- Documentation translation - Alexandra Godun
+- Documentation translation — Alexandra Godun
 
 ## License
 [MIT License](LICENSE.md)
