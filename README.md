@@ -68,6 +68,11 @@ Default value: `false`
 
 Specifies whether to hide timeline of the track, when track is not playing.
 
+#### `data-first`
+Type: `boolean`  
+
+Defines if this track is to play first after the spacebar is pressed if `data-space-control` option is on.
+
 ### Skin
 Adding `jouele-skin-dark` class to the link initialized by Jouele changes to predefined "dark" theme. For example:
 ```html
