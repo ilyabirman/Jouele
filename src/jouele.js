@@ -214,7 +214,7 @@
             return false;
         }
 
-        this.version = "2.2.1";
+        this.version = "2.2.2";
         this.$link = $link;
         this.href = href;
         this.options = options;
@@ -565,6 +565,10 @@
                 $jPlayer = $("<div>");
 
             $(document).on("keydown.jouele", function(event) {
+                if (event.target.nodeName === "INPUT" || event.target.nodeName === "TEXTAREA" || event.target.nodeName === "SELECT" || event.target.nodeName === "OPTION" || event.target.nodeName === "BUTTON" || (typeof $(event.target).attr("contenteditable") !== "undefined" && $(event.target).attr("contenteditable") !== "false")) {
+                    return true;
+                }
+                
                 if (event.keyCode === 32) {
                     if ($.Jouele.lastPlayed && $.Jouele.lastPlayed.isPlaying) {
                         if ($.Jouele.options.pauseOnSpace) {
