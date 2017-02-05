@@ -6,7 +6,7 @@ var cleanCSS = require('gulp-clean-css');
 var concatCss = require('gulp-concat-css');
 
 gulp.task('concatJs', function() {
-    gulp.src(['dist/dependencies/howler.js-2.0.2/howler.core.js', 'src/jouele.js'])
+    gulp.src(['node_modules/howler/dist/howler.js', 'src/jouele.js'])
         .pipe(concat('jouele.js'))
         .pipe(uglify())
         .pipe(gulp.dest('dist'))
