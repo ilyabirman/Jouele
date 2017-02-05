@@ -1,4 +1,5 @@
 .DS_Store
 .idea/
 node_modules/
-dist/jquery/
+dist/dependencies/
+mp3/

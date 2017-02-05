@@ -1,6 +1,6 @@
 {
   "name": "Jouele",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/ilyabirman/Jouele.git"
@@ -8,9 +8,10 @@
   "license": "MIT",
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-clean-css": "^2.0.10",
+    "gulp-clean-css": "^2.3.2",
+    "gulp-concat": "^2.6.1",
     "gulp-concat-css": "^2.3.0",
-    "gulp-uglify": "^1.5.4"
+    "gulp-uglify": "^2.0.1"
   },
   "scripts": {
     "start": "gulp"

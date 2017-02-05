@@ -7,11 +7,10 @@ Jouele is a simple and beautiful audio player for the web.
 
 ## Famous 2-step Setup
 ```html
-<!-- Include dependencies that are mandatory for Jouele: jQuery and jPlayer -->
-<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
-<script src="jquery.jplayer.min.js"></script>
+<!-- Include jQuery that are mandatory for Jouele -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-<!-- Include Jouele -->
+<!-- Include Jouele: JS and CSS -->
 <script src="jouele.js"></script>
 <link href="jouele.css" rel="stylesheet"/>
 ```
@@ -109,13 +108,6 @@ Default value: `null`
 Link to the last played or now playing instance of `Jouele` player.
 `null` if nothing has been played yet or if the last played track has been destroyed with the `destroy` method.
 
-#### `$.Jouele.$jPlayer`
-Type: `Jouele`  
-Default value: `null`
-
-jQuery-object with jPlayer instance binded.
-`null`, if none of `Jouele` player instances has been initialized or if jPlayer is unavailable.
-
 #### `$.Jouele.options`
 Type: `object`
 
@@ -174,7 +166,8 @@ Stores the track length in seconds. Can be a floating-point number.
 ## Credits
 - Idea and development — [Ilya Birman](http://ilyabirman.ru)
 - Development — [Eugene Lazarev](http://eugene-lazarev.ru)
-- Documentation translation — Alexandra Godun
+- Documentation translation — [Alexandra Godun](https://github.com/misterblblbl)
+- [HowlerJS](https://howlerjs.com/)
 
 ## License
 [MIT License](LICENSE.md)
