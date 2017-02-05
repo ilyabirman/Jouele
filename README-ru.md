@@ -6,7 +6,7 @@
 ## Знаменитая установка в 2 шага
 ```html
 <!-- Подключите на страницу скрипты, необходимые для работы Жуэля: jQuery и jPlayer -->
-<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="jquery.jplayer.min.js"></script>
 
 <!-- Подключите Жуэль -->
