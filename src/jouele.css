@@ -265,7 +265,7 @@
     transition: none;
 }
 .jouele-control-text {
-    line-height: 1.2 !important; /* Перекрываем все возможные каскады на сайте */
+    line-height: 16px !important; /* Перекрываем все возможные каскады на сайте */
     padding: 0 2em 0 0;
     overflow: hidden;
     word-wrap: break-word;
@@ -275,6 +275,7 @@
 .jouele-time {
     float: right;
     font-size: 11px;
+    line-height: 16px !important; /* Перекрываем все возможные каскады на сайте */
     color: #606060;
     text-align: right;
     white-space: nowrap;
