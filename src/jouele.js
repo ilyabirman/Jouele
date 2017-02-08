@@ -223,6 +223,23 @@
 
         return this.$link;
     };
+    
+    Jouele.prototype.breakPlayer = function breakPlayer() {
+        var joueleID = this.joueleID;
+        
+        this.$container.addClass("jouele_broken");
+        this.$container.find(".jouele-control-button-icon_unavailable").removeClass("jouele-hidden");
+        this.$container.find(".jouele-control-link").addClass("jouele-hidden");
+        this.$container.find(".jouele-play-lift").addClass("jouele-hidden");
+
+        this.$container.find(".jouele-control-link").off("click.jouele");
+        this.$container.find(".jouele-control-button-icon_play").off("click.jouele");
+        this.$container.find(".jouele-control-button-icon_pause").off("click.jouele");
+        this.$container.find(".jouele-mine").off("mousedown." + joueleID);
+        $(document).off("mouseup." + joueleID);
+        $(document).off("mousemove." + joueleID);
+        $(document).off("jouele-pause." + joueleID);
+    };
 
     Jouele.prototype.pause = function pause() {
         hidePreloader(this);
@@ -659,7 +676,7 @@
 
     Jouele.prototype.insertDOM = function insertDOM() {
         this.$container.find(".jouele-hidden").removeClass("jouele-hidden");
-        this.$container.find(".jouele-control-button-icon_unavailable").remove();
+        this.$container.find(".jouele-control-button-icon_unavailable").addClass("jouele-hidden");
         this.$container.find(".jouele-control-button-icon_pause").addClass("jouele-hidden");
         
         this.$link.after(this.$container);
@@ -675,6 +692,9 @@
         this.howler = new Howl({
             src: [self.href],
             html5: true,
+            onloaderror: function() {
+                self.breakPlayer.call(self);
+            },
             onload: function() {
                 self.totalTime = this.duration();
 

@@ -62,6 +62,9 @@
     z-index: 20;
     cursor: pointer;
 }
+.jouele_broken .jouele-load-bar {
+    cursor: default;
+}
 .jouele-load-bar:after {
     background: #bfbfbf;
 }
@@ -282,6 +285,9 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+.jouele_broken .jouele-time {
+    display: none;
 }
 
 .jouele-play-time {
