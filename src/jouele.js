@@ -635,7 +635,16 @@
                 $(document).off("mousemove." + joueleID);
                 self.isMouseMovingOverPlayBar = false;
 
-                self.seek.call(self, getEventPoint(event));
+                var point = getEventPoint(event);
+                if (point < 0) {
+                    point = 0;
+                    self.mouseOverPlayBarPosition = 0;
+                } else if (point > 100) {
+                    point = 100;
+                    self.mouseOverPlayBarPosition = 100;
+                }
+
+                self.seek.call(self, point);
 
                 self.mouseOverPlayBarPosition = null;
             });
@@ -646,8 +655,13 @@
                 if (!self.isMouseMovingOverPlayBar) {
                     return false;
                 }
-
-                getEventPoint(event);
+                
+                var point = getEventPoint(event);
+                if (point < 0) {
+                    self.mouseOverPlayBarPosition = 0;
+                } else if (point > 100) {
+                    self.mouseOverPlayBarPosition = 100;
+                }
 
                 updateTimeDisplay(self);
                 updatePlayBar(self);
@@ -698,7 +712,7 @@
             onload: function() {
                 self.totalTime = this.duration();
 
-                if (self.seekPosition) {
+                if (self.seekPosition >= 0) {
                     if (self.isPaused) {
                         self.seekTime = (self.totalTime * (self.seekPosition / 100)).toFixed(2);
                         self.howler.seek(self.seekTime);
@@ -757,7 +771,7 @@
             }
 
             if (event.keyCode === 32) {
-                if ($.Jouele.lastPlayed && !$.Jouele.lastPlayed.isPaused && ($.Jouele.lastPlayed.isPlaying || $.Jouele.lastPlayed.seekTime || $.Jouele.lastPlayed.seekPosition )) {
+                if ($.Jouele.lastPlayed && !$.Jouele.lastPlayed.isPaused && ($.Jouele.lastPlayed.isPlaying || $.Jouele.lastPlayed.seekTime || $.Jouele.lastPlayed.seekPosition >= 0 )) {
                     if ($.Jouele.options.pauseOnSpace) {
                         if (!$.Jouele.options.scrollOnSpace) {
                             event.stopPropagation();
