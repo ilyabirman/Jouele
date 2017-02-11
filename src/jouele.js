@@ -98,9 +98,9 @@
         if (custom_time != null) {
             instance.$container.find(".jouele-play-time").html(formatTime(custom_time));
         } else if (instance.isPlaying || instance.seekTime) {
-            instance.$container.find(".jouele-play-time").html(formatTime(makeSeconds(instance.seekTime ? instance.seekTime : instance.howler.seek())));
+            instance.$container.find(".jouele-play-time").html(formatTime(makeSeconds(instance.seekTime ? instance.seekTime : (instance.howler != null ? ((instance.howler.state() !== "unloaded" && typeof instance.howler.seek() === "number") ? instance.howler.seek() : 0) : 0))));
         } else {
-            instance.$container.find(".jouele-play-time").html(formatTime(0));
+            instance.$container.find(".jouele-play-time").html(formatTime(makeSeconds(instance.howler != null ? ((instance.howler.state() !== "unloaded" && typeof instance.howler.seek() === "number") ? instance.howler.seek() : 0) : 0)));
         }
 
         return instance;
@@ -256,8 +256,6 @@
 
         this.makeInterfacePause();
         
-        this.isPaused = true;
-        this.isPlaying = false;
         this.isMouseMovingOverPlayBar = false;
 
         if (this.howler && this.isLoaded) {
@@ -268,6 +266,9 @@
     };
 
     Jouele.prototype.makeInterfacePause = function makeInterfacePause() {
+        this.isPaused = true;
+        this.isPlaying = false;
+        
         this.$container.removeClass("jouele-status-playing");
         this.$container.find(".jouele-control-button-icon_play").removeClass("jouele-hidden");
         this.$container.find(".jouele-control-button-icon_pause").addClass("jouele-hidden");
@@ -276,13 +277,13 @@
     };
 
     Jouele.prototype.onPause = function onPause() {
-        this.makeInterfacePause();
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
 
-        clearInterval(this.timer);
-        this.timer = null;
+        this.makeInterfacePause();
         
-        this.isPaused = true;
-        this.isPlaying = false;
         this.isMouseMovingOverPlayBar = false;
         this.seekTime = null;
         this.seekPosition = null;
@@ -291,6 +292,8 @@
     };
 
     Jouele.prototype.play = function play() {
+        var self = this;
+        
         if (!this.howler) {
             this.createHowler.call(this);
         }
@@ -299,19 +302,17 @@
             return this;
         }
         
-        this.isPaused = false;
+        this.makeInterfacePlay();
 
         $(document).trigger("jouele-pause", this);
 
-        this.makeInterfacePlay();
-
-        if ($.Jouele.lastPlayed !== this) {
+        if ($.Jouele.lastPlayed !== this) {            
             if ($.Jouele.lastPlayed) {
                 if (!$.Jouele.lastPlayed.isPaused) {
                     $.Jouele.lastPlayed.pause();
                 }
             }
-            
+
             $.Jouele.lastPlayed = this;
             
             if (this.isLoaded) {
@@ -329,12 +330,29 @@
         
         this.isStarted = true;
         
-        showPreloader(this, 500); // 500 is enough to play the loaded fragment, if it's loaded; if isn't — preloader will appear after 500ms
+        showPreloader(this);
+
+        var nearest_second = (Math.ceil(self.howler.seek()) - self.howler.seek()).toFixed(3);
+        setTimeout(function() {
+            updateState(self);
+
+            if (self.timer) {
+                clearInterval(self.timer);
+            }
+
+            if (!self.isPaused) {
+                self.timer = setInterval(function() {
+                    updateState(self);
+                }, 1000);
+            }
+        }, nearest_second * 1000);
 
         return this;
     };
 
     Jouele.prototype.makeInterfacePlay = function makeInterfacePlay() {
+        this.isPaused = false;
+        
         this.$container.addClass("jouele-status-playing");
         this.$container.find(".jouele-control-button-icon_pause").removeClass("jouele-hidden");
         this.$container.find(".jouele-control-button-icon_play").addClass("jouele-hidden");
@@ -349,7 +367,6 @@
         
         this.makeInterfacePlay();
         
-        this.isPaused = false;
         this.isPlaying = true;
         this.isPlayed = true;
         this.seekTime = null;
@@ -365,9 +382,12 @@
             if (self.timer) {
                 clearInterval(self.timer);
             }
-            self.timer = setInterval(function() {
-                updateState(self);
-            }, 1000);
+            
+            if (!self.isPaused) {
+                self.timer = setInterval(function () {
+                    updateState(self);
+                }, 1000);
+            }
         }, nearest_second * 1000);
 
         $.Jouele.lastPlayed = this;
@@ -377,8 +397,8 @@
     
     Jouele.prototype.seek = function seek(seekPositionPercent) {
         var self = this;
-
-        this.isPaused = false;
+        
+        this.makeInterfacePlay();
 
         $(document).trigger("jouele-pause", this);
         
@@ -391,9 +411,22 @@
                 this.seekTime = +((this.totalTime * (seekPositionPercent / 100)).toFixed(2));
                 this.seekPosition = +seekPositionPercent;
             }
-            this.howler.seek(this.seekTime);
+            
+            if (this.isLoaded) {
+                showPreloader(this, 200);
+                this.howler.seek(this.seekTime);
+            } else {
+                if (!this.isStarted) {
+                    this.howler.load();
+                }
+                showPreloader(this);
+            }
         } else {
             this.seekPosition = +seekPositionPercent;
+            if (!this.isStarted) {
+                this.howler.load();
+            }
+            showPreloader(this);
         }
 
         if ($.Jouele.lastPlayed !== this) {
@@ -406,31 +439,40 @@
             $.Jouele.lastPlayed = this;
         }
         
-        this.makeInterfacePlay();
         this.isStarted = true;
         
-        var current_time = this.howler.seek();
-        var interval;
+        if (this.isLoaded) {
+            var current_time = this.howler.seek();
+            var interval;
 
-        setTimeout(function() {
-            if (current_time === self.howler.seek()) {
-                showPreloader(self);
-            }
-            interval = setInterval(function() {
-                if (current_time !== self.howler.seek()) {
-                    hidePreloader(self);
-                    clearTimeout(interval);
+            setTimeout(function() {
+                if (current_time === self.howler.seek()) {
+                    showPreloader(self);
                 }
-            }, 50);
-        }, 100);
+                interval = setInterval(function() {
+                    if (current_time !== self.howler.seek()) {
+                        hidePreloader(self);
+                        clearTimeout(interval);
+                    }
+                }, 50);
+            }, 100);
 
-        updateState(this);
+            updateState(this);
+        }
 
         return this;
     };
 
     Jouele.prototype.onSeek = function onSeek() {
         var self = this;
+
+        if (this.seekTime && (this.howler.seek() !== this.seekTime) && (this.seekPosition !== 100)) {
+            this.seek();
+            return false;
+        }
+        if (this.isPaused) {
+            return false;
+        }
 
         if (this.timer) {
             clearInterval(this.timer);
@@ -441,34 +483,37 @@
         var nearest_second = (Math.ceil(this.howler.seek()) - this.howler.seek()).toFixed(3);
         setTimeout(function() {
             updateState(self);
-            
-            self.timer = setInterval(function() {
-                updateState(self);
-            }, 1000);
-        }, nearest_second * 1000);
-        
-        if (this.isPlaying || this.isPaused) {
-            this.seekTime = null;
-            this.seekPosition = null;
-        } else {
-            if (!this.isPaused && $.Jouele.lastPlayed === this) {
-                this.play.call(this);
+
+            if (self.timer) {
+                clearInterval(self.timer);
             }
+            
+            if (!self.isPaused) {
+                self.timer = setInterval(function() {
+                    updateState(self);
+                }, 1000);
+            }
+        }, nearest_second * 1000);
+
+        this.seekTime = null;
+        this.seekPosition = null;
+
+        if ($.Jouele.lastPlayed === this && (!this.isPlaying || !this.isStarted)) {
+            this.play.call(this);
         }
         
         return this;
     };
     
     Jouele.prototype.onEnd = function onEnd() {
-        this.makeInterfacePause();
-
         clearInterval(this.timer);
         this.timer = null;
 
         this.mouseOverPlayBarPosition = 100;
         updateState(this);
 
-        this.isPlaying = false;
+        this.makeInterfacePause();
+        
         this.mouseOverPlayBarPosition = null;
         this.isMouseMovingOverPlayBar = false;
         this.seekTime = null;
@@ -482,17 +527,25 @@
     Jouele.prototype.onLoad = function onLoad() {
         this.isLoaded = true;
         this.totalTime = this.howler.duration();
-
-        if (this.seekPosition > 0 && !this.seekTime) {
-            if (this.isPaused) {
-                this.seekTime = +((this.totalTime * (this.seekPosition / 100)).toFixed(2));
+        
+        if (this.isMouseMovingOverPlayBar) {
+            
+        } else {
+            if (this.seekTime) {
                 this.howler.seek(this.seekTime);
             } else {
-                this.seek(this.seekPosition);
-            }
-        } else {
-            if (!this.isPaused) {
-                this.play();
+                if (this.seekPosition > 0) {
+                    if (this.isPaused) {
+                        this.seekTime = +((this.totalTime * (this.seekPosition / 100)).toFixed(2));
+                        this.howler.seek(this.seekTime);
+                    } else {
+                        this.seek(this.seekPosition);
+                    }
+                } else {
+                    if (!this.isPaused) {
+                        this.play();
+                    }
+                }
             }
         }
 
@@ -685,11 +738,9 @@
             event.stopPropagation();
         });
         this.$container.find(".jouele-control-button-icon_play").off("click.jouele").on("click.jouele", function() {
-            self.makeInterfacePlay.call(self);
             self.play.call(self);
         });
         this.$container.find(".jouele-control-button-icon_pause").off("click.jouele").on("click.jouele", function() {
-            self.makeInterfacePause.call(self);
             self.pause.call(self);
         });
 
@@ -748,6 +799,7 @@
 
             if (!self.howler) {
                 self.createHowler.call(self);
+                self.howler.load();
             }
 
             getEventPoint(event);
@@ -784,13 +836,16 @@
         this.howler = new Howl({
             src: [self.href],
             html5: true,
+            preload: false,
             onloaderror: function() {
                 self.breakPlayer.call(self);
             },
             onload: function() {
+                console.log("onload");
                 self.onLoad.call(self);
             },
             onplay: function() {
+                console.log("onplay");
                 self.onPlay.call(self);
             },
             onend: function() {
@@ -800,13 +855,7 @@
                 self.onPause.call(self);
             },
             onseek: function() {
-                if (self.seekTime && (self.howler.seek() !== self.seekTime) && (self.seekPosition !== 100)) {
-                    self.seek.call(self);
-                    return false;
-                }
-                if (self.isPaused) {
-                    return false;
-                }
+                console.log("onseek");
                 self.onSeek.call(self);
             }
         });
