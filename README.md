@@ -14,6 +14,7 @@ Jouele is a simple and beautiful audio player for the web.
 <script src="jouele.js"></script>
 <link href="jouele.css" rel="stylesheet"/>
 ```
+<sub>HowlerJS necessary for Jouele is already included into Jouele bundle so you don’t have to include it separately.</sub>
 
 ## Basic Usage
 ### Single track

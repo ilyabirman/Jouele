@@ -173,6 +173,7 @@
         this.mouseOverPlayBarPosition = null;
         this.isPaused = false;
         this.isLoaded = false;
+        this.isStarted = false;
 
         this.init();
     };
@@ -313,20 +314,20 @@
             
             $.Jouele.lastPlayed = this;
             
-            if (this.isPlayed && !this.isLoaded) {
-                // do not load it second time
-            } else {
+            if (this.isLoaded) {
                 this.howler.play();
+            } else {
+                if (!this.isStarted) {
+                    this.howler.load();
+                }
             }
         } else {
-            if (this.isPlayed && !this.isLoaded) {
-                // do not load it second time
-            } else {
+            if (this.isLoaded) {
                 this.howler.play();
             }
         }
-
-        this.isPlayed = true;
+        
+        this.isStarted = true;
         
         showPreloader(this, 500); // 500 is enough to play the loaded fragment, if it's loaded; if isn't — preloader will appear after 500ms
 
@@ -406,8 +407,7 @@
         }
         
         this.makeInterfacePlay();
-        
-        this.isPlayed = true;
+        this.isStarted = true;
         
         var current_time = this.howler.seek();
         var interval;
@@ -435,8 +435,6 @@
         if (this.timer) {
             clearInterval(this.timer);
         }
-
-        this.isPlayed = true;
 
         updateState(this);
 
@@ -491,6 +489,10 @@
                 this.howler.seek(this.seekTime);
             } else {
                 this.seek(this.seekPosition);
+            }
+        } else {
+            if (!this.isPaused) {
+                this.play();
             }
         }
 
@@ -755,7 +757,7 @@
 
         $(document).on("jouele-pause." + joueleID, function(event, triggeredJouele) {
             if (self !== triggeredJouele) {
-                if (!self.isPaused && self.isPlayed) {
+                if (!self.isPaused && self.isStarted) {
                     self.pause();
                 }
             }
@@ -789,9 +791,6 @@
                 self.onLoad.call(self);
             },
             onplay: function() {
-                if (self.isPaused) {
-                    return false;
-                }
                 self.onPlay.call(self);
             },
             onend: function() {
@@ -836,7 +835,7 @@
             }
 
             if (event.keyCode === 32) {
-                if ($.Jouele.lastPlayed && !$.Jouele.lastPlayed.isPaused && ($.Jouele.lastPlayed.isPlaying || $.Jouele.lastPlayed.seekTime != null || $.Jouele.lastPlayed.seekPosition != null )) {
+                if ($.Jouele.lastPlayed && !$.Jouele.lastPlayed.isPaused && ($.Jouele.lastPlayed.isPlaying || $.Jouele.lastPlayed.seekTime != null || $.Jouele.lastPlayed.seekPosition != null || ($.Jouele.lastPlayed.isStarted && !$.Jouele.lastPlayed.isLoaded) )) {
                     if ($.Jouele.options.pauseOnSpace) {
                         if (!$.Jouele.options.scrollOnSpace) {
                             event.stopPropagation();

@@ -12,6 +12,7 @@
 <script src="jouele.js"></script>
 <link href="jouele.css" rel="stylesheet"/>
 ```
+<sub>HowlerJS, необходимый для работы Жуэля, уже включен в собранный файл Жуэля, так что вам не нужно подключать его отдельно.</sub>
 
 ## Как использовать
 
