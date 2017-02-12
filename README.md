@@ -93,7 +93,7 @@ Turns `selector` link into a player. Returns a jQuery-object modified by `$(sele
 The player block is added to DOM instead of excluded element and also has an instance of `Jouele` player in its `data.jouele`.
 
 ## Global Object `$.Jouele`
-The object contains 3 properties and one extended object of options:
+The object contains 2 properties and one extended object of options:
 
 #### `$.Jouele.playlist`
 Type: `array`  
