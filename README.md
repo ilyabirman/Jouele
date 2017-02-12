@@ -42,11 +42,11 @@ Check [`dist/example.html`](dist/example.html) to see more examples of usage.
 Adding some data-attributes changes the behavior or appearance of the player (or of the playlist).
 
 #### `data-repeat`
-Is applied to the playlist.  
+Applied to a track or a playlist.  
 Type: `boolean`  
 Default value: `false`
 
-Defines whether to repeat the playback of playlist after the last track is finished.
+Defines whether to repeat the playback of track or playlist after the last track is finished.
 
 #### `data-length`
 Type: `string`  
