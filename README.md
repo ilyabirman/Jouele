@@ -53,7 +53,7 @@ Type: `string`
 Default value: `0`
 
 Shows the total length of the track, so that it is displayed immediately without pressing the "play" button.
-Examples for track of 9 minutes 54 seconds length: `data-length="9:54"`, `data-length="954"`
+Examples for track of 9 minutes 54 seconds length: `data-length="9:54"`, `data-length="594"`
 
 #### `data-space-control`
 Type: `boolean`  
