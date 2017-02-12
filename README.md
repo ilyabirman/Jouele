@@ -14,7 +14,7 @@ Jouele is a simple and beautiful audio player for the web.
 <script src="jouele.js"></script>
 <link href="jouele.css" rel="stylesheet"/>
 ```
-<sub>HowlerJS necessary for Jouele is already included into Jouele bundle so you don’t have to include it separately.</sub>
+<sub>howler.js necessary for Jouele is already included into Jouele bundle so you don’t have to include it separately.</sub>
 
 ## Basic Usage
 ### Single track
@@ -168,7 +168,7 @@ Stores the track length in seconds. Can be a floating-point number.
 - Idea and development — [Ilya Birman](http://ilyabirman.ru)
 - Development — [Eugene Lazarev](http://eugene-lazarev.ru)
 - Documentation translation — [Alexandra Godun](https://github.com/misterblblbl)
-- [HowlerJS](https://howlerjs.com/)
+- [howler.js](https://howlerjs.com/)
 
 ## License
 [MIT License](LICENSE.md)
