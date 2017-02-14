@@ -11,7 +11,7 @@
     box-sizing: content-box;
 }
 
-.jouele-progress-area {
+.jouele-progress {
     position: relative;
     width: 100%;
     height: 11px;
@@ -21,22 +21,22 @@
     user-select: none;
 }
 
-.jouele-mine {
+.jouele-progress-line {
     width: 100%;
     top: 0;
     height: 11px;
     position: absolute;
 }
 
-.jouele-mine-bar,
-.jouele-load-bar,
-.jouele-play-bar {
+.jouele-progress-line-bar_base,
+.jouele-progress-line-bar_load,
+.jouele-progress-line-bar_play {
     position: absolute;
     box-sizing: border-box;
 }
-.jouele-mine-bar:after,
-.jouele-load-bar:after,
-.jouele-play-bar:after {
+.jouele-progress-line-bar_base:after,
+.jouele-progress-line-bar_load:after,
+.jouele-progress-line-bar_play:after {
     content: '';
     position: absolute;
     top: 50%;
@@ -45,50 +45,50 @@
     height: 1px;
 }
 
-.jouele-mine-bar {
+.jouele-progress-line-bar_base {
     height: 11px;
     width: 100%;
     top: 0;
     z-index: 10;
 }
-.jouele-mine-bar:after {
+.jouele-progress-line-bar_base:after {
     background: #bfbfbf;
 }
 
-.jouele-load-bar {
+.jouele-progress-line-bar_load {
     height: 11px;
     width: 100%;
     top: 0;
     z-index: 20;
     cursor: pointer;
 }
-.jouele_broken .jouele-load-bar {
+.jouele_broken .jouele-progress-line-bar_load {
     cursor: default;
 }
-.jouele-load-bar:after {
+.jouele-progress-line-bar_load:after {
     background: #bfbfbf;
 }
 
 
-.jouele-play-bar {
+.jouele-progress-line-bar_play {
     height: 11px;
     top: 0;
     z-index: 30;
     cursor: pointer;
 }
-.jouele-play-bar:after {
+.jouele-progress-line-bar_play:after {
     background-color: #000;
     transition: background-color 0.16s linear;
 }
-.jouele-status-playing .jouele-play-bar:after {
+.jouele-status-playing .jouele-progress-line-bar_play:after {
     background-color: #f59331;
 }
-.jouele-mine:hover .jouele-play-bar:after {
+.jouele-progress-line:hover .jouele-progress-line-bar_play:after {
     background-color: #d04000;
     transition: none;
 }
 
-.jouele-play-lift {
+.jouele-progress-line-lift {
     left: 0;
     top: 50%;
     width: 5px;
@@ -101,10 +101,10 @@
     position: absolute;
     transition: width 0.16s linear, height 0.16s linear, margin 0.16s linear, background-color 0.16s linear;
 }
-.jouele-status-playing .jouele-play-lift {
+.jouele-status-playing .jouele-progress-line-lift {
     background-color: #f59331;
 }
-.jouele-mine:hover .jouele-play-lift {
+.jouele-progress-line:hover .jouele-progress-line-lift {
     background-color: #d04000;
     width: 7px;
     height: 7px;
@@ -113,7 +113,7 @@
     transition: none;
 }
 
-.jouele-play-lift:before {
+.jouele-progress-line-lift:before {
     content: '';
     width: 100%;
     height: 100%;
@@ -133,14 +133,14 @@
     display: none\0/; /* IE 8 */
     opacity: 0;
 }
-.jouele-play-lift_buffering:before {
+.jouele-progress-line-lift_buffering:before {
     opacity: 1;
     display: block\0/; /* IE 8 */
 }
-.jouele-status-playing .jouele-play-lift:before {
+.jouele-status-playing .jouele-progress-line-lift:before {
     border-color: #f59331;
 }
-.jouele-mine:hover .jouele-play-lift:before {
+.jouele-progress-line:hover .jouele-progress-line-lift:before {
     border-color: #d04000;
     transition: none;
 }
@@ -208,7 +208,7 @@
 }
 
 
-.jouele-info-area {
+.jouele-info {
     z-index: 100;
     position: relative;
     overflow: hidden;
@@ -216,23 +216,23 @@
     margin: 0 0 0 -4px;
 }
 
-.jouele-control {
+.jouele-info-control {
     overflow: hidden;
     font-size: 13px;
     line-height: 1;
 }
-.jouele-control * {
+.jouele-info-control * {
     line-height: 1;
 }
 
-.jouele-control-button {
+.jouele-info-control-button {
     float: left;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
-.jouele-control-link {
+.jouele-info-control-link {
     cursor: pointer;
     /* Перекрываем все возможные каскады на сайте */
     padding: 0 !important;
@@ -243,7 +243,7 @@
     border: 0 !important;
     color: currentColor !important;
 }
-.jouele-control-button-icon {
+.jouele-info-control-button-icon {
     display: block;
 }
 .jouele-svg {
@@ -254,19 +254,19 @@
 .jouele-svg-color {
     transition: fill 0.16s linear;
 }
-.jouele-control-button-icon_unavailable .jouele-svg-color,
-.jouele-control-button-icon_play .jouele-svg-color {
+.jouele-info-control-button-icon_unavailable .jouele-svg-color,
+.jouele-info-control-button-icon_play .jouele-svg-color {
     fill: #000;
 }
-.jouele-control-button-icon_pause .jouele-svg-color {
+.jouele-info-control-button-icon_pause .jouele-svg-color {
     fill: #f59331;
 }
-.jouele-control-button:hover .jouele-control-button-icon_play .jouele-svg-color,
-.jouele-control-button:hover .jouele-control-button-icon_pause .jouele-svg-color {
+.jouele-info-control-button:hover .jouele-info-control-button-icon_play .jouele-svg-color,
+.jouele-info-control-button:hover .jouele-info-control-button-icon_pause .jouele-svg-color {
     fill: #d04000;
     transition: none;
 }
-.jouele-control-text {
+.jouele-info-control-text {
     line-height: 16px !important; /* Перекрываем все возможные каскады на сайте */
     padding: 0 2em 0 0;
     overflow: hidden;
@@ -274,7 +274,7 @@
     white-space: normal;
 }
 
-.jouele-time {
+.jouele-info-time {
     float: right;
     font-size: 11px;
     line-height: 16px !important; /* Перекрываем все возможные каскады на сайте */
@@ -286,30 +286,27 @@
     -ms-user-select: none;
     user-select: none;
 }
-.jouele_broken .jouele-time {
+.jouele_broken .jouele-info-time {
     display: none;
 }
 
-.jouele-play-time {
+.jouele-info-time__current {
     float: left;
     margin-right: .65em;
 }
 
-.jouele-total-time {
+.jouele-info-time__total {
     float: right;
 }
-.jouele-total-time__approx {
-    padding-right: 0.3em;
-}
 
-.jouele_timeline_hide .jouele-progress-area {
+.jouele_timeline_hide .jouele-progress {
     margin-top: -16px;
     display: none\0/; /* IE 8 */
     opacity: 0;
     transition: opacity 0.33s ease-out, margin-top 0.33s ease-out;
 }
 
-.jouele-status-playing .jouele-progress-area {
+.jouele-status-playing .jouele-progress {
     margin-top: 0;
     opacity: 1;
     display: block\0/; /* IE 8 */
