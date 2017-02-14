@@ -988,7 +988,9 @@
                     var seekTime = $control.attr("data-play-from");
                     var $controlledJouele;
                     
-                    if ($control.attr("data-href")) {
+                    if ($.Jouele.playlist.length === 1 && $.Jouele.playlist[0].length === 1) {
+                        $controlledJouele = $.Jouele.playlist[0][0];
+                    } else if ($control.attr("data-href")) {
                         var href = $control.attr("data-href");
                         
                         playlistLoop:
