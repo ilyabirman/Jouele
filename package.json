@@ -7,8 +7,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "howler": "^2.0.2",
-    "jquery": "^3.1.1"
+    "howler": "^2.0.3",
+    "jquery": "^3.2.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",

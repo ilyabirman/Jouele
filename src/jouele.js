@@ -306,7 +306,7 @@
 
         $(document).trigger("jouele-pause", this);
 
-        if ($.Jouele.lastPlayed !== this) {            
+        if ($.Jouele.lastPlayed !== this) {
             if ($.Jouele.lastPlayed) {
                 if (!$.Jouele.lastPlayed.isPaused) {
                     $.Jouele.lastPlayed.pause();
@@ -331,6 +331,10 @@
         this.isStarted = true;
         
         showPreloader(this);
+        
+        if (self.howler._sounds.length < 1) {
+            return this;
+        }
 
         var nearest_second = (Math.ceil(self.howler.seek()) - self.howler.seek()).toFixed(3);
         setTimeout(function() {
