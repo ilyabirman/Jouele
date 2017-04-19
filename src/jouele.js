@@ -1010,7 +1010,9 @@
                         $controlledJouele = $control.siblings(".jouele").eq(0);
                     }
 
-                    $controlledJouele.playFrom(seekTime);
+                    if ($controlledJouele.length === 1) {
+                        $controlledJouele.playFrom(seekTime);
+                    }
                 }
             }
         }
