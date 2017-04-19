@@ -6,7 +6,7 @@
 ## Знаменитая установка в 2 шага
 ```html
 <!-- Подключите на страницу jQuery, необходимый для работы Жуэля -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <!-- Подключите Жуэль: JS и CSS -->
 <script src="jouele.js"></script>

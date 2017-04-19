@@ -8,7 +8,7 @@ Jouele is a simple and beautiful audio player for the web.
 ## Famous 2-step Setup
 ```html
 <!-- Include jQuery that are mandatory for Jouele -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <!-- Include Jouele: JS and CSS -->
 <script src="jouele.js"></script>
