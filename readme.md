@@ -3,7 +3,7 @@ Jouele is a simple and beautiful audio player for the web.
 
 [Project page](http://ilyabirman.net/projects/jouele/)
 
-[Russian translation of the documentation](https://github.com/ilyabirman/Jouele/blob/master/README-ru.md) :ru:
+[Russian translation of the documentation](https://github.com/ilyabirman/Jouele/blob/master/readme-ru.md) :ru:
 
 ## Famous 2-step Setup
 ```html
@@ -171,4 +171,4 @@ Stores the track length in seconds. Can be a floating-point number.
 - [howler.js](https://howlerjs.com/)
 
 ## License
-[MIT License](LICENSE.md)
+[MIT License](license.md)

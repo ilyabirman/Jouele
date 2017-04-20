@@ -171,4 +171,4 @@ var JoueleInstance = $(".jouele").data("jouele") // Получить экзем�
 - [howler.js](https://howlerjs.com/)
 
 ## Лицензия
-[MIT License](LICENSE.md)
+[MIT License](license.md)
