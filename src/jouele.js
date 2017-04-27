@@ -1017,7 +1017,7 @@
                         $controlledJouele = $control.siblings(".jouele").eq(0);
                     }
 
-                    if ($controlledJouele.length === 1) {
+                    if ($controlledJouele && typeof $controlledJouele.playFrom === "function") {
                         $controlledJouele.playFrom(seekTime);
                     }
                 }
