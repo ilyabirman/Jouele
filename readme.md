@@ -11,10 +11,13 @@ Jouele is a simple and beautiful audio player for the web.
 <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <!-- Include Jouele: JS and CSS -->
-<script src="jouele.js"></script>
-<link href="jouele.css" rel="stylesheet"/>
+<script src="jouele/jouele.min.js"></script>
+<link href="jouele/jouele.min.css" rel="stylesheet"/>
 ```
 <sub>howler.js necessary for Jouele is already included into Jouele bundle so you don’t have to include it separately.</sub>
+
+## Available in npm
+`npm install jouele`
 
 ## Basic Usage
 ### Single track
@@ -34,7 +37,7 @@ Add `jouele-playlist` class to the element, which contains links with `jouele` c
 </div>
 ```
 
-Check [`dist/example.html`](dist/example.html) to see more examples of usage.
+Check [`jouele/example.html`](jouele/example.html) to see more examples of usage.
 
 ## Advanced Features
 
@@ -79,12 +82,12 @@ Adding `jouele-skin-dark` class to the link initialized by Jouele changes to pre
 <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele jouele-skin-dark">Ilya Birman: News</a>
 ```
 
-A developer can create a custom theme having examined the CSS-file [`jouele.skin.css`](dist/jouele.skin.css).
+A developer can create a custom theme having examined the CSS-file [`src/jouele.skin.css`](src/jouele.skin.css).
 Follow these steps to install a new theme:
-- In [`jouele.skin.css`](dist/jouele.skin.css) change all `jouele-skin-dark` selectors to the new name following the pattern `jouele-skin-{skin_name}` (for example, `jouele-skin-blue`).
+- In `jouele.skin.css` change all `jouele-skin-dark` selectors to the new name following the pattern `jouele-skin-{skin_name}` (for example, `jouele-skin-blue`).
 - Change colors with your preferred ones.
 - Add `jouele-skin-{skin_name}`class to the link initialized by Jouele.
-- Link the changed [`jouele.skin.css`](dist/jouele.skin.css) file to the page after [`jouele.css`](dist/jouele.css).
+- Link the changed `jouele.skin.css` file to the page after `jouele.css`.
 
 ## Dynamic Initialization
 
