@@ -297,7 +297,10 @@
         var self = this;
         
         if (!this.howler) {
-            this.createHowler.call(this);
+            if (!this.createHowler.call(this)) {
+                this.breakPlayer.call(this);
+                return false;
+            }
         }
         
         if (this.isPlaying) {
@@ -409,7 +412,10 @@
         $(document).trigger("jouele-pause", this);
         
         if (!this.howler) {
-            this.createHowler.call(this);
+            if (!this.createHowler.call(this)) {
+                this.breakPlayer.call(this);
+                return false;
+            }
         }
 
         if (this.totalTime) {
@@ -567,7 +573,10 @@
         $(document).trigger("jouele-pause", this);
 
         if (!this.howler) {
-            this.createHowler.call(this);
+            if (!this.createHowler.call(this)) {
+                this.breakPlayer.call(this);
+                return false;
+            }
         }
         
         if (time) {
@@ -815,12 +824,15 @@
         this.$container.find(".jouele-info-control-link").off("click.jouele").on("click.jouele", function(event) {
             event.preventDefault();
             event.stopPropagation();
+            return false;
         });
         this.$container.find(".jouele-info-control-button-icon_play").off("click.jouele").on("click.jouele", function() {
             self.play.call(self);
+            return false;
         });
         this.$container.find(".jouele-info-control-button-icon_pause").off("click.jouele").on("click.jouele", function() {
             self.pause.call(self);
+            return false;
         });
 
         this.$container.find(".jouele-progress-line").off("mousedown." + joueleID).on("mousedown." + joueleID, function(event) {
@@ -877,13 +889,18 @@
             });
 
             if (!self.howler) {
-                self.createHowler.call(self);
+                if (!self.createHowler.call(self)) {
+                    self.breakPlayer.call(self);
+                    return false;
+                }
                 self.howler.load();
             }
 
             getEventPoint(event);
 
             updateState(self);
+            
+            return false;
         });
 
         $(document).on("jouele-pause." + joueleID, function(event, triggeredJouele) {
@@ -892,6 +909,8 @@
                     self.pause();
                 }
             }
+            
+            return false;
         });
 
         return this;
@@ -911,6 +930,13 @@
     
     Jouele.prototype.createHowler = function createHowler() {
         var self = this;
+        
+        if (typeof Howl === "undefined") {
+            if (typeof console !== "undefined" && typeof console.error === "function") {
+                console.error("Please include howler.js into your page");
+            }
+            return false;
+        }
         
         this.howler = new Howl({
             src: [self.href],
