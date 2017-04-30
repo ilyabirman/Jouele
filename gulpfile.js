@@ -2,25 +2,30 @@ var gulp = require('gulp');
 
 var concat = require("gulp-concat");
 var uglify = require('gulp-uglify');
-var cleanCSS = require('gulp-clean-css');
+var cleanCss = require('gulp-clean-css');
 var concatCss = require('gulp-concat-css');
 
-gulp.task('concatJs', function() {
-    gulp.src(['src/howlerjs/howler.js', 'src/jouele.js'])
-        .pipe(concat('jouele.js'))
-        .pipe(uglify())
-        .pipe(gulp.dest('dist'))
-});
-gulp.task('concatCss', function () {
+gulp.task('concat-css', function () {
     gulp.src(['src/jouele.css', 'src/jouele.skin.css'])
         .pipe(concatCss('dist/jouele.css', {rebaseUrls: false}))
         .pipe(gulp.dest('./'))
-        .pipe(cleanCSS({compatibility: 'ie8'}))
-        .pipe(gulp.dest('./'))
 });
-gulp.task('copy', function () {
-    gulp.src(['src/jouele.skin.css'])
+gulp.task('copy-js', function () {
+    gulp.src(['src/jouele.js'])
         .pipe(gulp.dest('dist'))
 });
+gulp.task('minify-css', function () {
+    gulp.src(['src/jouele.css', 'src/jouele.skin.css'])
+        .pipe(concatCss('jouele/jouele.min.css', {rebaseUrls: false}))
+        .pipe(cleanCss({compatibility: 'ie8'}))
+        .pipe(gulp.dest('./'))
+});
+gulp.task('uglify-js', function() {
+    gulp.src(['node_modules/howler/dist/howler.js', 'src/jouele.js'])
+        .pipe(concat('jouele.min.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('jouele'))
+});
 
-gulp.task('default', ['concatJs', 'concatCss', 'copy']);
+gulp.task('default', ['concat-css', 'copy-js']);
+gulp.task('jouele', ['minify-css', 'uglify-js']);

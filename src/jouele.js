@@ -914,6 +914,7 @@
         
         this.howler = new Howl({
             src: [self.href],
+            format: ['mp3'],
             html5: true,
             preload: false,
             onloaderror: function() {
