@@ -28,4 +28,4 @@ gulp.task('uglify-js', function() {
 });
 
 gulp.task('default', ['minify-css', 'uglify-js']);
-gulp.task('default', ['concat-css', 'copy-js']);
+gulp.task('npm', ['concat-css', 'copy-js']);
