@@ -1,5 +1,8 @@
 .DS_Store
 .idea/
-dist/
+.gitignore
+gulpfile.js
+jouele/
+src/
 node_modules/
 mp3/

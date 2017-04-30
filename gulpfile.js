@@ -27,5 +27,5 @@ gulp.task('uglify-js', function() {
         .pipe(gulp.dest('jouele'))
 });
 
+gulp.task('default', ['minify-css', 'uglify-js']);
 gulp.task('default', ['concat-css', 'copy-js']);
-gulp.task('jouele', ['minify-css', 'uglify-js']);

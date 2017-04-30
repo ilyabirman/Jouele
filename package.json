@@ -17,8 +17,5 @@
     "gulp-concat": "^2.6.1",
     "gulp-concat-css": "^2.3.0",
     "gulp-uglify": "^2.1.2"
-  },
-  "scripts": {
-    "start": "gulp"
   }
 }
