@@ -7,9 +7,12 @@
   },
   "license": "MIT",
   "main": "dist/jouele.js",
+  "style": "dist/jouele.css",
   "dependencies": {
-    "howler": "^2.0.3",
-    "jquery": "^3.2.1"
+    "howler": "^2.0.3"
+  },
+  "peerDependencies": {
+    "jquery": "3.x"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
