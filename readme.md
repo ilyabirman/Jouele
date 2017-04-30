@@ -17,7 +17,7 @@ Jouele is a simple and beautiful audio player for the web.
 <sub>howler.js necessary for Jouele is already included into Jouele bundle so you don’t have to include it separately.</sub>
 
 ## Available in npm
-`npm install jouele`
+`npm install ilyabirman-jouele`
 
 ## Basic Usage
 ### Single track

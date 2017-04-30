@@ -1,10 +1,12 @@
 {
-  "name": "Jouele",
+  "name": "ilyabirman-jouele",
+  "description": "A simple and beautiful audio player for the web",
   "version": "2.3.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/ilyabirman/Jouele.git"
   },
+  "author": "Ilya Birman",
   "license": "MIT",
   "main": "dist/jouele.js",
   "style": "dist/jouele.css",
