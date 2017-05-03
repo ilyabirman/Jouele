@@ -1,23 +1,11 @@
 # Jouele
 Jouele is a simple and beautiful audio player for the web. 
 
-[Project page](http://ilyabirman.net/projects/jouele/)
+[Project page](http://ilyabirman.net/projects/jouele/)  
+[Страница проекта на русском языке](http://ilyabirman.ru/projects/jouele/)
 
-[Russian translation of the documentation](https://github.com/ilyabirman/Jouele/blob/master/readme-ru.md) :ru:
-
-## Famous 2-step Setup
-```html
-<!-- Include jQuery that are mandatory for Jouele -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-<!-- Include Jouele: JS and CSS -->
-<script src="jouele/jouele.min.js"></script>
-<link href="jouele/jouele.min.css" rel="stylesheet"/>
-```
-<sub>howler.js necessary for Jouele is already included into Jouele bundle so you don’t have to include it separately.</sub>
-
-## Available in npm
-`npm install ilyabirman-jouele`
+## General
+Include `dist/jouele.js` and `dist/jouele.css` to your project. Make sure you have included [howler.js](howlerjs.com) and jQuery 3.x as dependencies.
 
 ## Basic Usage
 ### Single track
