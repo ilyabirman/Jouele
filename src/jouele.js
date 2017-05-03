@@ -976,7 +976,7 @@
             playOnSpace: false,
             scrollOnSpace: true
         },
-        version: "2.3.0"
+        version: "2.3.3"
     };
 
     /* Autoload Jouele */
