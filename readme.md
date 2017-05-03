@@ -11,8 +11,8 @@ Jouele is a simple and beautiful audio player for the web.
 <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <!-- Include Jouele: JS and CSS -->
-<script src="//unpkg.com/ilyabirman-jouele@2.3.2/dist/jouele.js"></script>
-<link href="//unpkg.com/ilyabirman-jouele@2.3.2/dist/jouele.css" rel="stylesheet"/>
+<script src="//unpkg.com/jouele/dist/jouele.js"></script>
+<link href="//unpkg.com/jouele/dist/jouele.css" rel="stylesheet"/>
 ```
 <sub>howler.js necessary for Jouele is already included into Jouele bundle so you don’t have to include it separately.</sub>
 
