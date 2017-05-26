@@ -14,7 +14,7 @@
     "howler": "^2.0.3"
   },
   "peerDependencies": {
-    "jquery": "3.x"
+    "jquery": "^3.2.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
