@@ -23,16 +23,26 @@
 
 .jouele-progress-line {
     width: 100%;
-    top: 0;
-    height: 11px;
+    height: 100%;
     position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .jouele-progress-line-bar_base,
 .jouele-progress-line-bar_load,
 .jouele-progress-line-bar_play {
     position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
     box-sizing: border-box;
+}
+.jouele-progress-line-bar_load,
+.jouele-progress-line-bar_play {
+    top: 0;
+    left: 0;
+    cursor: pointer;
 }
 .jouele-progress-line-bar_base:after,
 .jouele-progress-line-bar_load:after,
@@ -46,35 +56,29 @@
 }
 
 .jouele-progress-line-bar_base {
-    height: 11px;
     width: 100%;
-    top: 0;
     z-index: 10;
 }
 .jouele-progress-line-bar_base:after {
-    background: #bfbfbf;
+    background-color: #bfbfbf;
 }
 
 .jouele-progress-line-bar_load {
-    height: 11px;
     width: 100%;
-    top: 0;
     z-index: 20;
-    cursor: pointer;
 }
 .jouele_broken .jouele-progress-line-bar_load {
     cursor: default;
 }
 .jouele-progress-line-bar_load:after {
-    background: #bfbfbf;
+    background-color: #bfbfbf;
 }
 
-
 .jouele-progress-line-bar_play {
-    height: 11px;
-    top: 0;
     z-index: 30;
-    cursor: pointer;
+}
+.jouele_broken .jouele-progress-line-bar_play {
+    display: none;
 }
 .jouele-progress-line-bar_play:after {
     background-color: #000;
