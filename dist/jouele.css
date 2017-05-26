@@ -23,16 +23,27 @@
 
 .jouele-progress-line {
   width: 100%;
-  top: 0;
-  height: 11px;
+  height: 100%;
   position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .jouele-progress-line-bar_base,
 .jouele-progress-line-bar_load,
 .jouele-progress-line-bar_play {
   position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
   box-sizing: border-box;
+}
+
+.jouele-progress-line-bar_load,
+.jouele-progress-line-bar_play {
+  top: 0;
+  left: 0;
+  cursor: pointer;
 }
 
 .jouele-progress-line-bar_base:after,
@@ -47,22 +58,17 @@
 }
 
 .jouele-progress-line-bar_base {
-  height: 11px;
   width: 100%;
-  top: 0;
   z-index: 10;
 }
 
 .jouele-progress-line-bar_base:after {
-  background: #bfbfbf;
+  background-color: #bfbfbf;
 }
 
 .jouele-progress-line-bar_load {
-  height: 11px;
   width: 100%;
-  top: 0;
   z-index: 20;
-  cursor: pointer;
 }
 
 .jouele_broken .jouele-progress-line-bar_load {
@@ -70,14 +76,15 @@
 }
 
 .jouele-progress-line-bar_load:after {
-  background: #bfbfbf;
+  background-color: #bfbfbf;
 }
 
 .jouele-progress-line-bar_play {
-  height: 11px;
-  top: 0;
   z-index: 30;
-  cursor: pointer;
+}
+
+.jouele_broken .jouele-progress-line-bar_play {
+  display: none;
 }
 
 .jouele-progress-line-bar_play:after {
@@ -355,9 +362,13 @@
 }
 /* Black skin */
 
-.jouele-skin-dark .jouele-progress-line-bar_load:after,
+.jouele-skin-dark .jouele-progress-line-bar_base:after,
+.jouele-skin-dark .jouele-progress-line-bar_load:after {
+  background-color: #bfbfbf;
+}
+
 .jouele-skin-dark .jouele-progress-line-bar_play:after {
-  background: currentColor;
+  background-color: currentColor;
 }
 
 .jouele-skin-dark.jouele-status-playing .jouele-progress-line-bar_play:after,
@@ -382,7 +393,33 @@
   background-color: #d04000;
 }
 
+.jouele-skin-dark .jouele-progress-line-lift:before {
+  border-color: currentColor;
+}
+
+.jouele-skin-dark.jouele-status-playing .jouele-progress-line-lift:before,
+.jouele-skin-dark .jouele-status-playing .jouele-progress-line-lift:before {
+  border-color: #f59331;
+}
+
+.jouele-skin-dark .jouele-progress-line:hover .jouele-progress-line-lift:before {
+  border-color: #d04000;
+}
+
 .jouele-skin-dark .jouele-info-control-button-icon_unavailable .jouele-svg-color,
 .jouele-skin-dark .jouele-info-control-button-icon_play .jouele-svg-color {
   fill: currentColor;
+}
+
+.jouele-skin-dark .jouele-info-control-button-icon_pause .jouele-svg-color {
+  fill: #f59331;
+}
+
+.jouele-skin-dark .jouele-info-control-button:hover .jouele-info-control-button-icon_play .jouele-svg-color,
+.jouele-skin-dark .jouele-info-control-button:hover .jouele-info-control-button-icon_pause .jouele-svg-color {
+  fill: #d04000;
+}
+
+.jouele-skin-dark .jouele-info-time {
+  color: inherit;
 }
