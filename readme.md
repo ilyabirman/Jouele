@@ -5,7 +5,7 @@ Jouele is a simple and beautiful audio player for the web.
 [Страница проекта на русском языке](http://ilyabirman.ru/projects/jouele/)
 
 ## General
-Include `dist/jouele.js` and `dist/jouele.css` to your project. Make sure you have included [howler.js](howlerjs.com) and jQuery 3.x as dependencies.
+Include `dist/jouele.js` and `dist/jouele.css` to your project. Make sure you have included [howler.js](http://howlerjs.com) and jQuery 3.x as dependencies.
 
 ## Basic Usage
 ### Single track
