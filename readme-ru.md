@@ -6,11 +6,11 @@
 ## Знаменитая установка в 2 шага
 ```html
 <!-- Подключите на страницу jQuery, необходимый для работы Жуэля -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <!-- Подключите Жуэль: JS и CSS -->
-<script src="jouele/jouele.min.js"></script>
-<link href="jouele/jouele.min.css" rel="stylesheet"/>
+<script src="https://unpkg.com/jouele/dist/jouele.js"></script>
+<link href="https://unpkg.com/jouele/dist/jouele.css" rel="stylesheet"/>
 ```
 <sub>howler.js, необходимый для работы Жуэля, уже включен в собранный файл Жуэля, так что вам не нужно подключать его отдельно.</sub>
 
