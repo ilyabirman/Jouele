@@ -6,7 +6,7 @@
 
     <!-- Подключите на страницу jQuery, необходимый для работы Жуэля -->
     <!-- Include jQuery that are mandatory for Jouele -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="jquery-3.3.1.js"></script>
 
     <!-- Подключите Жуэль: JS и CSS -->
     <!-- Include Jouele: JS and CSS -->
@@ -19,39 +19,53 @@
         /* Инлайновые стили нужны только для оформления этой страницы с примерами, они не используются Жуэлем */
         /* Inline styles are only for this example page, they are not used by Jouele */
         html, body { margin: 0; padding: 0; background: #fff; font-family: "Helvetica", "Arial", sans-serif; font-size: 14px; line-height: 1.2; color: #000; }
-        .example-wrapper { padding: 0 50px; }
+        .example-wrapper { padding: 0 3em; min-width: 50em; }
         .example-header_beforeblack { padding-bottom: 0.5em; }
         .example-wrapper .jouele-playlist { padding: 0 50px; }
-        .example-track { padding: 25px 0; }
-        .example-track_black { background: #20242b; color: #909a9c; margin: 0 -50px; padding: 25px 50px; }
-        .example-track-header { font-size: 1.4em; line-height: 1.3; font-weight: 400; padding: 0; margin: 0 0 0.75em; }
+        .example-header { margin: 0; padding: 1em 0 0; }
+        .example-track { padding: 1em 0 2em; }
+        .example-track_black { background: #20242b; color: #909a9c; margin: 0 -3em; padding: 2em 3em; }
+        .example-track-header { font-size: 1.5em; line-height: 1.3; font-weight: 400; padding: 0; margin: 0 0 0.75em; }
     </style>
 
     <div class="example-wrapper">
-        <h2 class="example-header">jouele-playlist (2 tracks)</h2>
+        <h2 class="example-header">jouele-playlist (4 tracks)</h2>
         <div class="jouele-playlist" data-space-control="true">
             <div class="example-track">
                 <h3 class="example-track-header">data-length="9:54"<br/>"594" also will work (as 9×60 + 54)</h3>
-                <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele" data-length="9:54">Ilya Birman – News</a>
+                <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" data-length="9:54" class="jouele">Ilya Birman – News</a>
             </div>
             <div class="example-track">
                 <h3 class="example-track-header">data-hide-timeline-on-pause="true"</h3>
-                <a href="http://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Axiom.mp3" class="jouele" data-hide-timeline-on-pause="true">Ilya Birman – Axiom</a>
+                <a href="http://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Too%20Keen.mp3" class="jouele" data-hide-timeline-on-pause="true">Ilya Birman – Too Keen</a>
+            </div>
+            <div class="example-track">
+                <h3 class="example-track-header">short track</h3>
+                <a href="http://audio.ilyabirman.ru/Special/Underground/MindTheGap.mp3" class="jouele">Mind the Gap</a>
+            </div>
+            <div class="example-track">
+                <h3 class="example-track-header">data-repeat="true"</h3>
+                <a href="http://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Axiom.mp3" class="jouele" data-repeat="true">Ilya Birman – Axiom</a>
             </div>
         </div>
 
         <h2 class="example-header">jouele-playlist (1 track, data-repeat="true")</h2>
         <div class="jouele-playlist" data-repeat="true">
             <div class="example-track">
-                <h3 class="example-track-header">simple track</h3>
+                <h3 class="example-track-header">simple track (data-first="true")</h3>
                 <a href="http://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Skin%20Care.mp3" class="jouele" data-first="true">Ilya Birman – Skin Care</a>
             </div>
+        </div>
+
+        <h2 class="example-header">broken track</h2>
+        <div class="example-track">
+            <a href="http://audio.ilyabirman.ru/404" class="jouele">broken</a>
         </div>
 
         <h2 class="example-header example-header_beforeblack">standart track (no playlist)</h2>
         <div class="example-track example-track_black">
             <h3 class="example-track-header">jouele-skin-dark</h3>
-            <a href="http://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Fireport.mp3" class="jouele jouele-skin-dark">Ilya Birman – Fireport</a>
+            <a href="http://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele jouele-skin-dark">Ilya Birman – News</a>
         </div>
     </div>
 

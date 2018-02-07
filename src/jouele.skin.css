@@ -1,50 +1,49 @@
-/* Black skin */
-.jouele-skin-dark .jouele-progress-line-bar_base:after,
-.jouele-skin-dark .jouele-progress-line-bar_load:after {
+/*
+    Make a skin for your page using this pattern.
+    Change "dark" on your preferred skin name and use option "skin" when init Jouele (see documentation).
+*/
+
+.jouele-skin-dark .jouele-progress-line-bar_base:after { /* Control 'timeline' */
     background-color: #bfbfbf;
 }
-.jouele-skin-dark .jouele-progress-line-bar_play:after {
+.jouele-skin-dark .jouele-progress-line-bar_play:after { /* Control 'elapsed' */
     background-color: currentColor;
 }
-.jouele-skin-dark.jouele-status-playing .jouele-progress-line-bar_play:after,
-.jouele-skin-dark .jouele-status-playing .jouele-progress-line-bar_play:after {
+.jouele-skin-dark .jouele-progress-line-bar_play.jouele-is-playing:after { /* Control 'elapsed' when playing */
     background-color: #f59331;
 }
-.jouele-skin-dark .jouele-progress-line:hover .jouele-progress-line-bar_play:after {
+.jouele-skin-dark .jouele-progress-line:hover .jouele-progress-line-bar_play:after { /* Control 'elapsed' on hover */
     background-color: #d04000;
 }
-.jouele-skin-dark .jouele-progress-line-lift {
+.jouele-skin-dark .jouele-progress-line-lift { /* Control 'position' */
     background-color: currentColor;
 }
-.jouele-skin-dark.jouele-status-playing .jouele-progress-line-lift,
-.jouele-skin-dark .jouele-status-playing .jouele-progress-line-lift {
+.jouele-skin-dark .jouele-progress-line-lift.jouele-is-playing { /* Control 'position' when playing */
     background-color: #f59331;
 }
-.jouele-skin-dark .jouele-progress-line:hover .jouele-progress-line-lift {
+.jouele-skin-dark .jouele-progress-line:hover .jouele-progress-line-lift { /* Control 'position' on hover */
     background-color: #d04000;
 }
-.jouele-skin-dark .jouele-progress-line-lift:before {
+.jouele-skin-dark .jouele-progress-line-lift:before { /* Preloader animation in control 'position' */
     border-color: currentColor;
 }
-.jouele-skin-dark.jouele-status-playing .jouele-progress-line-lift:before,
-.jouele-skin-dark .jouele-status-playing .jouele-progress-line-lift:before {
+.jouele-skin-dark .jouele-progress-line-lift.jouele-is-playing:before { /* Preloader animation in control 'position' when playing */
     border-color: #f59331;
 }
-.jouele-skin-dark .jouele-progress-line:hover .jouele-progress-line-lift:before {
+.jouele-skin-dark .jouele-progress-line:hover .jouele-progress-line-lift:before { /* Preloader animation in control 'position' on hover */
     border-color: #d04000;
 }
 
 .jouele-skin-dark .jouele-info-control-button-icon_unavailable .jouele-svg-color,
-.jouele-skin-dark .jouele-info-control-button-icon_play .jouele-svg-color {
+.jouele-skin-dark .jouele-info-control-button-icon_play .jouele-svg-color { /* Control 'play-pause' */
     fill: currentColor;
 }
-.jouele-skin-dark .jouele-info-control-button-icon_pause .jouele-svg-color {
+.jouele-skin-dark .jouele-info-control-button-icon_play.jouele-is-playing .jouele-svg-color { /* Control 'play-pause' when playing */
     fill: #f59331;
 }
-.jouele-skin-dark .jouele-info-control-button:hover .jouele-info-control-button-icon_play .jouele-svg-color,
-.jouele-skin-dark .jouele-info-control-button:hover .jouele-info-control-button-icon_pause .jouele-svg-color {
+.jouele-skin-dark .jouele-info-control-button:hover .jouele-info-control-button-icon_play .jouele-svg-color { /* Control 'play-pause' on hover */
     fill: #d04000;
 }
-.jouele-skin-dark .jouele-info-time {
+.jouele-skin-dark .jouele-info-time { /* Control 'time-elapsed' and 'time-total' */
     color: inherit;
 }
