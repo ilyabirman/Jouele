@@ -1,7 +1,8 @@
 .DS_Store
 .idea/
+gulpfile.js
+howler-fork/
+jouele/
 node_modules/
 mp3/
-jouele/
-howler-fork/
 src/

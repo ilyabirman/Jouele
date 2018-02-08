@@ -2,8 +2,8 @@
 .idea/
 .gitignore
 gulpfile.js
+howler-fork/
 jouele/
-src/
 node_modules/
 mp3/
-howler-fork/
+src/
