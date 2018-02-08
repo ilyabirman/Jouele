@@ -1,20 +1,11 @@
 .jouele {
   display: block;
   position: relative;
-  line-height: 16px;
-}
-
-.jouele,
-.jouele * {
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
+  line-height: 1.15;
 }
 
 .jouele-progress {
   position: relative;
-  width: 100%;
-  height: 11px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -22,15 +13,15 @@
 }
 
 .jouele-progress-line {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
+  height: 0.8em;
+}
+
+.jouele-progress-line.jouele-is-available {
+  cursor: pointer;
 }
 
 .jouele-progress-line-bar_base,
-.jouele-progress-line-bar_load,
 .jouele-progress-line-bar_play {
   position: absolute;
   top: 0;
@@ -39,7 +30,6 @@
   box-sizing: border-box;
 }
 
-.jouele-progress-line-bar_load,
 .jouele-progress-line-bar_play {
   top: 0;
   left: 0;
@@ -47,7 +37,6 @@
 }
 
 .jouele-progress-line-bar_base:after,
-.jouele-progress-line-bar_load:after,
 .jouele-progress-line-bar_play:after {
   content: '';
   position: absolute;
@@ -59,31 +48,15 @@
 
 .jouele-progress-line-bar_base {
   width: 100%;
-  z-index: 10;
 }
 
 .jouele-progress-line-bar_base:after {
   background-color: #bfbfbf;
 }
 
-.jouele-progress-line-bar_load {
-  width: 100%;
-  z-index: 20;
-}
 
-.jouele_broken .jouele-progress-line-bar_load {
-  cursor: default;
-}
 
-.jouele-progress-line-bar_load:after {
-  background-color: #bfbfbf;
-}
-
-.jouele-progress-line-bar_play {
-  z-index: 30;
-}
-
-.jouele_broken .jouele-progress-line-bar_play {
+.jouele-progress-line-bar_play.jouele-is-unavailable {
   display: none;
 }
 
@@ -92,7 +65,7 @@
   transition: background-color 0.16s linear;
 }
 
-.jouele-status-playing .jouele-progress-line-bar_play:after {
+.jouele-progress-line-bar_play.jouele-is-playing:after {
   background-color: #f59331;
 }
 
@@ -108,15 +81,18 @@
   height: 5px;
   margin: -2px 0 0;
   border-radius: 50%;
-  z-index: 40;
   background-color: #000;
   cursor: pointer;
   position: absolute;
   transition: width 0.16s linear, height 0.16s linear, margin 0.16s linear, background-color 0.16s linear;
 }
 
-.jouele-status-playing .jouele-progress-line-lift {
+.jouele-progress-line-lift.jouele-is-playing {
   background-color: #f59331;
+}
+
+.jouele-progress-line-lift.jouele-is-unavailable {
+  display: none;
 }
 
 .jouele-progress-line:hover .jouele-progress-line-lift {
@@ -150,13 +126,13 @@
   opacity: 0;
 }
 
-.jouele-progress-line-lift_buffering:before {
+.jouele-progress-line-lift.jouele-is-buffering:before {
   opacity: 1;
   display: block\0/;
   /* IE 8 */
 }
 
-.jouele-status-playing .jouele-progress-line-lift:before {
+.jouele-progress-line-lift.jouele-is-playing:before {
   border-color: #f59331;
 }
 
@@ -240,16 +216,16 @@
 }
 
 .jouele-info {
-  z-index: 100;
   position: relative;
   overflow: hidden;
-  padding: 0 0 2px;
-  margin: 0 0 0 -4px;
+  padding: 0 0 0.2em;
+  margin: 0 0 0 -0.3em;
+  z-index: 1;
 }
 
 .jouele-info-control {
   overflow: hidden;
-  font-size: 13px;
+  font-size: 1em;
   line-height: 1;
 }
 
@@ -278,13 +254,21 @@
 }
 
 .jouele-info-control-button-icon {
+  display: none;
+}
+
+.jouele-info-control-button-icon_unavailable {
+  display: block;
+}
+
+.jouele-info-control-button-icon_play.jouele-is-available {
   display: block;
 }
 
 .jouele-svg {
   vertical-align: middle;
-  width: 16px;
-  height: 16px;
+  width: 1.15em;
+  height: 1.15em;
 }
 
 .jouele-svg-color {
@@ -296,18 +280,17 @@
   fill: #000;
 }
 
-.jouele-info-control-button-icon_pause .jouele-svg-color {
+.jouele-info-control-button-icon_play.jouele-is-playing .jouele-svg-color {
   fill: #f59331;
 }
 
-.jouele-info-control-button:hover .jouele-info-control-button-icon_play .jouele-svg-color,
-.jouele-info-control-button:hover .jouele-info-control-button-icon_pause .jouele-svg-color {
+.jouele-info-control-button:hover .jouele-info-control-button-icon_play .jouele-svg-color {
   fill: #d04000;
   transition: none;
 }
 
 .jouele-info-control-text {
-  line-height: 16px !important;
+  line-height: 1.15 !important;
   /* Перекрываем все возможные каскады на сайте */
   padding: 0 2em 0 0;
   overflow: hidden;
@@ -317,8 +300,8 @@
 
 .jouele-info-time {
   float: right;
-  font-size: 11px;
-  line-height: 16px !important;
+  font-size: 0.8em;
+  line-height: 1.4375 !important;
   /* Перекрываем все возможные каскады на сайте */
   color: #606060;
   text-align: right;
@@ -327,10 +310,6 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-
-.jouele_broken .jouele-info-time {
-  display: none;
 }
 
 .jouele-info-time__current {
@@ -342,15 +321,20 @@
   float: right;
 }
 
-.jouele_timeline_hide .jouele-progress {
-  margin-top: -16px;
+.jouele-info-time__current.jouele-is-unavailable,
+.jouele-info-time__total.jouele-is-unavailable {
+  display: none;
+}
+
+.jouele_timeline_hide .jouele-progress-line {
+  margin-top: -0.8em;
   display: none\0/;
   /* IE 8 */
   opacity: 0;
   transition: opacity 0.33s ease-out, margin-top 0.33s ease-out;
 }
 
-.jouele-status-playing .jouele-progress {
+.jouele_timeline_hide .jouele-progress-line.jouele-is-playing {
   margin-top: 0;
   opacity: 1;
   display: block\0/;
@@ -360,66 +344,78 @@
 .jouele-hidden {
   display: none !important;
 }
-/* Black skin */
+/*
+    Make a skin for your page using this pattern.
+    Change "dark" on your preferred skin name and use option "skin" when init Jouele (see documentation).
+*/
 
-.jouele-skin-dark .jouele-progress-line-bar_base:after,
-.jouele-skin-dark .jouele-progress-line-bar_load:after {
+.jouele-skin-dark .jouele-progress-line-bar_base:after {
+  /* Control 'timeline' */
   background-color: #bfbfbf;
 }
 
 .jouele-skin-dark .jouele-progress-line-bar_play:after {
+  /* Control 'elapsed' */
   background-color: currentColor;
 }
 
-.jouele-skin-dark.jouele-status-playing .jouele-progress-line-bar_play:after,
-.jouele-skin-dark .jouele-status-playing .jouele-progress-line-bar_play:after {
+.jouele-skin-dark .jouele-progress-line-bar_play.jouele-is-playing:after {
+  /* Control 'elapsed' when playing */
   background-color: #f59331;
 }
 
 .jouele-skin-dark .jouele-progress-line:hover .jouele-progress-line-bar_play:after {
+  /* Control 'elapsed' on hover */
   background-color: #d04000;
 }
 
 .jouele-skin-dark .jouele-progress-line-lift {
+  /* Control 'position' */
   background-color: currentColor;
 }
 
-.jouele-skin-dark.jouele-status-playing .jouele-progress-line-lift,
-.jouele-skin-dark .jouele-status-playing .jouele-progress-line-lift {
+.jouele-skin-dark .jouele-progress-line-lift.jouele-is-playing {
+  /* Control 'position' when playing */
   background-color: #f59331;
 }
 
 .jouele-skin-dark .jouele-progress-line:hover .jouele-progress-line-lift {
+  /* Control 'position' on hover */
   background-color: #d04000;
 }
 
 .jouele-skin-dark .jouele-progress-line-lift:before {
+  /* Preloader animation in control 'position' */
   border-color: currentColor;
 }
 
-.jouele-skin-dark.jouele-status-playing .jouele-progress-line-lift:before,
-.jouele-skin-dark .jouele-status-playing .jouele-progress-line-lift:before {
+.jouele-skin-dark .jouele-progress-line-lift.jouele-is-playing:before {
+  /* Preloader animation in control 'position' when playing */
   border-color: #f59331;
 }
 
 .jouele-skin-dark .jouele-progress-line:hover .jouele-progress-line-lift:before {
+  /* Preloader animation in control 'position' on hover */
   border-color: #d04000;
 }
 
 .jouele-skin-dark .jouele-info-control-button-icon_unavailable .jouele-svg-color,
 .jouele-skin-dark .jouele-info-control-button-icon_play .jouele-svg-color {
+  /* Control 'play-pause' */
   fill: currentColor;
 }
 
-.jouele-skin-dark .jouele-info-control-button-icon_pause .jouele-svg-color {
+.jouele-skin-dark .jouele-info-control-button-icon_play.jouele-is-playing .jouele-svg-color {
+  /* Control 'play-pause' when playing */
   fill: #f59331;
 }
 
-.jouele-skin-dark .jouele-info-control-button:hover .jouele-info-control-button-icon_play .jouele-svg-color,
-.jouele-skin-dark .jouele-info-control-button:hover .jouele-info-control-button-icon_pause .jouele-svg-color {
+.jouele-skin-dark .jouele-info-control-button:hover .jouele-info-control-button-icon_play .jouele-svg-color {
+  /* Control 'play-pause' on hover */
   fill: #d04000;
 }
 
 .jouele-skin-dark .jouele-info-time {
+  /* Control 'time-elapsed' and 'time-total' */
   color: inherit;
 }
