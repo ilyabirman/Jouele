@@ -21,7 +21,7 @@ gulp.task('minify-css', function () {
         .pipe(gulp.dest('./'))
 });
 gulp.task('uglify-js', function() {
-    gulp.src(['howler-fork/howler.core.js', 'src/jouele.js'])
+    gulp.src(['node_modules/howler/src/howler.core.js', 'src/jouele.js'])
         .pipe(concat('jouele.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('jouele'))

@@ -11,7 +11,7 @@
   "main": "dist/jouele.js",
   "style": "dist/jouele.css",
   "dependencies": {
-    "howler": "^2.0.8"
+    "howler": "^2.0.9"
   },
   "peerDependencies": {
     "jquery": "3.x"
