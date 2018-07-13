@@ -1,7 +1,7 @@
 (function($) {
     "use strict";
 
-    var version = "3.0.5-free";
+    var version = "3.0.6-free";
     var tracks = {};
 
     var $timeline_seeking = $();
@@ -189,16 +189,16 @@
                 return true;
             }
 
+            if ($timeline_seeking.data("jouele-destroyed")) {
+                JoueleInstance.$container.removeData("jouele-destroyed");
+                $timeline_seeking = $();
+                return true;
+            }
+
             switch (event.type) {
                 case "mouseup":
                 case "touchend":
                 case "touchcancel":
-                    if (JoueleInstance.$container.data("jouele-destroyed")) {
-                        JoueleInstance.$container.removeData("jouele-destroyed");
-                        $timeline_seeking = $();
-                        return true;
-                    }
-
                     JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"] = false;
                     JoueleInstance.getTrack().player["seekingOnTimeline"]["seekingInstance"] = false;
 
