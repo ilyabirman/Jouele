@@ -1,7 +1,7 @@
 (function($) {
     "use strict";
 
-    var version = "3.0.6-free";
+    var version = "3.0.7-beta";
     var tracks = {};
 
     var $timeline_seeking = $();
@@ -9,6 +9,7 @@
 
     var Helpers = {
         "isMobile": (function(a){return (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4)))})(navigator.userAgent||navigator.vendor||window.opera),
+        "hasRequestAnimationFrame": (function() {return typeof window.requestAnimationFrame === "function";})(),
 
         "formatTime": function(rawSeconds, round_floor) {
             if (typeof rawSeconds !== "number") {
@@ -32,11 +33,13 @@
                 return 0;
             }
 
+            time = time.replace(",", ".");
+
             var array = time.split(":").reverse(),
                 seconds = 0;
 
             for (var i = 0; i < array.length; i++) {
-                seconds += array[i] * Math.pow(60, i);
+                seconds += Math.abs(array[i]) * Math.pow(60, i);
             }
 
             return +seconds;
@@ -174,12 +177,11 @@
             }
 
             var JoueleInstance;
-            var $timeline_parent_jouele = $timeline_seeking.parents(".jouele").eq(0);
 
-            if ($timeline_parent_jouele.data("jouele")) {
-                JoueleInstance = $timeline_parent_jouele.data("jouele");
-            } else if ($timeline_parent_jouele.data("jouele-destroyed")) {
-                JoueleInstance = $timeline_parent_jouele.data("jouele-destroyed");
+            if ($timeline_seeking.data("jouele")) {
+                JoueleInstance = $timeline_seeking.data("jouele");
+            } else if ($timeline_seeking.data("jouele-destroyed")) {
+                JoueleInstance = $timeline_seeking.data("jouele-destroyed");
             } else {
                 JoueleInstance = Helpers.getInstance();
             }
@@ -189,8 +191,8 @@
                 return true;
             }
 
-            if ($timeline_seeking.data("jouele-destroyed")) {
-                JoueleInstance.$container.removeData("jouele-destroyed");
+            if ($timeline_seeking.data("jouele-destroyed") && JoueleInstance.$control.length > 0) {
+                JoueleInstance.$control.removeData("jouele-destroyed");
                 $timeline_seeking = $();
                 return true;
             }
@@ -304,12 +306,26 @@
             var JoueleInstance = this;
             var title = $.trim(JoueleInstance.getOptions().title);
 
+            var controls = {
+                "title": $()
+            };
+
             if (title && JoueleInstance.getTrack() && title !== JoueleInstance.getTrack().player["title"]) {
                 JoueleInstance.getTrack().player["title"] = title;
             }
 
-            for (var i = 0; i < JoueleInstance.getTrack().instances.length; i++) {
-                JoueleInstance.getTrack().instances[i].$container.find(".jouele-info-control-text").html(JoueleInstance.getTrack().player["title"]);
+            if (JoueleInstance.getTrack()) {
+                controls["title"] = JoueleInstance.getTrack().controls["title"];
+            }
+
+            $.each(controls["title"].add(($.Jouele.history.length > 0 && $.Jouele.history[0].getTrack() === JoueleInstance.getTrack()) || ($.Jouele.history.length === 0 && (!JoueleInstance.getTrack() || JoueleInstance.getTrack().player["isStarted"] || JoueleInstance.getTrack().player["seekTime"] || JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"])) ? $.Jouele.controls["title"] : ""), function(i, control) {
+                $(control).html(JoueleInstance.getTrack() ? JoueleInstance.getTrack().player["title"] : "");
+            });
+
+            if (!JoueleInstance.getTrack() || JoueleInstance.getTrack().player["isBroken"]) {
+                $.each($.Jouele.controls["title"], function(i, control) {
+                    $(control).html("");
+                });
             }
 
             return JoueleInstance;
@@ -317,6 +333,11 @@
         "updateTimeline": function() {
             var JoueleInstance = this;
             var position = 0;
+            var controls = {
+                "position": $(),
+                "elapsed": $(),
+                "remaining": $()
+            };
 
             if (!JoueleInstance.getTrack() || JoueleInstance.getTrack().player["isBroken"]) {
                 position = 0;
@@ -336,15 +357,36 @@
 
             position = Math.round(parseFloat(position) * 1e2) / 1e2;
 
-            for (var i = 0; i < JoueleInstance.getTrack().instances.length; i++) {
-                JoueleInstance.getTrack().instances[i].$container.find(".jouele-progress-line-lift").css("left", position + "%");
-                JoueleInstance.getTrack().instances[i].$container.find(".jouele-progress-line-bar_play").css("width", position + "%");
+            if (JoueleInstance.getTrack()) {
+                controls["position"] = JoueleInstance.getTrack().controls["position"];
+                controls["elapsed"] = JoueleInstance.getTrack().controls["elapsed"];
+                controls["remaining"] = JoueleInstance.getTrack().controls["remaining"];
             }
+
+            $.each(controls["position"].add(($.Jouele.history.length > 0 && $.Jouele.history[0].getTrack() === JoueleInstance.getTrack()) || ($.Jouele.history.length === 0 && (!JoueleInstance.getTrack() || JoueleInstance.getTrack().player["isStarted"] || JoueleInstance.getTrack().player["seekTime"] || JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"])) ? $.Jouele.controls["position"] : ""), function(i, control) {
+                var $control = $(control);
+                $control.css("left", position + "%").trigger("jouele:position", position);
+            });
+            $.each(controls["elapsed"].add(($.Jouele.history.length > 0 && $.Jouele.history[0].getTrack() === JoueleInstance.getTrack()) || ($.Jouele.history.length === 0 && (!JoueleInstance.getTrack() || JoueleInstance.getTrack().player["isStarted"] || JoueleInstance.getTrack().player["seekTime"] || JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"])) ? $.Jouele.controls["elapsed"] : ""), function(i, control) {
+                var $control = $(control);
+                $control.css("width", position + "%").trigger("jouele:position", position);
+            });
+            $.each(controls["remaining"].add(($.Jouele.history.length > 0 && $.Jouele.history[0].getTrack() === JoueleInstance.getTrack()) || ($.Jouele.history.length === 0 && (!JoueleInstance.getTrack() || JoueleInstance.getTrack().player["isStarted"] || JoueleInstance.getTrack().player["seekTime"] || JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"])) ? $.Jouele.controls["remaining"] : ""), function(i, control) {
+                var $control = $(control);
+                $control.css("width", (100 - position) + "%").trigger("jouele:position", (100 - position));
+            });
 
             return JoueleInstance;
         },
         "updateTimeDisplay": function(round_closest) {
             var JoueleInstance = this;
+
+            var controls = {
+                "time-total": $(),
+                "time-elapsed": $(),
+                "time-remaining": $(),
+                "seek": $()
+            };
 
             var total_time = "";
             var elapsed_time = "";
@@ -396,22 +438,70 @@
             }
 
             function showTime() {
-                var elapsed_time_formatted = Helpers.makeSeconds(Helpers.formatTime(elapsed_time, !round_closest)) > total_time ? Helpers.formatTime(elapsed_time, true) : Helpers.formatTime(elapsed_time, !round_closest);
-
-                for (var i = 0; i < JoueleInstance.getTrack().instances.length; i++) {
-                    if (JoueleInstance.getTrack().player["isBroken"]) {
-                        JoueleInstance.getTrack().instances[i].$container.find(".jouele-info-time__total").text("");
-                        JoueleInstance.getTrack().instances[i].$container.find(".jouele-info-time__current").text("");
-                    } else {
-                        JoueleInstance.getTrack().instances[i].$container.find(".jouele-info-time__total").text(total_time ? Helpers.formatTime(total_time, true) : "");
-                        JoueleInstance.getTrack().instances[i].$container.find(".jouele-info-time__current").text(total_time ? Helpers.formatTime(elapsed_time_formatted) : "");
-                    }
+                if (JoueleInstance.getTrack()) {
+                    controls["time-total"] = JoueleInstance.getTrack().controls["time-total"];
+                    controls["time-elapsed"] = JoueleInstance.getTrack().controls["time-elapsed"];
+                    controls["time-remaining"] = JoueleInstance.getTrack().controls["time-remaining"];
+                    controls["seek"] = JoueleInstance.getTrack().controls["seek"];
                 }
+
+                var elapsed_time_formatted = Helpers.makeSeconds(Helpers.formatTime(elapsed_time, !round_closest)) > total_time ? Helpers.formatTime(elapsed_time, true) : Helpers.formatTime(elapsed_time, !round_closest);
+                var remaining_time_formatted = Helpers.formatTime(Helpers.makeSeconds(total_time) - Helpers.makeSeconds(elapsed_time_formatted), true);
+
+                $.each(controls["time-total"].add(($.Jouele.history.length > 0 && $.Jouele.history[0].getTrack() === JoueleInstance.getTrack()) || !JoueleInstance.getTrack() || JoueleInstance.getTrack().player["isBroken"] || ($.Jouele.history.length === 0 && (JoueleInstance.getTrack().player["isStarted"] || JoueleInstance.getTrack().player["seekTime"] || JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"])) ? $.Jouele.controls["time-total"] : ""), function(i, control) {
+                    var $control = $(control);
+                    if (!JoueleInstance.getTrack() || JoueleInstance.getTrack().player["isBroken"] || !total_time) {
+                        $control.text("");
+                        $control.trigger("jouele:totaltime", 0);
+                    } else {
+                        $control.text(Helpers.formatTime(total_time, true));
+                        $control.trigger("jouele:totaltime", total_time);
+                    }
+                });
+                $.each(controls["time-elapsed"].add(($.Jouele.history.length > 0 && $.Jouele.history[0].getTrack() === JoueleInstance.getTrack()) || !JoueleInstance.getTrack() || JoueleInstance.getTrack().player["isBroken"] || ($.Jouele.history.length === 0 && (JoueleInstance.getTrack().player["isStarted"] || JoueleInstance.getTrack().player["seekTime"] || JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"])) ? $.Jouele.controls["time-elapsed"] : ""), function(i, control) {
+                    var $control = $(control);
+                    if (!JoueleInstance.getTrack() || JoueleInstance.getTrack().player["isBroken"] || !total_time) {
+                        $control.text("");
+                        $control.trigger("jouele:elapsedtime", 0);
+                    } else {
+                        $control.text(elapsed_time_formatted);
+                        $control.trigger("jouele:elapsedtime", elapsed_time);
+                    }
+                });
+                $.each(controls["time-remaining"].add(($.Jouele.history.length > 0 && $.Jouele.history[0].getTrack() === JoueleInstance.getTrack()) || !JoueleInstance.getTrack() || JoueleInstance.getTrack().player["isBroken"] || ($.Jouele.history.length === 0 && (JoueleInstance.getTrack().player["isStarted"] || JoueleInstance.getTrack().player["seekTime"] || JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"])) ? $.Jouele.controls["time-remaining"] : ""), function(i, control) {
+                    var $control = $(control);
+                    if (!JoueleInstance.getTrack() || JoueleInstance.getTrack().player["isBroken"] || !total_time) {
+                        $control.text("");
+                        $control.trigger("jouele:remainingtime", 0);
+                    } else {
+                        $control.text(remaining_time_formatted);
+                        $control.trigger("jouele:remainingtime", remaining_time);
+                    }
+                });
+                $.each(controls["seek"].add(($.Jouele.history.length > 0 && $.Jouele.history[0].getTrack() === JoueleInstance.getTrack()) || !JoueleInstance.getTrack() || ($.Jouele.history.length === 0 && (JoueleInstance.getTrack().player["isStarted"] || JoueleInstance.getTrack().player["seekTime"] || JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"])) ? $.Jouele.controls["seek"] : ""), function(i, control) {
+                    var $control = $(control);
+
+                    if ($control.attr("data-range") && JoueleInstance.getTrack() && (JoueleInstance.getTrack().player["isStarted"] || JoueleInstance.getTrack().player["seekTime"] || JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"])) {
+                        var range_start_seconds = Helpers.makeSeconds($control.data("range-start"));
+                        var range_end_seconds = Helpers.makeSeconds($control.data("range-end"));
+                        var elapsed_time_seconds = Helpers.makeSeconds(elapsed_time_formatted);
+
+                        if (elapsed_time_seconds >= range_start_seconds) {
+                            if (elapsed_time_seconds <= range_end_seconds) {
+                                $control.addClass("jouele-is-within").trigger("jouele:rangein");
+                            } else {
+                                $control.removeClass("jouele-is-within").trigger("jouele:rangeout");
+                            }
+                        } else {
+                            $control.removeClass("jouele-is-within").trigger("jouele:rangeout");
+                        }
+                    }
+                });
             }
 
             calculateTime();
 
-            if (JoueleInstance.$container.length > 0 && (total_time || !JoueleInstance.getTrack() || JoueleInstance.getTrack().player["isStarted"] || JoueleInstance.getTrack().player["seekTime"] || JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"])) {
+            if (total_time || !JoueleInstance.getTrack() || JoueleInstance.getTrack().player["isStarted"] || JoueleInstance.getTrack().player["seekTime"] || JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"]) {
                 showTime();
             }
 
@@ -425,23 +515,45 @@
 
             return JoueleInstance;
         },
+        "requestAnimationFrameProgress": function(round_closest, callback) {
+            var JoueleInstance = this;
+
+            var showProgress = function() {
+                if (typeof callback === "function") {
+                    callback.call(JoueleInstance);
+                }
+                Redraw.updateState.call(JoueleInstance, round_closest);
+                requestAnimationFrame(showProgress);
+            };
+
+            return requestAnimationFrame(showProgress);
+        },
+        "cancelAnimationFrame": function() {
+            var JoueleInstance = this;
+
+            cancelAnimationFrame(JoueleInstance.getTrack().player["updateStateTimer"]);
+
+            return JoueleInstance;
+        },
         "updateControlsClasses": function(controlClass, action) {
             var JoueleInstance = this;
 
-            for (var i = 0; i < JoueleInstance.getTrack().instances.length; i++) {
+            $.each(JoueleInstance.getTrack().controls, function(i, $controls) {
                 if (action === "add") {
-                    JoueleInstance.getTrack().instances[i].$container.addClass(controlClass);
-                    JoueleInstance.getTrack().instances[i].$container.find(".jouele-info-control-button-icon_play").addClass(controlClass);
-                    JoueleInstance.getTrack().instances[i].$container.find(".jouele-progress-line").addClass(controlClass);
-                    JoueleInstance.getTrack().instances[i].$container.find(".jouele-progress-line-bar_play").addClass(controlClass);
-                    JoueleInstance.getTrack().instances[i].$container.find(".jouele-progress-line-lift").addClass(controlClass);
+                    $controls.addClass(controlClass);
                 } else if (action === "remove") {
-                    JoueleInstance.getTrack().instances[i].$container.removeClass(controlClass);
-                    JoueleInstance.getTrack().instances[i].$container.find(".jouele-info-control-button-icon_play").removeClass(controlClass);
-                    JoueleInstance.getTrack().instances[i].$container.find(".jouele-progress-line").removeClass(controlClass);
-                    JoueleInstance.getTrack().instances[i].$container.find(".jouele-progress-line-bar_play").removeClass(controlClass);
-                    JoueleInstance.getTrack().instances[i].$container.find(".jouele-progress-line-lift").removeClass(controlClass);
+                    $controls.removeClass(controlClass);
                 }
+            });
+
+            if (controlClass !== "jouele-is-unavailable" && controlClass !== "jouele-is-available" && controlClass !== "jouele-is-loaded" && (($.Jouele.history.length > 0 && $.Jouele.history[0].getTrack() === JoueleInstance.getTrack()) || ($.Jouele.history.length === 0 && (JoueleInstance.getTrack().player["isStarted"] || JoueleInstance.getTrack().player["seekTime"] || JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"])))) { // Change global controls only if current track is the latest in history or if current track is first played on this page
+                $.each($.Jouele.controls, function(i, $controls) {
+                    if (action === "add") {
+                        $controls.addClass(controlClass);
+                    } else if (action === "remove") {
+                        $controls.removeClass(controlClass);
+                    }
+                });
             }
 
             return JoueleInstance;
@@ -450,8 +562,32 @@
 
     var Init = {
         "createJouele": function($element, options) {
-            var href = $element.attr("href");
-            var title = $element.html();
+            var href = "";
+            var title = "";
+
+            if ($element.hasClass("jouele") && $element.attr("href")) {
+                href = $element.attr("href");
+                title = $element.html();
+            } else if ($element.hasClass("jouele-control")) {
+                href = $element.attr("data-href");
+                title = $element.attr("data-title");
+            }
+
+            if ($element.hasClass("jouele")) {
+                if (!href) {
+                    Helpers.showError("Please include `href` attribute into your Jouele link");
+
+                    return this;
+                }
+            } else if ($element.hasClass("jouele-control")) {
+                if (!href) {
+                    Init.pushControl($element, true);
+
+                    return this;
+                }
+            } else {
+                return this;
+            }
 
             new Jouele($element, $.extend(
                 {},
@@ -519,8 +655,19 @@
                         if (!(JoueleInstance instanceof Jouele)) {
                             if ($.Jouele.tracks[JoueleInstance.href].instances.length > 0) {
                                 JoueleInstance = $.Jouele.tracks[JoueleInstance.href].instances[0];
+                            } else if (typeof $.Jouele.tracks[JoueleInstance.href].controls["play"] !== "undefined" && $.Jouele.tracks[JoueleInstance.href].controls["play"].length > 0) {
+                                JoueleInstance = $.Jouele.tracks[JoueleInstance.href].controls["play"].eq(0).data("jouele");
+                            } else if (typeof $.Jouele.tracks[JoueleInstance.href].controls["play-pause"] !== "undefined" && $.Jouele.tracks[JoueleInstance.href].controls["play-pause"].length > 0) {
+                                JoueleInstance = $.Jouele.tracks[JoueleInstance.href].controls["play-pause"].eq(0).data("jouele");
+                            } else if (typeof $.Jouele.tracks[JoueleInstance.href].controls["seek"] !== "undefined" && $.Jouele.tracks[JoueleInstance.href].controls["seek"].length > 0) {
+                                JoueleInstance = $.Jouele.tracks[JoueleInstance.href].controls["seek"].eq(0).data("jouele");
+                            } else if (typeof $.Jouele.tracks[JoueleInstance.href].controls["timeline"] !== "undefined" && $.Jouele.tracks[JoueleInstance.href].controls["timeline"].length > 0) {
+                                JoueleInstance = $.Jouele.tracks[JoueleInstance.href].controls["timeline"].eq(0).data("jouele");
                             } else {
-                                return false;
+                                $.each($.Jouele.tracks[JoueleInstance.href].controls, function(index, $control) {
+                                    JoueleInstance = $control.data("jouele");
+                                    return false;
+                                });
                             }
                         }
 
@@ -532,8 +679,15 @@
                         if (!(JoueleInstance instanceof Jouele)) {
                             if ($.Jouele.tracks[JoueleInstance.href].instances.length > 0) {
                                 JoueleInstance = $.Jouele.tracks[JoueleInstance.href].instances[0];
+                            } else if (typeof $.Jouele.tracks[JoueleInstance.href].controls["pause"] !== "undefined" && $.Jouele.tracks[JoueleInstance.href].controls["pause"].length > 0) {
+                                JoueleInstance = $.Jouele.tracks[JoueleInstance.href].controls["pause"].eq(0).data("jouele");
+                            } else if (typeof $.Jouele.tracks[JoueleInstance.href].controls["play-pause"] !== "undefined" && $.Jouele.tracks[JoueleInstance.href].controls["play-pause"].length > 0) {
+                                JoueleInstance = $.Jouele.tracks[JoueleInstance.href].controls["play-pause"].eq(0).data("jouele");
                             } else {
-                                return false;
+                                $.each($.Jouele.tracks[JoueleInstance.href].controls, function(index, $control) {
+                                    JoueleInstance = $control.data("jouele");
+                                    return false;
+                                });
                             }
                         }
 
@@ -545,8 +699,19 @@
                         if (!(JoueleInstance instanceof Jouele)) {
                             if ($.Jouele.tracks[JoueleInstance.href].instances.length > 0) {
                                 JoueleInstance = $.Jouele.tracks[JoueleInstance.href].instances[0];
+                            } else if (typeof $.Jouele.tracks[JoueleInstance.href].controls["seek"] !== "undefined" && $.Jouele.tracks[JoueleInstance.href].controls["seek"].length > 0) {
+                                JoueleInstance = $.Jouele.tracks[JoueleInstance.href].controls["seek"].eq(0).data("jouele");
+                            } else if (typeof $.Jouele.tracks[JoueleInstance.href].controls["timeline"] !== "undefined" && $.Jouele.tracks[JoueleInstance.href].controls["timeline"].length > 0) {
+                                JoueleInstance = $.Jouele.tracks[JoueleInstance.href].controls["timeline"].eq(0).data("jouele");
+                            } else if (typeof $.Jouele.tracks[JoueleInstance.href].controls["play"] !== "undefined" && $.Jouele.tracks[JoueleInstance.href].controls["play"].length > 0) {
+                                JoueleInstance = $.Jouele.tracks[JoueleInstance.href].controls["play"].eq(0).data("jouele");
+                            } else if (typeof $.Jouele.tracks[JoueleInstance.href].controls["play-pause"] !== "undefined" && $.Jouele.tracks[JoueleInstance.href].controls["play-pause"].length > 0) {
+                                JoueleInstance = $.Jouele.tracks[JoueleInstance.href].controls["play-pause"].eq(0).data("jouele");
                             } else {
-                                return false;
+                                $.each($.Jouele.tracks[JoueleInstance.href].controls, function(index, $control) {
+                                    JoueleInstance = $control.data("jouele");
+                                    return false;
+                                });
                             }
                         }
 
@@ -558,13 +723,38 @@
                         if (!(JoueleInstance instanceof Jouele)) {
                             if ($.Jouele.tracks[JoueleInstance.href].instances.length > 0) {
                                 JoueleInstance = $.Jouele.tracks[JoueleInstance.href].instances[0];
+                            } else if (typeof $.Jouele.tracks[JoueleInstance.href].controls["seek"] !== "undefined" && $.Jouele.tracks[JoueleInstance.href].controls["seek"].length > 0) {
+                                JoueleInstance = $.Jouele.tracks[JoueleInstance.href].controls["seek"].eq(0).data("jouele");
+                            } else if (typeof $.Jouele.tracks[JoueleInstance.href].controls["timeline"] !== "undefined" && $.Jouele.tracks[JoueleInstance.href].controls["timeline"].length > 0) {
+                                JoueleInstance = $.Jouele.tracks[JoueleInstance.href].controls["timeline"].eq(0).data("jouele");
+                            } else if (typeof $.Jouele.tracks[JoueleInstance.href].controls["play"] !== "undefined" && $.Jouele.tracks[JoueleInstance.href].controls["play"].length > 0) {
+                                JoueleInstance = $.Jouele.tracks[JoueleInstance.href].controls["play"].eq(0).data("jouele");
+                            } else if (typeof $.Jouele.tracks[JoueleInstance.href].controls["play-pause"] !== "undefined" && $.Jouele.tracks[JoueleInstance.href].controls["play-pause"].length > 0) {
+                                JoueleInstance = $.Jouele.tracks[JoueleInstance.href].controls["play-pause"].eq(0).data("jouele");
                             } else {
-                                return false;
+                                $.each($.Jouele.tracks[JoueleInstance.href].controls, function(index, $control) {
+                                    JoueleInstance = $control.data("jouele");
+                                    return false;
+                                });
                             }
                         }
 
                         return Core.seek.call(JoueleInstance, seekPositionPercent);
                     }
+                },
+                controls: {
+                    "play-pause": $(),
+                    "play": $(),
+                    "pause": $(),
+                    "time-total": $(),
+                    "time-elapsed": $(),
+                    "time-remaining": $(),
+                    "timeline": $(),
+                    "elapsed": $(),
+                    "remaining": $(),
+                    "position": $(),
+                    "seek": $(),
+                    "title": $()
                 },
                 instances: []
             };
@@ -573,8 +763,11 @@
             var JoueleInstance = this;
             var index_of_playlist;
 
-            $(".jouele-playlist").add(".jouele:not(.jouele-playlist .jouele):not(.jouele_destroyed)").each(function(index, element) {
-                if ((JoueleInstance.getPlaylistDOM().length > 0 && JoueleInstance.getPlaylistDOM()[0] === element) || (JoueleInstance.$link && JoueleInstance.$link[0] === element)) {
+            $(".jouele-playlist").add(".jouele:not(.jouele-playlist .jouele):not(.jouele_destroyed)").add(".jouele-control[data-href]:not(.jouele .jouele-control):not(.jouele-playlist .jouele-control):not(.jouele_destroyed)").each(function(index, element) {
+                if (JoueleInstance.getPlaylistDOM().length > 0 && JoueleInstance.getPlaylistDOM()[0] === element) {
+                    index_of_playlist = index;
+                    return false;
+                } else if ((JoueleInstance.$link && JoueleInstance.$link[0] === element) || (JoueleInstance.$control && JoueleInstance.$control[0] === element)) {
                     index_of_playlist = index;
                     return false;
                 }
@@ -583,17 +776,18 @@
             if (JoueleInstance.getPlaylistDOM().length > 0) {
                 var $jouele_links = JoueleInstance.getPlaylistDOM().find(".jouele[href]:not(.jouele_destroyed)");
                 var $jouele_inited = JoueleInstance.getPlaylistDOM().find(".jouele_inited");
+                var $jouele_controls = JoueleInstance.getPlaylistDOM().find(".jouele-control[data-href]:not(.jouele .jouele-control):not(.jouele_destroyed)");
                 var index_of_position_in_playlist;
                 var previous_inited_jouele;
                 var index_of_previous_jouele;
 
-                $jouele_links.add($jouele_inited).each(function(index, element) {
+                $jouele_links.add($jouele_inited).add($jouele_controls).each(function(index, element) {
                     var $element = $(element);
 
                     if ($element.hasClass("jouele_inited")) {
                         previous_inited_jouele = $element.data("jouele");
                     }
-                    if (element === JoueleInstance.$link[0]) {
+                    if ((JoueleInstance.$link && element === JoueleInstance.$link[0]) || (JoueleInstance.$control && element === JoueleInstance.$control[0])) {
                         index_of_position_in_playlist = index;
                         return false;
                     }
@@ -631,7 +825,7 @@
         "checkOptions": function(options) {
             var cleared_options = options;
 
-            if (!parseInt(options.length)) {
+            if (!Helpers.makeSeconds(options.length)) {
                 cleared_options.length = 0;
             }
             if (typeof options.repeat !== "boolean") {
@@ -661,7 +855,7 @@
             if ($.trim(new_options.title) === "") {
                 cleared_options.title = old_options.title;
             }
-            if (!parseInt(new_options.length)) {
+            if (!Helpers.makeSeconds(new_options.length)) {
                 cleared_options.length = old_options.length;
             }
             if (typeof new_options.repeat !== "boolean") {
@@ -705,57 +899,187 @@
 
             return JoueleInstance;
         },
-        "initInnerControls": function() {
-            var JoueleInstance = this;
+        "pushControl": function($control, is_global) {
+            var JoueleInstance = is_global ? undefined : this;
 
-            JoueleInstance.$container.find(".jouele-progress-line").off("mousedown.jouele touchstart.jouele").on("mousedown.jouele touchstart.jouele", function(event) {
-                if (event.type === "mousedown" && event.which !== 1) {
-                    return false;
-                }
+            var controls = is_global ? $.Jouele.controls : this.getTrack().controls;
+            var control_type = $control.attr("data-type");
 
-                if (!(JoueleInstance instanceof Jouele)) {
-                    return false;
-                }
+            switch (control_type) {
+                case "time-toggle":
+                    var remaining_attr = $control.attr("data-remaining");
 
-                var $timeline = $(this);
-
-                JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"] = true;
-                JoueleInstance.getTrack().player["seekingOnTimeline"]["seekingInstance"] = $timeline;
-
-                $timeline_seeking = $timeline;
-
-                if (!JoueleInstance.getTrack().player["howler"]) {
-                    if (!Core.createHowler.call(JoueleInstance)) {
-                        Core.breakPlayer.call(JoueleInstance);
-                        return false;
-                    }
-                    JoueleInstance.getTrack().player["howler"].load();
-                    JoueleInstance.getTrack().player["isStarted"] = true;
-                }
-
-                JoueleInstance.getTrack().player["seekingOnTimeline"]["seekingPosition"] = Helpers.getEventPoint(event);
-
-                Redraw.updateState.call(JoueleInstance);
-                Redraw.updateTitle.call(JoueleInstance);
-            }).addClass("jouele-is-available");
-
-            JoueleInstance.$container.find(".jouele-info-control-button-icon_play").off("click.jouele").on("click.jouele", function() {
-                if (!(JoueleInstance instanceof Jouele)) {
-                    return false;
-                }
-
-                if (JoueleInstance.getTrack().player["isPaused"]) {
-                    JoueleInstance.getTrack().player.play.call(JoueleInstance);
-                } else {
-                    if (JoueleInstance.getTrack().player["isStarted"]) {
-                        JoueleInstance.getTrack().player.pause.call(JoueleInstance);
+                    if (remaining_attr === "true") {
+                        controls["time-remaining"] = controls["time-remaining"].add($control);
                     } else {
-                        JoueleInstance.getTrack().player.play.call(JoueleInstance);
+                        $control.attr("data-remaining", "false");
+                        controls["time-elapsed"] = controls["time-elapsed"].add($control);
                     }
-                }
-            }).addClass("jouele-is-available");
 
-            JoueleInstance.$container.addClass("jouele-is-available");
+                    $control.off("click.jouele").on("click.jouele", function() {
+                        JoueleInstance = is_global ? Helpers.getInstance() : JoueleInstance;
+
+                        if (!(JoueleInstance instanceof Jouele)) {
+                            return false;
+                        }
+
+                        if ($control.attr("data-remaining") === "true") {
+                            $.each(controls["time-remaining"], function(i, item) {
+                                if ($control[0] === item) {
+                                    controls["time-remaining"].splice(i, 1);
+                                }
+                            });
+                            controls["time-elapsed"] = controls["time-elapsed"].add($control);
+                            $control.attr("data-remaining", "false");
+                        } else {
+                            $.each(controls["time-elapsed"], function(i, item) {
+                                if ($control[0] === item) {
+                                    controls["time-elapsed"].splice(i, 1);
+                                }
+                            });
+                            controls["time-remaining"] = controls["time-remaining"].add($control);
+                            $control.attr("data-remaining", "true");
+                        }
+
+                        Redraw.updateTimeDisplay.call(JoueleInstance);
+                    }).addClass("jouele-is-interactive");
+
+                    break;
+                case "seek":
+                    var seek_time = $control.attr("data-to");
+                    var range_time = $control.attr("data-range");
+
+                    if (range_time) {
+                        var delimeter_start_position = range_time.indexOf("…") > 0 ? range_time.indexOf("…") : range_time.indexOf("...");
+                        var delimeter_end_position = range_time.indexOf("…") > 0 ? range_time.indexOf("…") + 1 : range_time.indexOf("...") + 3;
+                        var range_time_start = Helpers.formatTime(Helpers.makeSeconds(range_time.substr(0, delimeter_start_position)), true);
+                        var range_time_end = Helpers.formatTime(Helpers.makeSeconds(range_time.substr(delimeter_end_position)), true);
+
+                        $control.data({
+                            "range-start": range_time_start,
+                            "range-end": range_time_end
+                        });
+                    }
+
+                    $control.off("click.jouele").on("click.jouele", function() {
+                        JoueleInstance = is_global ? Helpers.getInstance() : JoueleInstance;
+
+                        if (!(JoueleInstance instanceof Jouele)) {
+                            return false;
+                        }
+
+                        if (seek_time) {
+                            JoueleInstance.getTrack().player.playFrom.call(JoueleInstance, seek_time);
+                        }
+                        if (range_time) {
+                            var playfrom_time = range_time.indexOf("…") > 0 ? range_time.indexOf("…") : range_time.indexOf("...");
+                            if (!seek_time) {
+                                JoueleInstance.getTrack().player.playFrom.call(JoueleInstance, range_time.substr(0, playfrom_time));
+                            }
+                        }
+                    }).addClass("jouele-is-interactive");
+
+                    break;
+                case "timeline":
+                    $control.off("mousedown.jouele touchstart.jouele").on("mousedown.jouele touchstart.jouele", function(event) {
+                        if (event.type === "mousedown" && event.which !== 1) {
+                            return false;
+                        }
+
+                        JoueleInstance = is_global ? Helpers.getInstance() : JoueleInstance;
+
+                        if (!(JoueleInstance instanceof Jouele)) {
+                            return false;
+                        }
+
+                        JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"] = true;
+                        JoueleInstance.getTrack().player["seekingOnTimeline"]["seekingInstance"] = JoueleInstance;
+
+                        $timeline_seeking = $control;
+
+                        if (!JoueleInstance.getTrack().player["howler"]) {
+                            if (!Core.createHowler.call(JoueleInstance)) {
+                                Core.breakPlayer.call(JoueleInstance);
+                                return false;
+                            }
+                            JoueleInstance.getTrack().player["howler"].load();
+                            JoueleInstance.getTrack().player["isStarted"] = true;
+                        }
+
+                        JoueleInstance.getTrack().player["seekingOnTimeline"]["seekingPosition"] = Helpers.getEventPoint(event);
+
+                        Redraw.updateState.call(JoueleInstance);
+                        Redraw.updateTitle.call(JoueleInstance);
+                    }).addClass("jouele-is-interactive");
+
+                    break;
+                case "play-pause":
+                    $control.off("click.jouele").on("click.jouele", function() {
+                        JoueleInstance = is_global ? Helpers.getInstance() : JoueleInstance;
+
+                        if (!(JoueleInstance instanceof Jouele)) {
+                            return false;
+                        }
+
+                        if (JoueleInstance.getTrack().player["isPaused"]) {
+                            JoueleInstance.getTrack().player.play.call(JoueleInstance);
+                        } else {
+                            if (JoueleInstance.getTrack().player["isStarted"]) {
+                                JoueleInstance.getTrack().player.pause.call(JoueleInstance);
+                            } else {
+                                JoueleInstance.getTrack().player.play.call(JoueleInstance);
+                            }
+                        }
+                    }).addClass("jouele-is-interactive");
+
+                    break;
+                case "play":
+                    $control.off("click.jouele").on("click.jouele", function() {
+                        JoueleInstance = is_global ? Helpers.getInstance() : JoueleInstance;
+
+                        if (!(JoueleInstance instanceof Jouele)) {
+                            return false;
+                        }
+
+                        JoueleInstance.getTrack().player.play.call(JoueleInstance);
+                    }).addClass("jouele-is-interactive");
+
+                    break;
+                case "pause":
+                    $control.off("click.jouele").on("click.jouele", function() {
+                        JoueleInstance = is_global ? Helpers.getInstance() : JoueleInstance;
+
+                        if (!(JoueleInstance instanceof Jouele)) {
+                            return false;
+                        }
+
+                        JoueleInstance.getTrack().player.pause.call(JoueleInstance);
+                    }).addClass("jouele-is-interactive");
+
+                    break;
+                case "title":
+                    $control.off("jouele:title").on("jouele:title", function() {
+                        JoueleInstance = is_global ? Helpers.getInstance() : JoueleInstance;
+
+                        if (!(JoueleInstance instanceof Jouele)) {
+                            return false;
+                        }
+
+                        $control.html(JoueleInstance.getTrack().player["title"]);
+                    });
+
+                    break;
+                default:
+                    break;
+            }
+
+            if (typeof controls[control_type] !== "undefined" && controls[control_type].length > 0) {
+                controls[control_type] = controls[control_type].add($control);
+            } else {
+                controls[control_type] = $control;
+            }
+
+            $control.addClass(is_global ? "" : "jouele-is-available").addClass("jouele_inited");
 
             return JoueleInstance;
         },
@@ -769,8 +1093,8 @@
             var createInfoAreaDOM = function() {
                 return [
                     $(document.createElement("div")).addClass("jouele-info-time").append(
-                        $(document.createElement("div")).addClass("jouele-info-time__current").text(JoueleInstance.getTotalTime() ? "0:00" : ""),
-                        $(document.createElement("div")).addClass("jouele-info-time__total").text(JoueleInstance.getTotalTime() ? Helpers.formatTime(Helpers.makeSeconds(JoueleInstance.getTotalTime()), true) : "")
+                        $(document.createElement("div")).addClass("jouele-info-time__current jouele-control").attr("data-href", JoueleInstance.getHref()).attr("data-type", "time-elapsed").text(JoueleInstance.getTotalTime() ? "0:00" : ""),
+                        $(document.createElement("div")).addClass("jouele-info-time__total jouele-control").attr("data-href", JoueleInstance.getHref()).attr("data-type", "time-total").text(JoueleInstance.getTotalTime() ? Helpers.formatTime(Helpers.makeSeconds(JoueleInstance.getTotalTime()), true) : "")
                     ),
                     $(document.createElement("div")).addClass("jouele-info-control").append(
                         $(document.createElement("div")).addClass("jouele-info-control-button").append(
@@ -778,33 +1102,48 @@
                                 '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><g class="jouele-svg-color"><path d="m4 6.7l3.8 3.7-3.8 2.1z"/><path d="m.2 2.2l.6-.5 11 11.1-.5.5z"/><path d="m4 4.3v-.8l8 4.5-2.7 1.5z"/></g></svg>'
                             ),
                             $(document.createElement("a")).attr("href", JoueleInstance.getHref()).addClass("jouele-info-control-link jouele-hidden").append(
-                                $(document.createElement("span")).addClass("jouele-info-control-button-icon jouele-info-control-button-icon_play jouele-hidden").html(
+                                $(document.createElement("span")).addClass("jouele-info-control-button-icon jouele-info-control-button-icon_play jouele-control jouele-hidden").attr("data-href", JoueleInstance.getHref()).attr("data-type", "play-pause").html(
                                     '<svg class="jouele-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path class="jouele-svg-color" d="m4 3.5l8 4.5-8 4.5z"/></svg>'
                                 )
                             )
                         ),
-                        $(document.createElement("div")).addClass("jouele-info-control-text")
+                        $(document.createElement("div")).addClass("jouele-info-control-text jouele-control").attr("data-href", JoueleInstance.getHref()).attr("data-type", "title")
                     )
                 ];
             };
 
+            /*
             var createProgressAreaDOM = function() {
-                return $(document.createElement("div")).addClass("jouele-progress-line").append(
-                    $(document.createElement("div")).addClass("jouele-progress-line-bar_base").css("cursor", "pointer"),
-                    $(document.createElement("div")).addClass("jouele-progress-line-bar_play"),
-                    $(document.createElement("div")).addClass("jouele-progress-line-lift jouele-hidden")
+                return $(document.createElement("div")).addClass("jouele-progress-line jouele-control").attr("data-href", JoueleInstance.getHref()).attr("data-type", "timeline").append(
+                    $(document.createElement("div")).addClass("jouele-progress-line-bar_base"),
+                    $(document.createElement("div")).addClass("jouele-progress-line-bar_play jouele-control").attr("data-href", JoueleInstance.getHref()).attr("data-type", "elapsed"),
+                    $(document.createElement("div")).addClass("jouele-progress-line-lift jouele-hidden jouele-control").attr("data-href", JoueleInstance.getHref()).attr("data-type", "position").html(
+                        '<svg class="jouele-progress-line-lift-point" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><circle class="jouele-progress-line-lift-point-circle" cx="50" cy="50" r="50"/></svg>' +
+                        '<svg class="jouele-progress-line-lift-buffering" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><circle class="jouele-progress-line-lift-buffering-circle" id="orange-circle" r="50" cx="50" cy="50" fill="none" stroke-width="10%"/></svg>'
+                    )
+                );
+            };
+            */
+
+            var createProgressAreaDOM = function() {
+                return $(document.createElement("div")).addClass("jouele-progress-line jouele-control").attr("data-href", JoueleInstance.getHref()).attr("data-type", "timeline").append(
+                    $(document.createElement("div")).addClass("jouele-progress-line-bar_base"),
+                    $(document.createElement("div")).addClass("jouele-progress-line-bar_play jouele-control").attr("data-href", JoueleInstance.getHref()).attr("data-type", "elapsed"),
+                    $(document.createElement("div")).addClass("jouele-progress-line-lift jouele-hidden jouele-control").attr("data-href", JoueleInstance.getHref()).attr("data-type", "position")
                 );
             };
 
             JoueleInstance.$container = $container.data("jouele", JoueleInstance).addClass("jouele jouele_inited" + (JoueleInstance.$link.data("first") === true ? " jouele_first" : "") + (JoueleInstance.getOptions().hideTimelineOnPause ? " jouele_timeline_hide" : "") + (JoueleInstance.getOptions().skin ? " jouele-skin-" + JoueleInstance.getOptions().skin : ""));
-            JoueleInstance.$container.append($info_area.addClass("jouele-info").append(createInfoAreaDOM()), $progress_area.addClass("jouele-progress").append(createProgressAreaDOM()));
+            JoueleInstance.$container.append($info_area.addClass("jouele-info").append(createInfoAreaDOM()), $progress_area.addClass("jouele-progress").append(createProgressAreaDOM())).promise().done(function() {
+                Init.initInnerControls.call(JoueleInstance);
+            });
 
             return JoueleInstance;
         },
         "insertJoueleDOM": function() {
             var JoueleInstance = this;
 
-            if (JoueleInstance.$container.length > 0) {
+            if (JoueleInstance.$container) {
                 JoueleInstance.$container.find(".jouele-hidden").removeClass("jouele-hidden");
                 JoueleInstance.$container.find(".jouele-info-control-button-icon_unavailable").addClass("jouele-hidden");
 
@@ -820,14 +1159,27 @@
         },
         "findPlaylistInDOM": function() {
             var JoueleInstance = this;
+            var is_control = typeof JoueleInstance.$control !== "undefined" && JoueleInstance.$control.length > 0;
 
-            return JoueleInstance.$link.parents(".jouele-playlist").eq(0);
+            return is_control ? JoueleInstance.$control.parents(".jouele-playlist").eq(0) : JoueleInstance.$link.parents(".jouele-playlist").eq(0);
+        },
+        "initInnerControls": function() {
+            var JoueleInstance = this;
+
+            $.each(JoueleInstance.$container.find(".jouele-control"), function() {
+                Init.createJouele($(this), JoueleInstance.getOptions());
+            });
+
+            return JoueleInstance;
         },
         "pushToHistory": function() {
             var JoueleInstance = this;
 
             if ($.Jouele.history.length === 0 || $.Jouele.history[0].getTrack() !== JoueleInstance.getTrack() || ($.Jouele.history[0].getTrack() === JoueleInstance.getTrack() && JoueleInstance.getTrack().player["isPaused"] && $.Jouele.history[0] !== JoueleInstance)) {
                 $.Jouele.history.unshift(JoueleInstance);
+                $.each(JoueleInstance.getTrack().controls["title"].add($.Jouele.controls["title"]), function(i, control) {
+                    $(control).trigger("jouele:title");
+                });
             }
 
             return JoueleInstance;
@@ -998,20 +1350,30 @@
                 return JoueleInstance;
             }
 
-            var nearest_second = Math.round((Math.ceil(JoueleInstance.getTrack().player["howler"].seek()) - JoueleInstance.getTrack().player["howler"].seek()) * 1e3) / 1e3;
-            setTimeout(function() {
-                Redraw.updateState.call(JoueleInstance, true);
-
+            if (Helpers.hasRequestAnimationFrame) {
                 if (JoueleInstance.getTrack().player["updateStateTimer"]) {
-                    clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
+                    Redraw.cancelAnimationFrame.call(JoueleInstance);
                 }
 
                 if (!JoueleInstance.getTrack().player["isPaused"]) {
-                    JoueleInstance.getTrack().player["updateStateTimer"] = setInterval(function() {
-                        Redraw.updateState.call(JoueleInstance, true);
-                    }, 1000);
+                    JoueleInstance.getTrack().player["updateStateTimer"] = Redraw.requestAnimationFrameProgress.call(JoueleInstance, true);
                 }
-            }, nearest_second * 1000);
+            } else {
+                var nearest_second = Math.round((Math.ceil(JoueleInstance.getTrack().player["howler"].seek()) - JoueleInstance.getTrack().player["howler"].seek()) * 1e3) / 1e3;
+                setTimeout(function() {
+                    Redraw.updateState.call(JoueleInstance, true);
+
+                    if (JoueleInstance.getTrack().player["updateStateTimer"]) {
+                        clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
+                    }
+
+                    if (!JoueleInstance.getTrack().player["isPaused"]) {
+                        JoueleInstance.getTrack().player["updateStateTimer"] = setInterval(function() {
+                            Redraw.updateState.call(JoueleInstance, true);
+                        }, 1000);
+                    }
+                }, nearest_second * 1000);
+            }
 
             return JoueleInstance;
         },
@@ -1131,7 +1493,7 @@
             if (!JoueleInstance.getTrack().player["howler"]) {
                 if (!Core.createHowler.call(JoueleInstance)) {
                     Core.breakPlayer.call(JoueleInstance);
-                    return false;
+                    return JoueleInstance;
                 }
             }
 
@@ -1234,9 +1596,10 @@
 
         "destroy": function() {
             var JoueleInstance = this;
+            var is_control = typeof JoueleInstance.$control !== "undefined" && JoueleInstance.$control.length > 0;
 
             /* Clean timeline seeking */
-            if (JoueleInstance.getTrack().player["seekingOnTimeline"]["seekingInstance"][0] === JoueleInstance.$container.find(".jouele-progress-line")[0]) {
+            if ((is_control && JoueleInstance.getTrack().player["seekingOnTimeline"]["seekingInstance"] === JoueleInstance) || (!is_control && JoueleInstance.getTrack().player["seekingOnTimeline"]["seekingInstance"] === JoueleInstance.$container.find(".jouele-control[data-type=timeline]").data("jouele"))) {
                 JoueleInstance.getTrack().player["seekingOnTimeline"]["isSeeking"] = false;
                 JoueleInstance.getTrack().player["seekingOnTimeline"]["seekingInstance"] = false;
                 JoueleInstance.getTrack().player["seekingOnTimeline"]["seekingPosition"] = null;
@@ -1252,23 +1615,55 @@
                 }
             }
 
-            /* Remove this player from array of instances */
-            for (var index_instance = 0; index_instance < JoueleInstance.getTrack().instances.length; index_instance++) {
-                if (JoueleInstance.getTrack().instances[index_instance] === JoueleInstance) {
-                    JoueleInstance.getTrack().instances.splice(index_instance, 1);
-                    break;
+            if (!is_control) {
+                /* Remove this player from array of instances */
+                for (var index_instance = 0; index_instance < JoueleInstance.getTrack().instances.length; index_instance++) {
+                    if (JoueleInstance.getTrack().instances[index_instance] === JoueleInstance) {
+                        JoueleInstance.getTrack().instances.splice(index_instance, 1);
+                        break;
+                    }
                 }
-            }
 
-            /* Check if timeline is seeking now */
-            if ($timeline_seeking.length > 0 && $timeline_seeking.parents(".jouele").eq(0).data("jouele") === JoueleInstance) {
-                JoueleInstance.$container.data("jouele-destroyed", JoueleInstance);
-            }
+                /* Remove all child controls */
+                $.each(JoueleInstance.getTrack().controls, function(index, $controls) {
+                    JoueleInstance.getTrack().controls[index] = $controls.filter(function(index_control, control) {
+                        var $control = $(control);
+                        var is_child_control = false;
 
-            /* Clear listeners */
-            JoueleInstance.$container.find(".jouele-info-control-link").off("click.jouele");
-            JoueleInstance.$container.find(".jouele-info-control-button-icon_play").off("click.jouele");
-            JoueleInstance.$container.find(".jouele-progress-line").off("mousedown.jouele touchstart.jouele");
+                        if ($control.data("jouele") instanceof Jouele && typeof $control.data("jouele").getParentJouele === "function") {
+                            is_child_control = $control.data("jouele").getParentJouele() === JoueleInstance;
+                        }
+
+                        return !is_child_control;
+                    });
+                });
+
+                /* Check if timeline is seeking now */
+                if ($timeline_seeking.length > 0 && $timeline_seeking.data("jouele").getParentJouele() === JoueleInstance) {
+                    $timeline_seeking.data("jouele-destroyed", JoueleInstance);
+                }
+            } else {
+                /* Remove control from controls list */
+                var control_is_toggle = JoueleInstance.$control.attr("data-type") === "time-toggle";
+                var control_type = control_is_toggle ? (JoueleInstance.$control.attr("data-remaining") === "true" ? "time-remaining" : "time-elapsed") : JoueleInstance.$control.attr("data-type");
+
+                JoueleInstance.getTrack().controls[control_type] = JoueleInstance.getTrack().controls[control_type].filter(function(i, control) {
+                    return !(control === JoueleInstance.$control[0]);
+                });
+                if (control_is_toggle) {
+                    JoueleInstance.getTrack().controls["time-toggle"] = JoueleInstance.getTrack().controls["time-toggle"].filter(function(i, control) {
+                        return !(control === JoueleInstance.$control[0]);
+                    });
+                }
+
+                /* Check if timeline is seeking now */
+                if ($timeline_seeking.length > 0 && $timeline_seeking === JoueleInstance.$control) {
+                    JoueleInstance.$control.data("jouele-destroyed", JoueleInstance);
+                }
+
+                /* Clear listeners, remove data and modificators */
+                JoueleInstance.$control.off(".jouele").removeData("jouele").removeData("range-start").removeData("range-end").removeClass("jouele-is-available jouele-is-loaded jouele-is-paused jouele-is-buffering jouele-is-within jouele-is-playing jouele-is-interactive");
+            }
 
             /* Remove from playlist */
             for (var index_in_playlist = 0; index_in_playlist < JoueleInstance.getPlaylist().length; index_in_playlist++) {
@@ -1286,64 +1681,103 @@
                 }
             }
 
-            function removeTrack() {
-                clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
-                JoueleInstance.getTrack().player["updateStateTimer"] = null;
+            /* Remove this track */
+            var is_track_destroyed = false;
+            if (JoueleInstance.getTrack().instances.length === 0) {
+                $.each(JoueleInstance.getTrack().controls, function(index, $controls) {
+                    if ($controls.length === 0) {
+                        is_track_destroyed = true;
+                    } else {
+                        is_track_destroyed = false;
+                        return false;
+                    }
+                });
+            }
+            if (is_track_destroyed) {
+                var removeTrack = function() {
+                    if (JoueleInstance.getTrack().player["updateStateTimer"]) {
+                        if (Helpers.hasRequestAnimationFrame) {
+                            Redraw.cancelAnimationFrame.call(JoueleInstance);
+                        } else {
+                            clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
+                        }
+                        JoueleInstance.getTrack().player["updateStateTimer"] = null;
+                    }
 
-                Preloader.hide.call(JoueleInstance);
+                    Preloader.hide.call(JoueleInstance);
 
-                if (JoueleInstance.getTrack().instances.length === 0) {
                     if (JoueleInstance.getTrack().player["howler"]) {
                         JoueleInstance.getTrack().player["howler"].unload();
                         JoueleInstance.getTrack().player["howler"] = undefined;
                     }
 
                     delete tracks[JoueleInstance.getTrack().player["href"]];
+
+                    /* Update global controls */
+                    Redraw.updateState.call(JoueleInstance);
+                    Redraw.updateTitle.call(JoueleInstance);
+                };
+
+                if (JoueleInstance.getTrack().player["isPlaying"]) {
+                    var current_callback = JoueleInstance.getTrack().player["callbacks"]["onpause"];
+                    JoueleInstance.getTrack().player["callbacks"]["onpause"] = function() {
+                        if (current_callback) {
+                            current_callback();
+                        }
+                        removeTrack();
+                        return false;
+                    };
+                    JoueleInstance.pause();
+                } else {
+                    if (JoueleInstance.getTrack().player["isStarted"]) {
+                        Core.Interface.makeInterfacePause.call(JoueleInstance);
+                    }
+                    removeTrack();
                 }
             }
 
-            /* Pause and remove */
-            if (JoueleInstance.getTrack().player["isPlaying"]) {
-                var current_callback = JoueleInstance.getTrack().player["callbacks"]["onpause"];
-                JoueleInstance.getTrack().player["callbacks"]["onpause"] = function() {
-                    if (current_callback) {
-                        current_callback();
-                    }
-                    removeTrack();
-                    return false;
-                };
-                JoueleInstance.pause();
+            if (!is_control) {
+                /* Restore "before jouele" link */
+                JoueleInstance.$container.after(JoueleInstance.$link).detach();
+                JoueleInstance.$link.removeData("jouele").addClass("jouele_destroyed");
+
+                return JoueleInstance.$link;
             } else {
-                removeTrack();
+                JoueleInstance.$control.removeClass("jouele_inited").addClass("jouele_destroyed");
+
+                return JoueleInstance.$control;
             }
-
-            /* Restore "before jouele" link */
-            JoueleInstance.$container.after(JoueleInstance.$link).removeData("jouele").detach();
-            JoueleInstance.$link.removeData("jouele").addClass("jouele_destroyed");
-
-            return JoueleInstance.$link;
         },
         "breakPlayer": function() {
             var JoueleInstance = this;
+            var is_control = typeof JoueleInstance.$control !== "undefined" && JoueleInstance.$control.length > 0;
 
             JoueleInstance.getTrack().player["isBroken"] = true;
 
-            clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
-            JoueleInstance.getTrack().player["updateStateTimer"] = null;
+            if (JoueleInstance.getTrack().player["updateStateTimer"]) {
+                if (Helpers.hasRequestAnimationFrame) {
+                    Redraw.cancelAnimationFrame.call(JoueleInstance);
+                } else {
+                    clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
+                }
+                JoueleInstance.getTrack().player["updateStateTimer"] = null;
+            }
 
             Preloader.hide.call(JoueleInstance);
 
             Redraw.updateTimeDisplay.call(JoueleInstance);
 
-            for (var i = 0; i < JoueleInstance.getTrack().instances.length; i++) {
-                if (JoueleInstance.getTrack().instances[i].$container.length > 0) {
-                    JoueleInstance.getTrack().instances[i].$container.addClass("jouele_broken");
-                    JoueleInstance.getTrack().instances[i].$container.find(".jouele-info-control-button-icon_unavailable").removeClass("jouele-hidden");
-                    JoueleInstance.getTrack().instances[i].$container.find(".jouele-info-control-link").addClass("jouele-hidden").off("click.jouele");
-                    JoueleInstance.getTrack().instances[i].$container.find(".jouele-info-control-button-icon_play").off("click.jouele");
-                    JoueleInstance.getTrack().instances[i].$container.find(".jouele-progress-line").off("mousedown.jouele touchstart.jouele");
+            $.each(JoueleInstance.getTrack().instances, function(index, element) {
+                if (element.$container) {
+                    element.$container.addClass("jouele_broken");
+                    element.$container.find(".jouele-info-control-button-icon_unavailable").removeClass("jouele-hidden");
+                    element.$container.find(".jouele-info-control-link").addClass("jouele-hidden").off("click.jouele");
                 }
-            }
+            });
+
+            $.each(JoueleInstance.getTrack().controls, function(index, $control) {
+                $control.off(".jouele");
+            });
 
             Redraw.updateControlsClasses.call(JoueleInstance, "jouele-is-available", "remove");
             Redraw.updateControlsClasses.call(JoueleInstance, "jouele-is-loaded", "remove");
@@ -1351,9 +1785,10 @@
             Redraw.updateControlsClasses.call(JoueleInstance, "jouele-is-buffering", "remove");
             Redraw.updateControlsClasses.call(JoueleInstance, "jouele-is-within", "remove");
             Redraw.updateControlsClasses.call(JoueleInstance, "jouele-is-playing", "remove");
+            Redraw.updateControlsClasses.call(JoueleInstance, "jouele-is-interactive", "remove");
             Redraw.updateControlsClasses.call(JoueleInstance, "jouele-is-unavailable", "add");
 
-            for (i = 0; i < $.Jouele.history.length; i++) {
+            for (var i = 0; i < $.Jouele.history.length; i++) {
                 if ($.Jouele.history[i].getTrack() === JoueleInstance.getTrack()) {
                     $.Jouele.history.splice(i, 1);
                     i--;
@@ -1409,7 +1844,11 @@
                 var JoueleInstance = this;
 
                 if (JoueleInstance.getTrack().player["updateStateTimer"]) {
-                    clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
+                    if (Helpers.hasRequestAnimationFrame) {
+                        Redraw.cancelAnimationFrame.call(JoueleInstance);
+                    } else {
+                        clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
+                    }
                     JoueleInstance.getTrack().player["updateStateTimer"] = null;
                 }
 
@@ -1455,16 +1894,13 @@
                 Redraw.updateState.call(JoueleInstance);
                 Preloader.hide.call(JoueleInstance);
 
-                var nearest_second = Math.round((Math.ceil(JoueleInstance.getTrack().player["howler"].seek()) - JoueleInstance.getTrack().player["howler"].seek()) * 1e3) / 1e3;
-                setTimeout(function() {
-                    Redraw.updateState.call(JoueleInstance, true);
-
+                if (Helpers.hasRequestAnimationFrame) {
                     if (JoueleInstance.getTrack().player["updateStateTimer"]) {
-                        clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
+                        Redraw.cancelAnimationFrame.call(JoueleInstance);
                     }
 
                     if (!JoueleInstance.getTrack().player["isPaused"]) {
-                        JoueleInstance.getTrack().player["updateStateTimer"] = setInterval(function() {
+                        JoueleInstance.getTrack().player["updateStateTimer"] = Redraw.requestAnimationFrameProgress.call(JoueleInstance, true, function() {
                             if (JoueleInstance.getTrack().player["howler"]) {
                                 if (previous_timestamp && previous_timestamp === JoueleInstance.getTrack().player["howler"].seek()) {
                                     Preloader.show.call(JoueleInstance, 200);
@@ -1473,10 +1909,32 @@
                                 }
                                 previous_timestamp = JoueleInstance.getTrack().player["howler"].seek();
                             }
-                            Redraw.updateState.call(JoueleInstance, true);
-                        }, 1000);
+                        });
                     }
-                }, nearest_second * 1000);
+                } else {
+                    var nearest_second = Math.round((Math.ceil(JoueleInstance.getTrack().player["howler"].seek()) - JoueleInstance.getTrack().player["howler"].seek()) * 1e3) / 1e3;
+                    setTimeout(function () {
+                        Redraw.updateState.call(JoueleInstance, true);
+
+                        if (JoueleInstance.getTrack().player["updateStateTimer"]) {
+                            clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
+                        }
+
+                        if (!JoueleInstance.getTrack().player["isPaused"]) {
+                            JoueleInstance.getTrack().player["updateStateTimer"] = setInterval(function () {
+                                if (JoueleInstance.getTrack().player["howler"]) {
+                                    if (previous_timestamp && previous_timestamp === JoueleInstance.getTrack().player["howler"].seek()) {
+                                        Preloader.show.call(JoueleInstance, 200);
+                                    } else {
+                                        Preloader.hide.call(JoueleInstance);
+                                    }
+                                    previous_timestamp = JoueleInstance.getTrack().player["howler"].seek();
+                                }
+                                Redraw.updateState.call(JoueleInstance, true);
+                            }, 1000);
+                        }
+                    }, nearest_second * 1000);
+                }
 
                 return JoueleInstance;
             },
@@ -1502,7 +1960,11 @@
                 }
 
                 if (JoueleInstance.getTrack().player["updateStateTimer"]) {
-                    clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
+                    if (Helpers.hasRequestAnimationFrame) {
+                        Redraw.cancelAnimationFrame.call(JoueleInstance);
+                    } else {
+                        clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
+                    }
                 }
                 if (JoueleInstance.getTrack().player["seekTime"] === JoueleInstance.getTotalTime()) {
                     /* Hacks for Howler 2.0.x */
@@ -1519,16 +1981,9 @@
 
                 Redraw.updateState.call(JoueleInstance);
 
-                var nearest_second = Math.round((Math.ceil(JoueleInstance.getTrack().player["howler"].seek()) - JoueleInstance.getTrack().player["howler"].seek()) * 1e3) / 1e3;
-                setTimeout(function() {
-                    Redraw.updateState.call(JoueleInstance, true);
-
-                    if (JoueleInstance.getTrack().player["updateStateTimer"]) {
-                        clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
-                    }
-
+                if (Helpers.hasRequestAnimationFrame) {
                     if (!JoueleInstance.getTrack().player["isPaused"]) {
-                        JoueleInstance.getTrack().player["updateStateTimer"] = setInterval(function() {
+                        JoueleInstance.getTrack().player["updateStateTimer"] = Redraw.requestAnimationFrameProgress.call(JoueleInstance, true, function () {
                             if (JoueleInstance.getTrack().player["howler"]) {
                                 if (previous_timestamp && previous_timestamp === JoueleInstance.getTrack().player["howler"].seek()) {
                                     Preloader.show.call(JoueleInstance, 200);
@@ -1537,10 +1992,32 @@
                                 }
                                 previous_timestamp = JoueleInstance.getTrack().player["howler"].seek();
                             }
-                            Redraw.updateState.call(JoueleInstance, true);
-                        }, 1000);
+                        });
                     }
-                }, nearest_second * 1000);
+                } else {
+                    var nearest_second = Math.round((Math.ceil(JoueleInstance.getTrack().player["howler"].seek()) - JoueleInstance.getTrack().player["howler"].seek()) * 1e3) / 1e3;
+                    setTimeout(function () {
+                        Redraw.updateState.call(JoueleInstance, true);
+
+                        if (JoueleInstance.getTrack().player["updateStateTimer"]) {
+                            clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
+                        }
+
+                        if (!JoueleInstance.getTrack().player["isPaused"]) {
+                            JoueleInstance.getTrack().player["updateStateTimer"] = setInterval(function () {
+                                if (JoueleInstance.getTrack().player["howler"]) {
+                                    if (previous_timestamp && previous_timestamp === JoueleInstance.getTrack().player["howler"].seek()) {
+                                        Preloader.show.call(JoueleInstance, 200);
+                                    } else {
+                                        Preloader.hide.call(JoueleInstance);
+                                    }
+                                    previous_timestamp = JoueleInstance.getTrack().player["howler"].seek();
+                                }
+                                Redraw.updateState.call(JoueleInstance, true);
+                            }, 1000);
+                        }
+                    }, nearest_second * 1000);
+                }
 
                 if (JoueleInstance.getTrack().player["isPlaying"]) {
                     JoueleInstance.getTrack().player["seekTime"] = null;
@@ -1558,8 +2035,14 @@
 
                 Preloader.hide.call(JoueleInstance);
 
-                clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
-                JoueleInstance.getTrack().player["updateStateTimer"] = null;
+                if (JoueleInstance.getTrack().player["updateStateTimer"]) {
+                    if (Helpers.hasRequestAnimationFrame) {
+                        Redraw.cancelAnimationFrame.call(JoueleInstance);
+                    } else {
+                        clearInterval(JoueleInstance.getTrack().player["updateStateTimer"]);
+                    }
+                    JoueleInstance.getTrack().player["updateStateTimer"] = null;
+                }
 
                 JoueleInstance.getTrack().player["seekingOnTimeline"]["seekingPosition"] = 100;
                 Redraw.updateState.call(JoueleInstance);
@@ -1685,22 +2168,48 @@
             return typeof this.getTrack() !== "undefined" ? Core.destroy.call(this) : this;
         };
 
-        /* Set API properties */
-        this.$container = $();
-        this.$link = $element;
-        $playlist = Init.findPlaylistInDOM.call(this);
-        playlist = $.Jouele.playlist[Init.getPlaylistIndex.call(this)];
+        /* Init link or control */
+        if ($element.hasClass("jouele") && $element.attr("href")) {
+            /* Set API properties */
+            this.$container = null;
+            this.$link = $element;
+            $playlist = Init.findPlaylistInDOM.call(this);
+            playlist = $.Jouele.playlist[Init.getPlaylistIndex.call(this)];
 
-        /* Push instance */
-        this.getTrack().instances.push(this);
+            /* Push instance */
+            this.getTrack().instances.push(this);
 
-        /* Init */
-        Redraw.updateLength.call(this);
-        Init.createJoueleDOM.call(this);
-        Redraw.updateTitle.call(this);
-        Init.checkGlobalOptions.call(this);
-        Init.initInnerControls.call(this);
-        Init.insertJoueleDOM.call(this);
+            /* Init */
+            Redraw.updateLength.call(this);
+            Init.createJoueleDOM.call(this);
+            Redraw.updateTitle.call(this);
+            Init.checkGlobalOptions.call(this);
+            Init.insertJoueleDOM.call(this);
+        } else if ($element.hasClass("jouele-control") && $element.attr("data-href")) {
+            /* Set API properties */
+            this.$control = $element;
+
+            /* Init */
+            Redraw.updateLength.call(this);
+            Redraw.updateTitle.call(this);
+            Init.pushControl.call(this, $element);
+
+            if (this.$control.parents(".jouele").length === 0) {
+                $playlist = Init.findPlaylistInDOM.call(this);
+                playlist = $.Jouele.playlist[Init.getPlaylistIndex.call(this)];
+                Init.checkGlobalOptions.call(this);
+            } else {
+                var JoueleInstance = this;
+
+                parent_jouele = JoueleInstance.$control.parents(".jouele").eq(0).data("jouele");
+
+                this.getParentJouele = function() { return parent_jouele; };
+                this.getPlaylistDOM = function() { return parent_jouele.getPlaylistDOM(); };
+                this.getPlaylist = function() { return parent_jouele.getPlaylist(); };
+            }
+        } else {
+            return this;
+        }
 
         /* Clear */
         $element.removeClass("jouele_destroyed");
@@ -1716,6 +2225,20 @@
         tracks: tracks,
         playlist: [],
         history: [],
+        controls: {
+            "play-pause": $(),
+            "play": $(),
+            "pause": $(),
+            "time-total": $(),
+            "time-elapsed": $(),
+            "time-remaining": $(),
+            "timeline": $(),
+            "elapsed": $(),
+            "remaining": $(),
+            "position": $(),
+            "seek": $(),
+            "title": $()
+        },
         options: {
             pauseOnSpace: false,
             playOnSpace: false,
@@ -1740,7 +2263,7 @@
         var jouele_instance;
 
         if (typeof Howl === "undefined") {
-            Helpers.showError("Please include `howler.js 2.0.9+` into your page — it is necessary for Jouele");
+            Helpers.showError("Please include `howler.js 2.0.15` into your page — it is necessary for Jouele");
             return this;
         }
 
@@ -1760,13 +2283,8 @@
             var $element = $(this);
             jouele_instance = $element.data("jouele");
 
-            if (!$element.hasClass("jouele")) {
-                Helpers.showError("Please add `jouele` class to this element");
-                return this;
-            }
-
-            if (!$element.attr("href")) {
-                Helpers.showError("Please add `href` attribute to this element and specify URL to mp3-file");
+            if (!$element.hasClass("jouele") && !$element.hasClass("jouele-control")) {
+                Helpers.showError("Please add `jouele` or `jouele-control` class to this element");
                 return this;
             }
 
@@ -1778,7 +2296,7 @@
 
     /* Autoload Jouele */
     var autoLoadJouele = function() {
-        $("a.jouele[href]").jouele();
+        $("a.jouele[href]").add(".jouele-control[data-type]").jouele();
     };
     $(autoLoadJouele);
 }(jQuery));

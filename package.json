@@ -1,26 +1,37 @@
 {
   "name": "ilyabirman-jouele",
   "description": "A simple and beautiful audio player for the web",
-  "version": "3.0.6",
+  "version": "3.0.7-beta",
   "repository": {
     "type": "git",
     "url": "https://github.com/ilyabirman/Jouele.git"
   },
-  "author": "Ilya Birman",
   "license": "MIT",
-  "main": "dist/jouele.js",
-  "style": "dist/jouele.css",
+  "author": {
+    "name": "Ilya Birman",
+    "email": "ilyabirman@ilyabirman.ru",
+    "url": "https://ilyabirman.ru"
+  },
+  "contributors": [
+    {
+      "name": "Evgeniy Lazarev",
+      "email": "me@lazarev.me",
+      "url": "https://lazarev.me"
+    }
+  ],
+  "main": "dist/jouele.min.js",
+  "style": "dist/jouele.min.css",
   "dependencies": {
-    "howler": "^2.0.13"
+    "howler": "2.0.15"
   },
   "peerDependencies": {
     "jquery": "3.x"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-clean-css": "^3.9.4",
+    "gulp": "^4.0.2",
+    "gulp-clean-css": "^4.2.0",
     "gulp-concat": "^2.6.1",
     "gulp-concat-css": "^3.1.0",
-    "gulp-uglify": "^3.0.0"
+    "gulp-uglify": "^3.0.2"
   }
 }
