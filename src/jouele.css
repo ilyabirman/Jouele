@@ -272,6 +272,14 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    font-feature-settings: 'tnum';
+}
+
+@supports (font-variant-numeric: tabular-nums) {
+    .jouele-info-time {
+        font-feature-settings: 'tnum';
+        font-variant-numeric: tabular-nums;
+    }
 }
 
 .jouele-info-time__current {
