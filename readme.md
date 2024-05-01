@@ -10,7 +10,7 @@
 <script src="jouele.min.js"></script>
 <link href="jouele.min.css" rel="stylesheet"/>
 ```
-<sub>Минифицированный файл [`jouele.min.js`](dist/jouele.min.js) уже содержит в себе необходимый для работы Жуэля howler.js, так что вам не нужно подключать его отдельно. Если вы используете неминифицированный [`jouele.js`](src/jouele.js), подключите [howler.core.js v2.0.15](https://github.com/goldfire/howler.js/blob/v2.0.15/src/howler.core.js) до Жуэля.  
+<sub>Минифицированный файл [`jouele.min.js`](dist/jouele.min.js) уже содержит в себе необходимый для работы Жуэля howler.js, так что вам не нужно подключать его отдельно. Если вы используете неминифицированный [`jouele.js`](src/jouele.js), подключите [howler.core.js v2.2.4](https://github.com/goldfire/howler.js/blob/v2.2.4/src/howler.core.js) до Жуэля.  
 Если вы хотите подключить неминифицированный файл стилей, подключите [`jouele.css`](src/jouele.css) и [`jouele.skin.css`](src/jouele.skin.css).</sub>
 
 ## Простое использование (автоматическая инициализация)
