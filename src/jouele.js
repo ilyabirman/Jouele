@@ -1,7 +1,7 @@
 (function($) {
     "use strict";
 
-    var version = "3.0.7-beta";
+    var version = "4.0";
     var tracks = {};
 
     var $timeline_seeking = $();
@@ -27,9 +27,12 @@
         },
         "makeSeconds": function(time) {
             if (typeof time === "number") {
-                return time;
+                return isFinite(time) ? time : 0;
             }
             if (typeof time === "undefined" || time === null) {
+                return 0;
+            }
+            if (typeof time !== "string") {
                 return 0;
             }
 
@@ -278,7 +281,7 @@
                 old_length = JoueleInstance.getOptions().length;
             }
 
-            if (JoueleInstance.getTrack().player.howler) {
+            if (JoueleInstance.getTrack().player.howler && JoueleInstance.getTrack().player.howler.duration()) {
                 new_length = JoueleInstance.getTrack().player.howler.duration();
             } else if (Helpers.makeSeconds(JoueleInstance.getOptions().length) > 0) {
                 new_length = Helpers.makeSeconds(JoueleInstance.getOptions().length);
@@ -900,6 +903,21 @@
             }
 
             return JoueleInstance;
+        },
+        "refreshGlobalOptions": function() {
+            $.Jouele.options.pauseOnSpace = false;
+            $.Jouele.options.playOnSpace = false;
+            $.Jouele.options.scrollOnSpace = true;
+
+            $(".jouele_inited").filter(function() {
+                return $(this).hasClass("jouele") || $(this).parents(".jouele").length === 0;
+            }).each(function() {
+                var JoueleInstance = $(this).data("jouele");
+
+                if (JoueleInstance instanceof Jouele && !JoueleInstance.getOptions().static) {
+                    Init.checkGlobalOptions.call(JoueleInstance);
+                }
+            });
         },
         "pushControl": function($control, is_global) {
             var JoueleInstance = is_global ? undefined : this;
@@ -1672,7 +1690,8 @@
                 });
 
                 /* Check if timeline is seeking now */
-                if ($timeline_seeking.length > 0 && $timeline_seeking.data("jouele").getParentJouele() === JoueleInstance) {
+                var seeking_instance = $timeline_seeking.data("jouele");
+                if ($timeline_seeking.length > 0 && seeking_instance instanceof Jouele && typeof seeking_instance.getParentJouele === "function" && seeking_instance.getParentJouele() === JoueleInstance) {
                     $timeline_seeking.data("jouele-destroyed", JoueleInstance);
                 }
             } else {
@@ -2174,10 +2193,15 @@
 
         /* Set API setters */
         this.setOptions = function(new_options) {
-            if (typeof this.getTrack() !== "undefined") {
+            if (typeof this.getTrack() === "undefined" || typeof new_options !== "object" || new_options === null) {
                 return this;
             }
 
+            new_options = $.extend({}, new_options);
+            delete new_options.href;
+            delete new_options.static;
+
+            var old_skin = options.skin;
             options = $.extend(
                 options,
                 Init.checkNewOptions(options, new_options)
@@ -2185,7 +2209,18 @@
             if (this.getTrack().player["howler"]) {
                 this.getTrack().player["howler"].loop(options.repeat);
             }
+            if (this.$container) {
+                if (old_skin) {
+                    this.$container.removeClass("jouele-skin-" + old_skin);
+                }
+                if (options.skin) {
+                    this.$container.addClass("jouele-skin-" + options.skin);
+                }
+                this.$container.toggleClass("jouele_timeline_hide", options.hideTimelineOnPause);
+            }
+            Redraw.updateLength.call(this);
             Redraw.updateTitle.call(this);
+            Init.refreshGlobalOptions();
             return this;
         };
 
