@@ -22,6 +22,8 @@
 
 ### Stability and build fixes
 
+- Improved seeking in long audio files. Jouele now applies a requested time as soon as the browser has media metadata and waits for `canplay` rather than `canplaythrough`, allowing the browser to request the relevant HTTP byte range without first buffering earlier parts of the file.
+- Servers must support HTTP byte-range responses for remote seeking; Jouele leaves byte-to-time mapping to the browser so variable-bitrate audio remains supported.
 - Fixed a crash when a player was destroyed while a standalone timeline control was seeking.
 - Invalid non-string and non-number duration values now fall back safely instead of breaking initialization.
 - The Opera compatibility patch is now applied while building the distribution bundle and no longer modifies the installed Howler source in `node_modules`.

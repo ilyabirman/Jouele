@@ -645,6 +645,8 @@
                     seekTime: null,
                     seekPosition: null,
                     preloaderTimeout: null,
+                    metadataNode: null,
+                    metadataListener: null,
 
                     seekingOnTimeline: {
                         isSeeking: false,
@@ -1022,7 +1024,7 @@
                                 Core.breakPlayer.call(JoueleInstance);
                                 return false;
                             }
-                            JoueleInstance.getTrack().player["howler"].load();
+                            Core.loadHowler.call(JoueleInstance);
                             JoueleInstance.getTrack().player["isStarted"] = true;
                         }
 
@@ -1229,6 +1231,108 @@
     };
 
     var Core = {
+        "loadHowler": function() {
+            var JoueleInstance = this;
+            var howler = JoueleInstance.getTrack().player["howler"];
+
+            howler.load();
+
+            if (howler._html5 && howler._sounds.length > 0 && typeof Howler !== "undefined") {
+                $.each(howler._sounds, function(index, sound) {
+                    if (sound._node && sound._loadFn && Howler._canPlayEvent !== "canplay") {
+                        sound._node.removeEventListener(Howler._canPlayEvent, sound._loadFn, false);
+                        sound._joueleLoadFn = function() {
+                            sound._node.removeEventListener("canplay", sound._joueleLoadFn, false);
+                            sound._joueleLoadFn = null;
+                            sound._loadFn();
+                        };
+                        sound._node.addEventListener("canplay", sound._joueleLoadFn, false);
+                    }
+                });
+            }
+
+            return JoueleInstance;
+        },
+        "prepareRemoteSeek": function() {
+            var JoueleInstance = this;
+            var player = JoueleInstance.getTrack().player;
+            var howler = player["howler"];
+
+            if (!howler || !howler._html5 || howler._sounds.length === 0 || !howler._sounds[0]._node) {
+                return JoueleInstance;
+            }
+
+            var node = howler._sounds[0]._node;
+
+            function applyPendingSeek() {
+                var duration = isFinite(node.duration) ? node.duration : Helpers.makeSeconds(JoueleInstance.getOptions().length);
+                var seek_time = player["seekTime"];
+
+                if (player["seekPosition"] !== null && duration > 0) {
+                    seek_time = Math.round(parseFloat(duration * (player["seekPosition"] / 100)) * 1e2) / 1e2;
+                    player["seekTime"] = seek_time;
+                }
+
+                if (seek_time === null || !isFinite(seek_time)) {
+                    return;
+                }
+
+                if (duration > 0 && seek_time > duration) {
+                    seek_time = duration;
+                    player["seekTime"] = seek_time;
+                }
+
+                try {
+                    node.currentTime = seek_time;
+                } catch (error) {
+                    return;
+                }
+
+                if (player["metadataListener"]) {
+                    node.removeEventListener("loadedmetadata", player["metadataListener"], false);
+                    player["metadataNode"] = null;
+                    player["metadataListener"] = null;
+                }
+            }
+
+            if (player["metadataListener"] && player["metadataNode"] !== node) {
+                player["metadataNode"].removeEventListener("loadedmetadata", player["metadataListener"], false);
+                player["metadataNode"] = null;
+                player["metadataListener"] = null;
+            }
+
+            if (node.readyState >= 1) {
+                applyPendingSeek();
+            } else if (!player["metadataListener"]) {
+                player["metadataNode"] = node;
+                player["metadataListener"] = applyPendingSeek;
+                node.addEventListener("loadedmetadata", player["metadataListener"], false);
+            }
+
+            return JoueleInstance;
+        },
+        "clearRemoteSeekListener": function() {
+            var player = this.getTrack().player;
+            var howler = player["howler"];
+
+            if (player["metadataNode"] && player["metadataListener"]) {
+                player["metadataNode"].removeEventListener("loadedmetadata", player["metadataListener"], false);
+            }
+
+            player["metadataNode"] = null;
+            player["metadataListener"] = null;
+
+            if (howler && howler._sounds) {
+                $.each(howler._sounds, function(index, sound) {
+                    if (sound._node && sound._joueleLoadFn) {
+                        sound._node.removeEventListener("canplay", sound._joueleLoadFn, false);
+                        sound._joueleLoadFn = null;
+                    }
+                });
+            }
+
+            return this;
+        },
         "destroyStatic": function() {
             var JoueleInstance = this;
 
@@ -1389,7 +1493,7 @@
                 JoueleInstance.getTrack().player["howler"].play();
             } else {
                 if (!JoueleInstance.getTrack().player["isStarted"]) {
-                    JoueleInstance.getTrack().player["howler"].load();
+                    Core.loadHowler.call(JoueleInstance);
                 }
             }
 
@@ -1487,8 +1591,9 @@
                 JoueleInstance.getTrack().player["howler"].seek(JoueleInstance.getTrack().player["seekTime"]);
             } else {
                 if (!JoueleInstance.getTrack().player["isStarted"]) {
-                    JoueleInstance.getTrack().player["howler"].load();
+                    Core.loadHowler.call(JoueleInstance);
                 }
+                Core.prepareRemoteSeek.call(JoueleInstance);
                 Preloader.show.call(JoueleInstance);
             }
 
@@ -1572,14 +1677,16 @@
                     }
                 } else {
                     if (!JoueleInstance.getTrack().player["isStarted"]) {
-                        JoueleInstance.getTrack().player["howler"].load();
+                        Core.loadHowler.call(JoueleInstance);
                     }
+                    Core.prepareRemoteSeek.call(JoueleInstance);
                     Preloader.show.call(JoueleInstance);
                 }
             } else {
                 if (!JoueleInstance.getTrack().player["isStarted"]) {
-                    JoueleInstance.getTrack().player["howler"].load();
+                    Core.loadHowler.call(JoueleInstance);
                 }
+                Core.prepareRemoteSeek.call(JoueleInstance);
                 Preloader.show.call(JoueleInstance);
             }
 
@@ -1747,6 +1854,8 @@
             }
             if (is_track_destroyed) {
                 var removeTrack = function() {
+                    Core.clearRemoteSeekListener.call(JoueleInstance);
+
                     if (JoueleInstance.getTrack().player["updateStateTimer"]) {
                         if (Helpers.hasRequestAnimationFrame) {
                             Redraw.cancelAnimationFrame.call(JoueleInstance);
@@ -1803,6 +1912,8 @@
         "breakPlayer": function() {
             var JoueleInstance = this;
             var is_control = typeof JoueleInstance.$control !== "undefined" && JoueleInstance.$control.length > 0;
+
+            Core.clearRemoteSeekListener.call(JoueleInstance);
 
             JoueleInstance.getTrack().player["isBroken"] = true;
 
@@ -2119,6 +2230,7 @@
             "onLoad": function() {
                 var JoueleInstance = this;
 
+                Core.clearRemoteSeekListener.call(JoueleInstance);
                 JoueleInstance.getTrack().player["isLoaded"] = true;
                 Redraw.updateLength.call(JoueleInstance);
 
