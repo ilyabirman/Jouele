@@ -60,7 +60,7 @@
 
         "getFirstJouele": function() {
             var first_jouele;
-            var $first_jouele = $(".jouele").add(".jouele-control").filter(".jouele_first:not(.jouele_broken)").eq(0);
+            var $first_jouele = $(".jouele").add(".jouele-control").filter(".jouele_first:not(.jouele_broken):not(.jouele_static)").eq(0);
 
             if ($first_jouele.length === 0) {
                 for (var index_playlist = 0; index_playlist < $.Jouele.playlist.length; index_playlist++) {
@@ -594,6 +594,7 @@
                 {
                     /* Defaults */
                     length: 0,
+                    static: false,
                     repeat: false,
                     hideTimelineOnPause: false,
                     skin: "",
@@ -610,7 +611,8 @@
                 {
                     skin: Helpers.getSkinName($element),
                     href: href,
-                    title: title
+                    title: title,
+                    static: $element.hasClass("jouele") && $element.attr("data-static") === "true"
                 }
             ));
 
@@ -1083,6 +1085,20 @@
 
             return JoueleInstance;
         },
+        "pushStaticControl": function($control) {
+            var controls = this.getTrack().controls;
+            var control_type = $control.attr("data-type");
+
+            if (typeof controls[control_type] !== "undefined" && controls[control_type].length > 0) {
+                controls[control_type] = controls[control_type].add($control);
+            } else {
+                controls[control_type] = $control;
+            }
+
+            $control.data("jouele", this).addClass("jouele-is-available jouele_inited");
+
+            return this;
+        },
         "createJoueleDOM": function() {
             var JoueleInstance = this;
 
@@ -1133,7 +1149,7 @@
                 );
             };
 
-            JoueleInstance.$container = $container.data("jouele", JoueleInstance).addClass("jouele jouele_inited" + (JoueleInstance.$link.data("first") === true ? " jouele_first" : "") + (JoueleInstance.getOptions().hideTimelineOnPause ? " jouele_timeline_hide" : "") + (JoueleInstance.getOptions().skin ? " jouele-skin-" + JoueleInstance.getOptions().skin : ""));
+            JoueleInstance.$container = $container.data("jouele", JoueleInstance).addClass("jouele jouele_inited" + (JoueleInstance.getOptions().static ? " jouele_static" : "") + (JoueleInstance.$link.data("first") === true ? " jouele_first" : "") + (JoueleInstance.getOptions().hideTimelineOnPause ? " jouele_timeline_hide" : "") + (JoueleInstance.getOptions().skin ? " jouele-skin-" + JoueleInstance.getOptions().skin : ""));
             JoueleInstance.$container.append($info_area.addClass("jouele-info").append(createInfoAreaDOM()), $progress_area.addClass("jouele-progress").append(createProgressAreaDOM())).promise().done(function() {
                 Init.initInnerControls.call(JoueleInstance);
             });
@@ -1147,9 +1163,13 @@
                 JoueleInstance.$container.find(".jouele-hidden").removeClass("jouele-hidden");
                 JoueleInstance.$container.find(".jouele-info-control-button-icon_unavailable").addClass("jouele-hidden");
 
-                JoueleInstance.$container.find(".jouele-info-control-link").off("click.jouele").on("click.jouele", function(event) {
-                    event.preventDefault();
-                });
+                if (JoueleInstance.getOptions().static) {
+                    JoueleInstance.$container.find(".jouele-info-control-link").removeAttr("href");
+                } else {
+                    JoueleInstance.$container.find(".jouele-info-control-link").off("click.jouele").on("click.jouele", function(event) {
+                        event.preventDefault();
+                    });
+                }
 
                 JoueleInstance.$link.after(JoueleInstance.$container);
                 JoueleInstance.$link.detach();
@@ -1167,7 +1187,11 @@
             var JoueleInstance = this;
 
             $.each(JoueleInstance.$container.find(".jouele-control"), function() {
-                Init.createJouele($(this), JoueleInstance.getOptions());
+                if (JoueleInstance.getOptions().static) {
+                    Init.pushStaticControl.call(JoueleInstance, $(this));
+                } else {
+                    Init.createJouele($(this), JoueleInstance.getOptions());
+                }
             });
 
             return JoueleInstance;
@@ -1187,6 +1211,15 @@
     };
 
     var Core = {
+        "destroyStatic": function() {
+            var JoueleInstance = this;
+
+            JoueleInstance.$container.find(".jouele-control").removeData("jouele");
+            JoueleInstance.$container.after(JoueleInstance.$link).detach();
+            JoueleInstance.$link.removeData("jouele").addClass("jouele_destroyed");
+
+            return JoueleInstance.$link;
+        },
         "createHowler": function() {
             var JoueleInstance = this;
 
@@ -2104,8 +2137,13 @@
 
     /* Instance */
     var Jouele = function($element, options) {
+        var is_static = options.static === true;
+        var track;
+
         /* Create track */
-        if (typeof tracks[options.href] === "undefined") {
+        if (is_static) {
+            track = Init.createTrack(options.href);
+        } else if (typeof tracks[options.href] === "undefined") {
             tracks[options.href] = Init.createTrack(options.href);
         }
 
@@ -2122,7 +2160,7 @@
         /* Set API getters */
         this.getOptions = function() { return options; };
         this.getHref = function() { return this.getOptions().href; };
-        this.getTrack = function() { return tracks[this.getHref()]; };
+        this.getTrack = function() { return is_static ? track : tracks[this.getHref()]; };
         this.getTitle = function() { return typeof this.getTrack() !== "undefined" ? this.getTrack().player["title"] : ""; };
         this.getTotalTime = function() { return typeof this.getTrack() !== "undefined" ? this.getTrack().player["totalTime"] : 0; };
         this.getElapsedTime = function() { return typeof this.getTrack() !== "undefined" ? this.getTrack().player["elapsedTime"] : 0; };
@@ -2153,18 +2191,22 @@
 
         /* Set API methods */
         this.play = function() {
-            return typeof this.getTrack() !== "undefined" ? this.getTrack().player.play.call(this) : this;
+            return !is_static && typeof this.getTrack() !== "undefined" ? this.getTrack().player.play.call(this) : this;
         };
         this.pause = function() {
-            return typeof this.getTrack() !== "undefined" ? this.getTrack().player.pause.call(this) : this;
+            return !is_static && typeof this.getTrack() !== "undefined" ? this.getTrack().player.pause.call(this) : this;
         };
         this.playFrom = function(time) {
-            return typeof this.getTrack() !== "undefined" ? this.getTrack().player.playFrom.call(this, time) : this;
+            return !is_static && typeof this.getTrack() !== "undefined" ? this.getTrack().player.playFrom.call(this, time) : this;
         };
         this.seek = function(seekPositionPercent) {
-            return typeof this.getTrack() !== "undefined" ? this.getTrack().player.seek.call(this, seekPositionPercent) : this;
+            return !is_static && typeof this.getTrack() !== "undefined" ? this.getTrack().player.seek.call(this, seekPositionPercent) : this;
         };
         this.destroy = function() {
+            if (is_static) {
+                return Core.destroyStatic.call(this);
+            }
+
             return typeof this.getTrack() !== "undefined" ? Core.destroy.call(this) : this;
         };
 
@@ -2173,17 +2215,28 @@
             /* Set API properties */
             this.$container = null;
             this.$link = $element;
-            $playlist = Init.findPlaylistInDOM.call(this);
-            playlist = $.Jouele.playlist[Init.getPlaylistIndex.call(this)];
+            if (!is_static) {
+                $playlist = Init.findPlaylistInDOM.call(this);
+                playlist = $.Jouele.playlist[Init.getPlaylistIndex.call(this)];
+            }
 
             /* Push instance */
-            this.getTrack().instances.push(this);
+            if (!is_static) {
+                this.getTrack().instances.push(this);
+            }
 
             /* Init */
             Redraw.updateLength.call(this);
             Init.createJoueleDOM.call(this);
             Redraw.updateTitle.call(this);
-            Init.checkGlobalOptions.call(this);
+            if (is_static) {
+                this.$container.find("[data-type='elapsed']").css("width", "0%");
+                this.$container.find("[data-type='remaining']").css("width", "100%");
+                this.$container.find("[data-type='position']").css("left", "0%");
+            }
+            if (!is_static) {
+                Init.checkGlobalOptions.call(this);
+            }
             Init.insertJoueleDOM.call(this);
         } else if ($element.hasClass("jouele-control") && $element.attr("data-href")) {
             /* Set API properties */
@@ -2262,11 +2315,6 @@
     $.fn.jouele = function(options) {
         var jouele_instance;
 
-        if (typeof Howl === "undefined") {
-            Helpers.showError("Please include `howler.js 2.0.15` into your page — it is necessary for Jouele");
-            return this;
-        }
-
         if (this.length === 1) {
             jouele_instance = this.data("jouele");
 
@@ -2289,6 +2337,11 @@
             }
 
             if (!$element.data("jouele")) {
+                if (typeof Howl === "undefined" && !($element.hasClass("jouele") && $element.attr("data-static") === "true")) {
+                    Helpers.showError("Please include `howler.js 2.0.15` into your page — it is necessary for Jouele");
+                    return this;
+                }
+
                 Init.createJouele($element, options);
             }
         });
