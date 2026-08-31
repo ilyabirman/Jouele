@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Jouele examples</title>
+
+    <!-- Подключите на страницу jQuery, необходимый для работы Жуэля -->
+    <!-- Include jQuery that are mandatory for Jouele -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- Подключите Жуэль: JS и CSS -->
+    <!-- Include Jouele: JS and CSS -->
+    <script src="./jouele.min.js"></script>
+    <link href="./jouele.min.css" rel="stylesheet"/>
+</head>
+<body>
+
+    <style>
+        /* Инлайновые стили нужны только для оформления этой страницы с примерами, они не используются Жуэлем */
+        /* Inline styles are only for this example page, they are not used by Jouele */
+        html, body { margin: 0; padding: 0; background: #fff; font-family: "Helvetica", "Arial", sans-serif; font-size: 14px; line-height: 1.2; color: #000; }
+        .example-fixed { position: fixed; top: 0; left: 0; right: 0; padding: 2em 0; background: #f8f8f8; z-index: 9; }
+        .example-fixed-controls { width: 55em; margin: 0 auto; position: relative; }
+        .example-fixed-controls-top { height: 3em; position: relative; margin: 0 15em; }
+        .example-fixed-bar { position: absolute; left: 3em; right: 0; top: 50%; height: 1.5em; margin-top: -0.75em; cursor: pointer; }
+        .example-fixed-bar:before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: #bfbfbf; }
+        .example-fixed-bar-elapsed { position: absolute; top: 50%; left: 0; height: 1px; background: #000; transition: background 0.16s; }
+        .example-fixed-bar-elapsed.jouele-is-playing { background: #f59331; }
+        .example-fixed-bar:hover .example-fixed-bar-elapsed { background: #d04000; transition: none; }
+        .example-fixed-bar-position { position: absolute; top: 50%; left: 0; width: 0.5em; height: 0.5em; margin-top: -0.25em; margin-left: -0.25em; border-radius: 50%; background: #000; transition: background 0.16s; }
+        .example-fixed-bar-position.jouele-is-playing { background: #f59331; }
+        .example-fixed-bar:hover .example-fixed-bar-position { background: #d04000; transition: none; }
+        .example-fixed-bar-position:before {
+            content: '';
+            width: 100%;
+            height: 100%;
+            padding: 2px;
+            display: block;
+            font-size: 0;
+            position: absolute;
+            left: -3px;
+            top: -3px;
+            border: 1px solid #000;
+            border-radius: 50%;
+            transition: border-color 0.16s linear, opacity 0.16s linear;
+            -webkit-animation: preloader-animate .75s ease infinite;
+            -moz-animation: preloader-animate .75s ease infinite;
+            -o-animation: preloader-animate .75s ease infinite;
+            animation: preloader-animate .75s ease infinite;
+            display: none\0/; /* IE 8 */
+            opacity: 0;
+        }
+        .example-fixed-bar-position.jouele-is-buffering:before {
+            opacity: 1;
+            display: block\0/; /* IE 8 */
+        }
+        .example-fixed-bar-position.jouele-is-playing:before {
+            border-color: #f59331;
+        }
+        .example-fixed-bar:hover .example-fixed-bar-position:before {
+            border-color: #d04000;
+            transition: none;
+        }
+        @-webkit-keyframes preloader-animate {
+            0% {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+            50% {
+                -webkit-transform: scale(1.2);
+                transform: scale(1.2);
+            }
+            100% {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+        }
+        @-moz-keyframes preloader-animate {
+            0% {
+                -moz-transform: scale(1);
+                transform: scale(1);
+            }
+            50% {
+                -moz-transform: scale(1.2);
+                transform: scale(1.2);
+            }
+            100% {
+                -moz-transform: scale(1);
+                transform: scale(1);
+            }
+        }
+        @-o-keyframes preloader-animate {
+            0% {
+                -o-transform: scale(1);
+                transform: scale(1);
+            }
+            50% {
+                -o-transform: scale(1.2);
+                transform: scale(1.2);
+            }
+            100% {
+                -o-transform: scale(1);
+                transform: scale(1);
+            }
+        }
+        @keyframes preloader-animate {
+            0% {
+                -webkit-transform: scale(1);
+                -moz-transform: scale(1);
+                -o-transform: scale(1);
+                transform: scale(1);
+            }
+            50% {
+                -webkit-transform: scale(1.2);
+                -moz-transform: scale(1.2);
+                -o-transform: scale(1.2);
+                transform: scale(1.2);
+            }
+            100% {
+                -webkit-transform: scale(1);
+                -moz-transform: scale(1);
+                -o-transform: scale(1);
+                transform: scale(1);
+            }
+        }
+
+        .example-fixed-icon { position: absolute; width: 3em; height: 3em; left: 0; top: 0; cursor: pointer; transform: translateX(-25%); }
+        .example-fixed-icon__svg { vertical-align: top; width: 100%; }
+        .example-fixed-icon__svg path { fill: #000; transition: fill 0.16s; }
+        .example-fixed-icon.jouele-is-playing .example-fixed-icon__svg path { fill: #f59331; }
+        .example-fixed-icon:hover .example-fixed-icon__svg path { fill: #d04000; transition: none; }
+        .example-fixed-controls-bottom { overflow: hidden; margin: 0 15em; }
+        .example-fixed-time { float: right; text-align: right; }
+        .example-fixed-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .example-fixed-controls-left { position: absolute; left: 0; top: 0.5em; width: 7.5em; }
+        .example-fixed-controls-left .jouele-control { display: inline-block; vertical-align: top; padding: 0.25em 0.75em 0.35em; border-radius: 0.2em; background: #fff; box-shadow: 0 0.05em 0.05em 0.05em #bfbfbf; cursor: pointer; transition: background 0.16s, color 0.16s; }
+        .example-fixed-controls-left .jouele-control.jouele-is-within { background: #f59331; color: #fff; }
+        .example-fixed-controls-left .jouele-control:hover { background: #d04000; color: #fff; transition: none; }
+        .example-wrapper { padding: 10em 3em 0; min-width: 50em; }
+        .example-header_beforeblack { padding-bottom: 0.5em; }
+        .example-wrapper .jouele-playlist { padding: 0 50px; }
+        .example-header { margin: 0; padding: 1em 0 0; }
+        .example-track { padding: 1em 0 2em; }
+        .example-track_black { background: #20242b; color: #909a9c; margin: 0 -3em; padding: 2em 3em; }
+        .example-track-header { font-size: 1.5em; line-height: 1.3; font-weight: 400; padding: 0; margin: 0 0 0.75em; }
+    </style>
+
+    <div class="example-fixed">
+        <div class="example-fixed-controls">
+            <div class="example-fixed-controls-top">
+                <span class="example-fixed-icon jouele-control" data-type="play-pause">
+                    <svg class="example-fixed-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16"><path d="m4 3.5l8 4.5-8 4.5z"/></svg>
+                </span>
+                <div class="example-fixed-bar jouele-control" data-type="timeline">
+                    <span class="example-fixed-bar-elapsed jouele-control" data-type="elapsed"></span>
+                    <span class="example-fixed-bar-position jouele-control" data-type="position"></span>
+                </div>
+            </div>
+            <div class="example-fixed-controls-bottom">
+                <div class="example-fixed-time">
+                    <span class="jouele-control" data-type="time-elapsed"></span>
+                    <span class="jouele-control" data-type="time-total"></span>
+                </div>
+                <div class="example-fixed-title jouele-control" data-type="title">&nbsp;</div>
+            </div>
+            <div class="example-fixed-controls-left">
+                <span class="jouele-control" data-type="seek" data-to="0:36" data-range="0:36...0:36">go to 36 sec</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="example-wrapper">
+        <h2 class="example-header">jouele-playlist (4 tracks)</h2>
+        <div class="jouele-playlist" data-space-control="true">
+            <div class="example-track">
+                <h3 class="example-track-header">data-length="9:54"<br/>"594" also will work (as 9×60 + 54)</h3>
+                <a href="https://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" data-length="9:54" class="jouele">Ilya Birman – News</a>
+            </div>
+            <div class="example-track">
+                <h3 class="example-track-header">data-hide-timeline-on-pause="true"</h3>
+                <a href="https://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Too%20Keen.mp3" class="jouele" data-hide-timeline-on-pause="true">Ninth Of Kin – Too Keen</a>
+            </div>
+            <div class="example-track">
+                <h3 class="example-track-header">short track</h3>
+                <a href="https://audio.ilyabirman.ru/Special/Underground/MindTheGap.mp3" class="jouele">Mind the Gap</a>
+            </div>
+            <div class="example-track">
+                <h3 class="example-track-header">data-repeat="true"</h3>
+                <a href="https://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Axiom.mp3" class="jouele" data-repeat="true">Ninth Of Kin – Axiom</a>
+            </div>
+        </div>
+
+        <h2 class="example-header">jouele-playlist (1 track, data-repeat="true")</h2>
+        <div class="jouele-playlist" data-repeat="true">
+            <div class="example-track">
+                <h3 class="example-track-header">simple track (data-first="true")</h3>
+                <a href="https://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Skin%20Care.mp3" class="jouele" data-first="true">Ninth Of Kin – Skin Care</a>
+            </div>
+        </div>
+
+        <h2 class="example-header">broken track</h2>
+        <div class="example-track">
+            <a href="https://audio.ilyabirman.ru/404" class="jouele">broken</a>
+        </div>
+
+        <h2 class="example-header example-header_beforeblack">standart track (no playlist)</h2>
+        <div class="example-track example-track_black">
+            <h3 class="example-track-header">jouele-skin-dark</h3>
+            <a href="https://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" class="jouele jouele-skin-dark">Ilya Birman – News</a>
+        </div>
+
+        <h2 class="example-header">static player</h2>
+        <div class="example-track">
+            <h3 class="example-track-header">data-static="true" with data-length="7:50"</h3>
+            <a href="https://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Skin%20Care.mp3" class="jouele" data-static="true" data-length="7:50">Ninth Of Kin – Skin Care (static)</a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Jouele examples</title>
+
+    <!-- Подключите на страницу jQuery, необходимый для работы Жуэля -->
+    <!-- Include jQuery that are mandatory for Jouele -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- Подключите Жуэль: JS и CSS -->
+    <!-- Include Jouele: JS and CSS -->
+    <script src="./jouele.min.js"></script>
+    <link href="./jouele.min.css" rel="stylesheet"/>
+</head>
+<body>
+
+    <style>
+        /* Инлайновые стили нужны только для оформления этой страницы с примерами, они не используются Жуэлем */
+        /* Inline styles are only for this example page, they are not used by Jouele */
+        html, body { margin: 0; padding: 0; background: #fff; font-family: "Helvetica", "Arial", sans-serif; font-size: 14px; line-height: 1.2; color: #000; }
+        .example-wrapper { padding: 2em 3.5em; position: relative; z-index: 1; }
+        .example-playlist { margin: 0 0 2em; padding: 1em 2em; background: #f8f8f8; line-height: 1.5; }
+
+        .jouele-is-interactive {
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px dashed;
+            cursor: pointer;
+        }
+        .jouele .jouele-is-interactive {
+            border-bottom: 0;
+        }
+    </style>
+
+    <div class="example-wrapper">
+        <div class="example-playlist jouele-playlist">
+            <span class="jouele-control" data-href="https://audio.ilyabirman.ru/Ilya%20Birman%20-%20News.mp3" data-type="play-pause">play/pause News.mp3</span><br/>
+            <span class="jouele-control" data-href="https://audio.ilyabirman.ru/404" data-type="play-pause">play/pause broken</span>
+        </div>
+
+        <div class="example-playlist">
+            <span class="jouele-control" data-href="https://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Skin%20Care.mp3" data-type="play-pause">play/pause Skin Care</span>
+        </div>
+
+        <div class="example-playlist jouele-playlist">
+            <a href="https://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Axiom.mp3" class="jouele">Ninth Of Kin – Axiom</a><br/>
+            <span class="jouele-control" data-href="https://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Axiom.mp3" data-type="play-pause">play/pause Axiom.mp3</span><br/><br/>
+            <a href="https://audio.ilyabirman.ru/Ninth%20Of%20Kin%20-%20Too%20Keen.mp3" class="jouele">Ninth Of Kin – Too Keen</a>
+        </div>
+    </div>
+
+</body>
+</html>
